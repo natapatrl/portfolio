@@ -203,6 +203,14 @@ def section_head(n, label):
     return f'<h2 class="sec"><span class="sec-no">{e(n)}</span>{e(label)}</h2>'
 
 
+def window(title, inner, status=None, attrs=""):
+    """Content window: sharp frame, mint corner brackets, title bar with status lights."""
+    st = f'<span class="window-status">{e(status)}</span>' if status else ""
+    return (f'<div class="window"{attrs}><div class="window-bar"><span class="window-title">{e(title)}</span>'
+            f'<span class="window-right">{st}<span class="window-lights" aria-hidden="true"><i></i><i></i><i></i></span></span></div>'
+            f'<div class="window-body">{inner}\n    </div></div>')
+
+
 def build_home():
     p = ""
     f = PROJECTS[0]
@@ -210,35 +218,33 @@ def build_home():
     tools = "".join(f"<li>{e(t)}</li>" for t in HOME["tools"])
     body = f"""
 <section class="hero wrap">
-  <div class="console" data-console>
-    <div class="console-bar"><span class="console-title">{e(HOME['console_title'])}</span><span class="console-lights" aria-hidden="true"><i></i><i></i><i></i></span></div>
-    <div class="console-body">
-      <p class="cmd" aria-hidden="true"><span class="ps">&gt;</span><span class="cmd-text">{e(HOME['cmd_intro'])}</span></p>
-      <h1 class="hero-intro out">{e(HOME['intro'])}</h1>
-      <p class="cmd" aria-hidden="true"><span class="ps">&gt;</span><span class="cmd-text">{e(HOME['cmd_tools'])}</span></p>
-      <ul class="tools out" aria-label="Tools I work in">{tools}</ul>
-      <p class="cmd idle" aria-hidden="true"><span class="ps">&gt;</span><span class="cursor">_</span></p>
-    </div>
-  </div>
+  {window(HOME['profile_title'], f"""
+      <p class="hud-label" aria-hidden="true"><span class="hud-text">{e(HOME['class_label'])}</span></p>
+      <h1 class="hero-intro out">{e(HOME['intro'])}<span class="cursor" aria-hidden="true">_</span></h1>
+      <p class="hud-label" aria-hidden="true"><span class="hud-text">{e(HOME['loadout_label'])}</span></p>
+      <ul class="tools out" aria-label="Tools I work in">{tools}</ul>""", attrs=' data-console')}
 </section>
 
-<section class="wrap featured" aria-labelledby="featured-title">
-  <div class="featured-grid">
-    <a class="featured-media" href="{p}projects/{f['slug']}/" tabindex="-1" aria-hidden="true">{placeholder(f['hero_ph'], 'FIG. 01 / ' + f['title'])}</a>
-    <div class="featured-body">
-      <p class="feat-kicker">/ LATEST PROJECT</p>
-      {doc_head(None, f['title'], None, tag="h2", cls="featured-head")}
-      {badges(f.get('badges', []))}
-      <p class="feat-tag">{e(f.get('tagline', f['blurb']))}</p>
-      <div class="links">{links}<a class="link internal" href="{p}projects/{f['slug']}/">Full breakdown</a></div>
-    </div>
-  </div>
+<section class="wrap featured" aria-label="Latest project">
+  {window(HOME['latest_title'], f"""
+    <div class="featured-grid">
+      <a class="featured-media" href="{p}projects/{f['slug']}/" tabindex="-1" aria-hidden="true">{placeholder(f['hero_ph'], 'FIG. 01 / ' + f['title'])}</a>
+      <div class="featured-body">
+        {doc_head(None, f['title'], None, tag="h2", cls="featured-head")}
+        {badges(f.get('badges', []))}
+        <p class="feat-tag">{e(f.get('tagline', f['blurb']))}</p>
+        <div class="links">{links}<a class="link internal" href="{p}projects/{f['slug']}/">Full breakdown</a></div>
+      </div>
+    </div>""", status="NEW")}
 </section>
 
-<section class="quest" aria-label="Design quest">
-  <p class="quest-label">{e(HOME['quest_label'])}</p>
-  <p class="quest-title">{e(HOME['quest'])}</p>
-  <p class="quest-reward">{e(HOME['reward'])}</p>
+<section class="quest" aria-label="Design quest" data-rip>
+  <span class="quest-seam" aria-hidden="true"></span>
+  <div class="quest-band">
+    <p class="quest-label">{e(HOME['quest_label'])}</p>
+    <p class="quest-title">{e(HOME['quest'])}</p>
+    <p class="quest-reward">{e(HOME['reward'])}</p>
+  </div>
 </section>
 
 <section class="wrap more" aria-labelledby="more-title">

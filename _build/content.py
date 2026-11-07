@@ -14,12 +14,13 @@ SITE = {
 }
 
 HOME = {
-    # Console panel at the top of the home page: each (command, output) pair is "typed" in turn.
-    "console_title": "nat@portfolio:~",
-    "cmd_intro": "whoami",
+    # Home windows read like a game's UI (player profile, loadout), not a code terminal.
+    "profile_title": "PLAYER PROFILE",
+    "class_label": "CLASS",
     "intro": "I'M NAT; A GAMEPLAY, LEVEL, UX/UI DESIGNER.",
-    "cmd_tools": "ls ./tools",
+    "loadout_label": "LOADOUT",
     "tools": ["Unity", "Unreal", "Figma"],
+    "latest_title": "LATEST PROJECT",
     "quest_label": "DESIGN QUEST:",
     "quest": "DEFEAT FRUSTRATION",
     "reward": "USER REWARD: +100 DESIGN POINTS",

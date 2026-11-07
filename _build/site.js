@@ -25,23 +25,24 @@
 
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // ---------- Home: console panel types its commands, then shows each output ----------
+  var sleep = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+
+  // ---------- Home: profile window types its labels, then shows each value ----------
   var con = document.querySelector("[data-console]");
   if (con && !reduce) {
     con.classList.add("typing");
-    var steps = [];
-    con.querySelectorAll(".console-body > *").forEach(function (el) { steps.push(el); });
-    var sleep = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+    var steps = Array.prototype.slice.call(con.querySelectorAll(".window-body > *"));
     (async function () {
       await sleep(250);
       for (var s = 0; s < steps.length; s++) {
-        var el = steps[s], t = el.querySelector(".cmd-text");
+        var el = steps[s], t = el.querySelector(".hud-text");
         if (t) {
           var full = t.textContent;
           t.textContent = "";
+          el.classList.add("shown");
           t.classList.add("shown");
           for (var k = 1; k <= full.length; k++) { t.textContent = full.slice(0, k); await sleep(45); }
-          await sleep(180);
+          await sleep(160);
         } else {
           el.classList.add("shown");
           await sleep(220);
@@ -49,6 +50,22 @@
       }
       con.classList.remove("typing");
     })();
+  }
+
+  // ---------- Home: design quest band rips the page open when it scrolls into view ----------
+  var rip = document.querySelector("[data-rip]");
+  if (rip && !reduce && "IntersectionObserver" in window) {
+    rip.classList.add("rip-ready");
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        rip.classList.add("ripped");
+        io.disconnect();
+        // once done, drop the clip so nothing stays cut off
+        setTimeout(function () { rip.classList.remove("rip-ready", "ripped"); }, 1200);
+      });
+    }, { threshold: 0.6 });
+    io.observe(rip);
   }
 
   // ---------- Projects page: discipline filter ----------
