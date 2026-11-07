@@ -6,6 +6,23 @@
     a.textContent = addr;
   });
 
+  // ---------- READ meter in the top bar: fills as the page scrolls ----------
+  var cellsEl = document.querySelector(".read-cells"), pctEl = document.querySelector(".read-pct");
+  if (cellsEl && pctEl) {
+    for (var c = 0; c < 12; c++) cellsEl.appendChild(document.createElement("i"));
+    var cells = cellsEl.querySelectorAll("i");
+    var update = function () {
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      var p = max > 0 ? Math.min(1, window.scrollY / max) : 1;
+      var on = Math.round(p * cells.length);
+      cells.forEach(function (el, i) { el.classList.toggle("on", i < on); });
+      pctEl.textContent = Math.round(p * 100) + "%";
+    };
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    update();
+  }
+
   // ---------- About page: texting game ----------
   var chat = document.querySelector("[data-chat]");
   var dataEl = document.getElementById("chat-data");

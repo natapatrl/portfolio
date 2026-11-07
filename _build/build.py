@@ -75,11 +75,12 @@ def page(rel_out, title, desc, body, active=None, p=None):
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-header">
-  <a class="logo" href="{home}" aria-label="Home">
-    <span class="logo-name">NATAPATR<br>LORSATHIAN</span>
-    <span class="logo-role">GAME DESIGNER</span>
+  <a class="brand" href="{home}" aria-label="Natapatr Lorsathian, home">
+    <img class="brand-mark" src="{p}assets/logo.svg" alt="" width="56" height="44">
+    <span class="brand-text"><span class="brand-name">NATAPATR LORSATHIAN</span><span class="brand-role">game designer</span></span>
   </a>
   <nav class="site-nav" aria-label="Main">{nav}</nav>
+  <div class="read" aria-hidden="true"><span class="read-label">READ</span><span class="read-cells"></span><span class="read-pct">0%</span></div>
 </header>
 <main id="main">
 {body}
@@ -294,6 +295,24 @@ def build_404():
     page("404.html", "Not found", "Page not found.", body, p="/portfolio/")
 
 
+def nl_logo():
+    """Pixel NL monogram knocked out of a mint gradient badge with a soft top sheen."""
+    n = ["X...X", "XX..X", "XX..X", "X.X.X", "X..XX", "X..XX", "X...X"]
+    l = ["X...", "X...", "X...", "X...", "X...", "X...", "XXXX"]
+    glyph = [a + "." + c for a, c in zip(n, l)]
+    w, h = len(glyph[0]) + 4, len(glyph) + 4
+    px = "".join(f'<rect x="{x + 2}" y="{y + 2}" width="1" height="1"/>'
+                 for y, row in enumerate(glyph) for x, c in enumerate(row) if c == "X")
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" shape-rendering="crispEdges">'
+            f'<defs><linearGradient id="g" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="{w}" y2="{h}">'
+            '<stop offset="0" stop-color="#d6fff1"/><stop offset=".55" stop-color="#9ef5d6"/>'
+            '<stop offset="1" stop-color="#5fd9b3"/></linearGradient>'
+            '<linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".45"/>'
+            '<stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>'
+            f'<rect width="{w}" height="{h}" fill="url(#g)"/><rect width="{w}" height="{h / 2}" fill="url(#s)"/>'
+            f'<g fill="#0b1338">{px}</g></svg>')
+
+
 def build_assets():
     rnd = random.Random(7)
     w, h, s = 480, 48, 8
@@ -303,13 +322,21 @@ def build_assets():
         for x in range(0, w, s):
             if y == h - s or rnd.random() < density ** 1.6:
                 rects.append(f'<rect x="{x}" y="{y}" width="{s}" height="{s}"/>')
+    rects2 = []
+    for y in range(0, 40, 8):
+        dens = 1 - y / 40
+        for x in range(0, 480, 8):
+            if y == 0 or rnd.random() < dens ** 1.8:
+                rects2.append(f'<rect x="{x}" y="{y}" width="8" height="8"/>')
+    write("assets/header-edge.svg",
+          '<svg xmlns="http://www.w3.org/2000/svg" width="480" height="40" viewBox="0 0 480 40" '
+          f'shape-rendering="crispEdges" fill="#060b26">{"".join(rects2)}</svg>')
     write("assets/pixel-edge.svg",
           f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}" '
           f'shape-rendering="crispEdges" fill="#000">{"".join(rects)}</svg>')
-    write("assets/favicon.svg",
-          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="crispEdges">'
-          '<rect width="16" height="16" fill="#162354"/>'
-          '<path fill="#9ef5d6" d="M3 3h2v10H3zM11 3h2v10h-2zM5 5h2v2H5zM7 7h2v2H7zM9 9h2v2H9z"/></svg>')
+    logo = nl_logo()
+    write("assets/logo.svg", logo)
+    write("assets/favicon.svg", logo)
     here = os.path.dirname(__file__)
     for name in ("style.css", "site.js"):
         with open(os.path.join(here, name), encoding="utf-8") as f:
