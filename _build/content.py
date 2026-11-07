@@ -27,40 +27,31 @@ ABOUT = {
     # the right (mint) bubbles. Each topic disappears once asked. When none are left, the only
     # option is the final link.
     "intro": [
-        "Hello, I'm Natapatr Lorsathian (Nat for short).",
-        "I'm a versatile game designer. While proficient with the basics of every design "
-        "discipline, I enjoy UI/UX and level design the most.",
-        "Ask me anything below!",
+        "Hi, I'm Natapatr. Nat for short.",
+        "I'm a game designer. Level design and UX/UI are my favorites.",
+        "Ask me anything!",
     ],
     "topics": [
         {
-            "q": "What makes a game great to you?",
+            "q": "What makes a game great?",
             "a": [
-                "I firmly believe that a great game must first and foremost feel good to play.",
-                "While fun is undoubtedly the foundation of game design, even the most enjoyable "
-                "game can quickly become frustrating if it's not user-friendly.",
+                "It has to feel good to play.",
+                "Fun is the foundation, but even a fun game gets frustrating if it isn't user-friendly.",
             ],
         },
         {
-            "q": "So what's your design goal?",
-            "a": [
-                "Striking a balance between fun and user experience is key to creating a truly "
-                "great gameplay experience.",
-            ],
+            "q": "Your design goal?",
+            "a": ["Balancing fun with a smooth user experience."],
         },
         {
-            "q": "What tools do you work with?",
-            "a": [
-                "Unity, Unreal (including UEFN, Fortnite's level editor) and Figma, which I use "
-                "to prototype UI.",
-            ],
+            "q": "What tools do you use?",
+            "a": ["Unity, Unreal (incl. UEFN) and Figma for UI prototypes."],
         },
         {
-            "q": "What are you working on right now?",
+            "q": "Working on anything now?",
             "a": [
-                "Anonymized! It started as our Global Game Jam 2026 entry and won 1st place at "
-                "Game Dev Hub Bangkok.",
-                "Since then we've developed it into a full game, and it's out now on Steam.",
+                "Anonymized! Our Global Game Jam 2026 entry, 1st place at Game Dev Hub Bangkok.",
+                "We grew it into a full game. It's out now on Steam.",
             ],
         },
     ],
@@ -68,11 +59,8 @@ ABOUT = {
 }
 
 CONTACT = {
-    "heading": "INTERESTED IN MY RESUME?",
-    "lines": [
-        "Reach out below. (Or via any convenient platform of your choice)",
-        "If I haven't already, I'll send you a version of my Resume tailored specifically for the occasion.",
-    ],
+    # One line only: the channel list below does the rest.
+    "line": "Reach out on any channel. I'll send a resume tailored to the role.",
 }
 
 # Order here = order on the site. The first project is the featured one on the home page.
@@ -87,7 +75,10 @@ PROJECTS = [
         "tags": ["Gameplay Design", "Level Design", "UX/UI Design"],
         "blurb": "Movement-based color-shifting puzzle game; Global Game Jam 2026 submission "
                  "under the theme 'Mask'.",
-        "tagline": "Movement-based color-shifting puzzle game, out now on Steam.",
+        "tagline": "Movement-based color-shifting puzzle game.",
+        "genre": "Color-shift puzzle",
+        # Short HUD badges on the home featured block (kept to a couple of words each).
+        "badges": [("award", "1st place / GGJ 2026 Bangkok"), ("status", "Out now")],
         "awards": [
             "1st Place - Game Dev Hub Bangkok (Global Game Jam 2026)",
             "Finalist - BIDC Rising Star Award 2026",
@@ -100,7 +91,7 @@ PROJECTS = [
             ("Status", "Out now on Steam"),
         ],
         "links": [
-            ("View on Steam", "https://store.steampowered.com/app/4765400/ANONYMIZED_Demo/"),
+            ("View on Steam", "https://store.steampowered.com/app/4548240/Anonymized/"),
             ("Jam version on itch.io", "https://arkudada.itch.io/anonymized"),
         ],
         "hero_ph": "Anonymized key art or gameplay screenshot",
@@ -132,6 +123,7 @@ PROJECTS = [
         "kind": "Team Project",
         "roles": "Gameplay Designer | Level Designer",
         "tags": ["Gameplay Design", "Level Design"],
+        "genre": "Physics platformer",
         "blurb": "A unique platformer using physics-based movement; an IndieCritical Summer Jam 2025 "
                  "submission under the theme 'Not What It Seems'.",
         "stats": [
@@ -173,6 +165,7 @@ PROJECTS = [
         "kind": "Team Project",
         "roles": "Gameplay Designer | UX Designer",
         "tags": ["Gameplay Design", "UX/UI Design"],
+        "genre": "Claw-machine arcade",
         "blurb": "Arcade-inspired claw-machine game; Global Game Jam 2025 submission under the theme "
                  "'Bubble'.",
         "stats": [
@@ -220,6 +213,7 @@ PROJECTS = [
         "kind": "Solo Project",
         "roles": "Level Designer",
         "tags": ["Level Design"],
+        "genre": "Narrative level",
         "blurb": "Practice and showcase on scene composition, level flow and environmental storytelling.",
         "stats": [
             ("Team size", "Solo"),
@@ -266,6 +260,7 @@ PROJECTS = [
         "kind": "Solo Project",
         "roles": "Level Designer",
         "tags": ["Level Design"],
+        "genre": "Third-person shooter arena",
         "blurb": "Concept level designed for a multiplayer third-person shooter experience. Practice on "
                  "map-based combat balance using layout, sightlines, and map objectives.",
         "stats": [
@@ -313,6 +308,7 @@ PROJECTS = [
         "kind": "Team Project",
         "roles": "Gameplay Designer | Level Designer",
         "tags": ["Gameplay Design", "Level Design"],
+        "genre": "Escape room puzzle",
         "blurb": "Escape room puzzle game; focused on improving player guidance through level flow and "
                  "lighting.",
         "stats": [

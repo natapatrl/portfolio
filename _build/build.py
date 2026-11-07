@@ -118,6 +118,20 @@ def tag_chips(tags):
     return f'<span class="chips">{out}</span>'
 
 
+def stat(pr, key):
+    return dict(pr["stats"]).get(key, "")
+
+
+def spec_strip(pr):
+    """Year / team / engine as a compact HUD readout instead of a sentence."""
+    team = stat(pr, "Team size")
+    team = "SOLO" if team.lower() == "solo" else f"TEAM {team}"
+    engine = stat(pr, "Engine").replace("Unreal Fortnite (UEFN)", "UEFN")
+    cells = [("YR", pr["year"]), ("SIZE", team), ("ENG", engine)]
+    return ('<span class="m-spec">' + "".join(
+        f'<span><b>{e(k)}</b>{e(v)}</span>' for k, v in cells) + "</span>")
+
+
 def mission_list(p, projects):
     rows = ""
     for i, pr in projects:
@@ -126,10 +140,26 @@ def mission_list(p, projects):
   <a class="mission" href="{p}projects/{pr['slug']}/">
     <span class="m-id">{num(i)}</span>
     <span class="m-thumb">{placeholder(pr['hero_ph'])}</span>
-    <span class="m-name"><span class="m-title">{e(title)}<span class="slash">/</span></span><small>{e(pr['blurb'])}</small>
-      <span class="m-meta">{e(pr['year'])} / {e(pr['kind'])}</span>{tag_chips(pr['tags'])}</span>
+    <span class="m-name"><span class="m-title">{e(title)}<span class="slash">/</span></span><span class="m-genre">{e(pr['genre'])}</span>{tag_chips(pr['tags'])}</span>
+    {spec_strip(pr)}
   </a>"""
     return f'<nav class="missions" aria-label="Projects">{rows}\n</nav>'
+
+
+BADGE_ICON = {
+    "award": ["XXXXX", "XXXXX", ".XXX.", "..X..", ".XXX."],   # trophy
+    "status": [".....", ".XXX.", ".XXX.", ".XXX.", "....."],  # status light
+}
+
+
+def badges(items):
+    out = ""
+    for kind, label in items:
+        px = "".join(f'<rect x="{x}" y="{y}" width="1" height="1"/>' for y, r in enumerate(BADGE_ICON[kind])
+                     for x, ch in enumerate(r) if ch == "X")
+        out += (f'<span class="badge b-{kind}"><svg viewBox="0 0 5 5" aria-hidden="true" '
+                f'shape-rendering="crispEdges">{px}</svg>{e(label)}</span>')
+    return f'<div class="badges">{out}</div>'
 
 
 def doc_head(no, title, sub=None, tag="h1", cls=""):
@@ -164,7 +194,8 @@ def build_home():
     <div class="featured-body">
       <p class="feat-kicker">/ LATEST PROJECT</p>
       {doc_head(None, f['title'], None, tag="h2", cls="featured-head")}
-      <div class="prose"><p>{e(f.get('tagline', f['blurb']))}</p></div>
+      {badges(f.get('badges', []))}
+      <p class="feat-tag">{e(f.get('tagline', f['blurb']))}</p>
       <div class="links">{links}<a class="link internal" href="{p}projects/{f['slug']}/">Full breakdown</a></div>
     </div>
   </div>
@@ -286,14 +317,11 @@ def build_project(i, pr):
 
 
 def build_contact():
-    lines = "".join(f"<p>{e(t)}</p>" for t in CONTACT["lines"])
     body = f"""
 <section class="wrap section-page">
   {page_head('03', 'Contact me')}
   <div class="frame-box">
-    {section_head('/ RESUME', CONTACT['heading'])}
-    <div class="note prose">{lines}</div>
-    {section_head('/ CHANNELS', 'Reach me at')}
+    <p class="contact-line"><span class="prompt" aria-hidden="true">&gt;</span>{e(CONTACT['line'])}</p>
     <dl class="readout contact">
       <div class="row"><dt>Email</dt><dd>{email_link('../')}</dd></div>
       <div class="row"><dt>LinkedIn</dt><dd>{ext_link(SITE['linkedin_label'], SITE['linkedin'], '')}</dd></div>
