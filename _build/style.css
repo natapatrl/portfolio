@@ -71,17 +71,7 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
   height: 76px;
   padding: 0 1.6rem;
   background: #060b26;
-}
-/* bottom edge breaks into pixels */
-.site-header::after {
-  content: "";
-  position: absolute;
-  left: 0; right: 0;
-  top: 100%;
-  height: 40px;
-  background: url("header-edge.svg") repeat-x;
-  background-size: 480px 40px;
-  pointer-events: none;
+  border-bottom: 1px solid var(--line-strong);
 }
 .brand { display: flex; align-items: center; gap: 0.85rem; text-decoration: none; color: var(--head); }
 .brand-mark { display: block; height: 44px; width: 64px; image-rendering: pixelated; }
@@ -228,8 +218,8 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 .m-genre { display: block; font: 400 var(--fs-body-s)/1.4 var(--plex); color: var(--muted); margin-top: 0.2rem; }
 /* year / team / engine readout on the right of each row */
 .m-spec { display: grid; gap: 0.3rem; font: 400 var(--fs-label)/1 var(--mono); color: var(--head); white-space: nowrap; }
-.m-spec { width: 8.6rem; }
-.m-spec > span { display: grid; grid-template-columns: 2.6rem auto; }
+.m-spec { width: 10.4rem; }
+.m-spec > span { display: grid; grid-template-columns: 4.2rem auto; }
 .m-spec b { font-weight: 400; color: var(--dim); font-size: var(--fs-micro); letter-spacing: 0.1em; margin-right: 0.6rem; }
 .mission:hover .m-spec { color: var(--mint); }
 /* discipline tags: small HUD chips with a pixel icon, colour-coded */
@@ -294,17 +284,17 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 .badge svg { width: 11px; height: 11px; fill: currentColor; flex: none; }
 .badge.b-status { --c: var(--mint); }
 .badge.b-status svg { animation: blink 1.6s steps(1) infinite; }
-.quest { text-align: center; background: #000; margin: 4.5rem 0; padding: 2.2rem 1rem; position: relative; }
+.quest { text-align: center; background: #000; margin: 5.5rem 0; padding: 2.2rem 1rem; position: relative; }
 .quest::before, .quest::after {
   content: "";
   position: absolute;
   left: 0; right: 0;
-  height: 48px;
-  background: url("pixel-edge.svg") repeat-x;
-  background-size: 480px 48px;
+  height: 70px;   /* (depth + 1) x cell from QUEST_EDGE in build.py */
+  background-repeat: repeat-x;
+  background-size: 980px 70px;
 }
-.quest::before { bottom: 100%; }
-.quest::after { top: 100%; transform: scaleY(-1); }
+.quest::before { bottom: 100%; transform: scaleY(-1); background-image: url("quest-edge-top.svg"); }
+.quest::after { top: 100%; background-image: url("quest-edge-bottom.svg"); }
 .quest-label { font: 400 var(--fs-caps-l) var(--grot); letter-spacing: 0.3em; margin: 0; color: var(--lav); }
 .quest-title { font: 400 clamp(1.8rem, 5vw, 3rem) var(--pixel); letter-spacing: 0.14em; color: var(--mint); margin: 0.2rem 0; }
 .quest-reward { font: italic 500 var(--fs-caps) var(--grot); letter-spacing: 0.2em; margin: 0; }

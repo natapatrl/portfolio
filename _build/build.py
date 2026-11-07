@@ -125,9 +125,8 @@ def stat(pr, key):
 def spec_strip(pr):
     """Year / team / engine as a compact HUD readout instead of a sentence."""
     team = stat(pr, "Team size")
-    team = "SOLO" if team.lower() == "solo" else f"TEAM {team}"
     engine = stat(pr, "Engine").replace("Unreal Fortnite (UEFN)", "UEFN")
-    cells = [("YR", pr["year"]), ("SIZE", team), ("ENG", engine)]
+    cells = [("YEAR", pr["year"]), ("TEAM", team), ("ENGINE", engine)]
     return ('<span class="m-spec">' + "".join(
         f'<span><b>{e(k)}</b>{e(v)}</span>' for k, v in cells) + "</span>")
 
@@ -317,11 +316,14 @@ def build_project(i, pr):
 
 
 def build_contact():
+    lines = "".join(f"<p>{e(t)}</p>" for t in CONTACT["lines"])
     body = f"""
 <section class="wrap section-page">
   {page_head('03', 'Contact me')}
   <div class="frame-box">
-    <p class="contact-line"><span class="prompt" aria-hidden="true">&gt;</span>{e(CONTACT['line'])}</p>
+    {section_head('/ RESUME', CONTACT['heading'])}
+    <div class="note prose">{lines}</div>
+    {section_head('/ CHANNELS', 'Reach me at')}
     <dl class="readout contact">
       <div class="row"><dt>Email</dt><dd>{email_link('../')}</dd></div>
       <div class="row"><dt>LinkedIn</dt><dd>{ext_link(SITE['linkedin_label'], SITE['linkedin'], '')}</dd></div>
@@ -374,27 +376,33 @@ def nl_logo():
             f'<g fill="#0b1338">{px}</g>{loose}</svg>')
 
 
+def tear_edge(seed, cell, depth, width=480, loose=5, fill="#000"):
+    """A band edge 'ripped' into pixels: solid along the top, then a stepped contour of whole cells
+    (each column 0..depth-1 cells deep, changing by at most one step), with a few loose cells
+    breaking away below. Draw it under a solid band; flip it for the other side."""
+    rnd = random.Random(seed)
+    cols = width // cell
+    rects, h = [], 1
+    for x in range(cols):
+        h = max(1, min(depth - 1, h + rnd.choice((-1, 0, 0, 1))))
+        rects.append(f'<rect x="{x * cell}" y="0" width="{cell}" height="{h * cell}"/>')
+    for _ in range(loose):
+        x, y = rnd.randrange(cols), rnd.randrange(depth - 1, depth + 1)
+        rects.append(f'<rect x="{x * cell}" y="{y * cell}" width="{cell}" height="{cell}"/>')
+    hgt = (depth + 1) * cell
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{hgt}" viewBox="0 0 {width} {hgt}" '
+            f'shape-rendering="crispEdges" fill="{fill}">{"".join(rects)}</svg>'), hgt
+
+
+# Pixel size (px), max depth (cells), loose cells per tile, tile width (px) of the quest band rip.
+QUEST_EDGE = {"cell": 14, "depth": 4, "loose": 5, "width": 980}
+
+
 def build_assets():
-    rnd = random.Random(7)
-    w, h, s = 480, 48, 8
-    rects = []
-    for y in range(0, h, s):
-        density = (y + s) / h
-        for x in range(0, w, s):
-            if y == h - s or rnd.random() < density ** 1.6:
-                rects.append(f'<rect x="{x}" y="{y}" width="{s}" height="{s}"/>')
-    rects2 = []
-    for y in range(0, 40, 8):
-        dens = 1 - y / 40
-        for x in range(0, 480, 8):
-            if y == 0 or rnd.random() < dens ** 1.8:
-                rects2.append(f'<rect x="{x}" y="{y}" width="8" height="8"/>')
-    write("assets/header-edge.svg",
-          '<svg xmlns="http://www.w3.org/2000/svg" width="480" height="40" viewBox="0 0 480 40" '
-          f'shape-rendering="crispEdges" fill="#060b26">{"".join(rects2)}</svg>')
-    write("assets/pixel-edge.svg",
-          f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}" '
-          f'shape-rendering="crispEdges" fill="#000">{"".join(rects)}</svg>')
+    # Design-quest band edges: different seeds top and bottom so the rip doesn't look mirrored.
+    for side, seed in (("top", 11), ("bottom", 23)):
+        svg, _ = tear_edge(seed, QUEST_EDGE["cell"], QUEST_EDGE["depth"], QUEST_EDGE["width"], QUEST_EDGE["loose"])
+        write(f"assets/quest-edge-{side}.svg", svg)
     logo = nl_logo()
     write("assets/logo.svg", logo)
     write("assets/favicon.svg", logo)

@@ -59,8 +59,11 @@ ABOUT = {
 }
 
 CONTACT = {
-    # One line only: the channel list below does the rest.
-    "line": "Reach out on any channel. I'll send a resume tailored to the role.",
+    "heading": "INTERESTED IN MY RESUME?",
+    "lines": [
+        "Reach out below. (Or via any convenient platform of your choice)",
+        "If I haven't already, I'll send you a version of my Resume tailored specifically for the occasion.",
+    ],
 }
 
 # Order here = order on the site. The first project is the featured one on the home page.
