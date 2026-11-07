@@ -116,14 +116,14 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 /* Datasheet heading: dim number + title share one baseline; the sub-line gets its own row */
 .doc-head {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto minmax(0, 1fr);
   column-gap: 1.4rem;
   align-items: baseline;
   border-bottom: 2px solid var(--head);
   padding-bottom: 1rem;
 }
 .doc-no { grid-column: 1; grid-row: 1; font: 300 clamp(3rem, 8vw, 5.2rem)/1 var(--grot); color: var(--mint); }
-.doc-title { grid-column: 2; grid-row: 1; font-size: clamp(2rem, 5.5vw, 3.4rem); letter-spacing: 0.05em; text-transform: uppercase; line-height: 1; }
+.doc-title { grid-column: 2; grid-row: 1; font-size: clamp(2rem, 5.5vw, 3.4rem); letter-spacing: 0.05em; text-transform: uppercase; line-height: 1; overflow-wrap: break-word; }
 .doc-sub { grid-column: 2; grid-row: 2; font: 400 var(--fs-data)/1.5 var(--mono); color: var(--muted); margin: 0.55rem 0 0; }
 .doc-head:not(:has(.doc-no)) .doc-title, .doc-head:not(:has(.doc-no)) .doc-sub { grid-column: 1 / -1; }
 .page-head { margin-bottom: 2rem; }
@@ -153,17 +153,18 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
   border-bottom: 1px solid var(--mint);
   padding: 0.2rem 0;
 }
-.link::after { content: " \2197"; color: var(--mint); }
-.link.internal::after { content: " \2192"; }
+/* decorative arrows: the "/ ''" part gives them empty alt text so screen readers skip them */
+.link::after { content: " \2197"; content: " \2197" / ""; color: var(--mint); }
+.link.internal::after { content: " \2192"; content: " \2192" / ""; }
 .link.internal.prev::after { content: none; }
-.link.internal.prev::before { content: "\2190 "; color: var(--mint); }
+.link.internal.prev::before { content: "\2190 "; content: "\2190 " / ""; color: var(--mint); }
 .link:hover { color: var(--mint); }
 .footer-links .link { font-size: var(--fs-caps-s); }
 
 /* "+" bullet list */
 .plus-list { list-style: none; padding: 0; margin: 0; font-family: var(--plex); font-size: var(--fs-body); color: var(--body); }
 .plus-list li { position: relative; padding: 0.3rem 0 0.3rem 1.6rem; line-height: 1.6; }
-.plus-list li::before { content: "+"; position: absolute; left: 0.15rem; top: 0.28rem; color: var(--mint); font-family: var(--mono); }
+.plus-list li::before { content: "+"; content: "+" / ""; position: absolute; left: 0.15rem; top: 0.28rem; color: var(--mint); font-family: var(--mono); }
 .awards li { color: var(--lav); }
 
 /* Image frames: crop-mark corners, no box */
@@ -222,7 +223,7 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 .mission:hover .m-id { color: var(--mint); }
 .m-title { display: block; font: 500 1.2rem var(--grot); letter-spacing: 0.06em; text-transform: uppercase; color: var(--head); }
 .m-title .slash { color: var(--dim); margin-left: 0.15em; }
-.m-title .slash::after { content: "_"; color: var(--mint); opacity: 0; }
+.m-title .slash::after { content: "_"; content: "_" / ""; color: var(--mint); opacity: 0; }
 .mission:hover .m-title .slash { color: var(--mint); }
 .mission:hover .m-title .slash::after { opacity: 1; animation: blink 1s steps(1) infinite; }
 .m-genre { display: block; font: 400 var(--fs-body-s)/1.4 var(--plex); color: var(--muted); margin-top: 0.2rem; }
@@ -234,6 +235,7 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 .mission:hover .m-spec { color: var(--mint); }
 /* discipline tags: small HUD chips with a pixel icon, colour-coded */
 .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.55rem; }
+ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .chip {
   --c: var(--mint);
   display: inline-flex;
@@ -282,7 +284,7 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
   background: rgba(158, 245, 214, 0.05);
   font: 500 var(--fs-caps-s) var(--grot); letter-spacing: 0.24em; color: var(--muted);
 }
-.window-title { display: flex; align-items: center; gap: 0.8rem; }
+.window-title { display: flex; align-items: center; gap: 0.8rem; margin: 0; font: inherit; letter-spacing: inherit; }
 .window-tag { font: 500 var(--fs-micro)/1 var(--mono); letter-spacing: 0.1em; color: var(--deep); background: var(--mint); padding: 0.22rem 0.4rem; }
 .window-lights { display: flex; gap: 5px; }
 .window-lights i { width: 7px; height: 7px; background: var(--line-strong); }
@@ -389,13 +391,16 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
   color: var(--c); border: 1px solid color-mix(in srgb, var(--c) 40%, transparent);
   clip-path: polygon(6px 0, 100% 0, 100% 100%, 0 100%, 0 6px);
 }
+/* clipped corners would cut off an outside outline, so the focus ring sits just inside the shape */
+.filter:focus-visible, .dl-tab:focus-visible { outline: 1px solid var(--mint); outline-offset: -5px; }
+.filter[aria-pressed="true"]:focus-visible { outline-color: var(--deep); }
 .filter.t-gameplay { --c: var(--mint); }
 .filter.t-level { --c: var(--lav); }
 .filter.t-ux { --c: #9dc4ff; }
 .filter .count { color: var(--dim); }
 .filter:hover { background: color-mix(in srgb, var(--c) 10%, transparent); }
 .filter[aria-pressed="true"] { background: var(--c); color: var(--deep); border-color: var(--c); }
-.filter[aria-pressed="true"] .count { color: var(--deep); opacity: 0.6; }
+.filter[aria-pressed="true"] .count { color: var(--deep); opacity: 0.75; }
 .filter-status { margin-left: auto; font: 400 var(--fs-micro) var(--mono); color: var(--muted); }
 .mission[hidden] { display: none; }
 
@@ -407,7 +412,7 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 .proj-count b { font-weight: 400; color: var(--mint); margin: 0 0.3rem; }
 .back { display: inline-block; }
 .back::after { content: none !important; }
-.back::before { content: "\2190 "; color: var(--mint); }
+.back::before { content: "\2190 "; content: "\2190 " / ""; color: var(--mint); }
 .two-col { display: grid; grid-template-columns: 1.5fr 1fr; gap: 3.5rem; }
 .two-col aside { padding-top: 2.4rem; }
 .two-col aside .sec { margin-top: 2rem; }
@@ -430,7 +435,7 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
   padding: .45rem .7rem; border: 1px dashed var(--line-strong); color: var(--head); font: 500 var(--fs-caps-s) var(--grot); letter-spacing: .14em; text-transform: uppercase; }
 .dl-link-k { font: 400 var(--fs-micro) var(--mono); letter-spacing: .1em; color: var(--lav); }
 .dl-link-t { color: var(--muted); }
-.dl-link::after { content: "\2192"; color: var(--mint); }
+.dl-link::after { content: "\2192"; content: "\2192" / ""; color: var(--mint); }
 .dl-link:hover { border-color: var(--mint); border-style: solid; color: var(--mint); }
 .debrief { margin: 0; font: 400 var(--fs-body)/1.55 var(--plex); color: var(--muted); }
 /* D: OS-style tabs under the window bar; all panes share one grid cell so the window never jumps */
@@ -526,6 +531,7 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
   border-top: 1px solid var(--line);
   min-height: 3.6rem;
 }
+.chat-options:focus { outline: none; }   /* only holds focus while Nat is typing */
 .chat-opt {
   font: 400 var(--fs-body-s) var(--plex);
   color: var(--mint);
@@ -539,7 +545,7 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 }
 .chat-opt:hover, .chat-opt:focus-visible { background: rgba(158, 245, 214, 0.12); color: var(--head); }
 .chat-opt.final { background: var(--mint); color: var(--deep); border-color: var(--mint); font-weight: 500; }
-.chat-opt.final::after { content: " \2192"; }
+.chat-opt.final::after { content: " \2192"; content: " \2192" / ""; }
 .chat-opt.final:hover { background: var(--head); color: var(--deep); }
 @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
@@ -571,6 +577,17 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 @keyframes blink { 50% { opacity: 0; } }
 @keyframes pulse { 0%, 80%, 100% { opacity: 0.25; } 40% { opacity: 1; } }
 
+/* Touch screens: taller tap area for text links. The underline moves to a background line so it
+   stays under the text, and negative margins keep the layout where it was. */
+@media (pointer: coarse) {
+  .link {
+    border-bottom: 0;
+    padding: 0.65rem 0;
+    margin: -0.45rem 0;
+    background: linear-gradient(var(--mint), var(--mint)) left calc(100% - 0.45rem) / 100% 1px no-repeat;
+  }
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 1000px) {
   .site-header { grid-template-columns: 1fr auto; height: auto; padding: 0.7rem 1.2rem 0.3rem; gap: 0.4rem 1rem; }
@@ -588,6 +605,10 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
   .m-spec { grid-column: 2; display: flex; gap: 1.1rem; width: auto; }
   .m-spec > span { display: inline; }
 }
+@media (max-width: 400px) {
+  .doc-head { column-gap: 0.9rem; }
+  .doc-title { letter-spacing: 0.02em; }
+}
 @media (max-width: 640px) {
   .site-header { grid-template-columns: 1fr auto; height: auto; padding: 0.7rem 1rem 0.3rem; gap: 0.4rem 1rem; }
   .site-nav { grid-column: 1 / -1; grid-row: 2; justify-content: space-around; }
@@ -603,6 +624,7 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
   .readout .row, .readout.contact .row { grid-template-columns: 1fr; gap: 0.15rem; }
 }
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
   * { animation: none !important; transition: none !important; }
   .js .chat .bubble:not(.typing) { opacity: 1; transform: none; }
 }

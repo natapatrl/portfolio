@@ -34,14 +34,21 @@ def email_link(p, cls=""):
             f'{e(u)} [at] {e(d.replace(".", " [dot] "))}</a>')
 
 
-def placeholder(label, caption=None, ratio="16/9", cls=""):
+def placeholder(label, caption=None, ratio="16/9", cls="", decorative=False):
+    """Image slot. decorative=True for thumbnails inside a link or button whose text already names
+    the project, so screen readers don't read the image label as part of the link name."""
     cap = f'<figcaption>{e(caption)}</figcaption>' if caption else ""
-    return (f'<figure class="frame {cls}"><div class="ph" style="aspect-ratio:{ratio}" role="img" '
-            f'aria-label="Image coming soon: {e(label)}"><span>[ img: {e(label)} ]</span></div>{cap}</figure>')
+    if decorative:
+        fig_attr, ph_attr = ' aria-hidden="true"', ""
+    else:
+        fig_attr, ph_attr = "", f' role="img" aria-label="Image coming soon: {e(label)}"'
+    return (f'<figure class="frame {cls}"{fig_attr}><div class="ph" style="aspect-ratio:{ratio}"{ph_attr}>'
+            f'<span>[ img: {e(label)} ]</span></div>{cap}</figure>')
 
 
 def ext_link(label, href, cls="link"):
-    return f'<a class="{cls}" href="{href}" target="_blank" rel="noopener">{e(label)}</a>'
+    return (f'<a class="{cls}" href="{href}" target="_blank" rel="noopener">{e(label)}'
+            '<span class="sr-only"> (opens in new tab)</span></a>')
 
 
 def page(rel_out, title, desc, body, active=None, p=None):
@@ -108,13 +115,18 @@ TAG_STYLE = {
 }
 
 
-def tag_chips(tags, full=False):
+def tag_chips(tags, full=False, label=None):
+    """Discipline chips. With a label they become a labelled list (home profile window);
+    inside project links they stay plain spans."""
+    item = "li" if label else "span"
     out = ""
     for t in tags:
         cls, icon = TAG_STYLE.get(t, ("", []))
         px = "".join(f'<rect x="{x}" y="{y}" width="1" height="1"/>' for y, r in enumerate(icon) for x, ch in enumerate(r) if ch == "X")
         svg = f'<svg viewBox="0 0 5 5" aria-hidden="true" shape-rendering="crispEdges">{px}</svg>' if px else ""
-        out += f'<span class="chip {cls}">{svg}{e(t if full else t.replace(" Design", ""))}</span>'
+        out += f'<{item} class="chip {cls}">{svg}{e(t if full else t.replace(" Design", ""))}</{item}>'
+    if label:
+        return f'<ul class="chips" aria-label="{e(label)}">{out}</ul>'
     return f'<span class="chips">{out}</span>'
 
 
@@ -137,9 +149,9 @@ def mission_list(p, projects):
         title = pr.get("list_title", pr["title"])
         rows += f"""
   <a class="mission" href="{p}projects/{pr['slug']}/" data-tags="{e(' '.join(TAG_STYLE[t][0] for t in pr['tags']))}">
-    <span class="m-id">{num(i)}</span>
-    <span class="m-thumb">{placeholder(pr['hero_ph'])}</span>
-    <span class="m-name"><span class="m-title">{e(title)}<span class="slash">/</span></span><span class="m-genre">{e(pr['genre'])}</span>{tag_chips(pr['tags'])}</span>
+    <span class="m-id" aria-hidden="true">{num(i)}</span>
+    <span class="m-thumb">{placeholder(pr['hero_ph'], decorative=True)}</span>
+    <span class="m-name"><span class="m-title">{e(title)}<span class="slash" aria-hidden="true">/</span></span><span class="m-genre">{e(pr['genre'])}</span>{tag_chips(pr['tags'])}</span>
     {spec_strip(pr)}
   </a>"""
     return f'<nav class="missions" aria-label="Projects">{rows}\n</nav>'
@@ -152,8 +164,8 @@ def pick_cards(p, slugs):
         i, pr = next((i, pr) for i, pr in enumerate(PROJECTS) if pr["slug"] == slug)
         cards += f"""
   <a class="card" href="{p}projects/{slug}/">
-    {placeholder(pr['hero_ph'], None, '16/9')}
-    <span class="card-head"><span class="m-title">{e(pr.get('list_title', pr['title']))}<span class="slash">/</span></span><span class="card-id">{num(i)}</span></span>
+    {placeholder(pr['hero_ph'], None, '16/9', decorative=True)}
+    <span class="card-head"><span class="m-title">{e(pr.get('list_title', pr['title']))}<span class="slash" aria-hidden="true">/</span></span><span class="card-id" aria-hidden="true">{num(i)}</span></span>
     <span class="m-genre">{e(pr['genre'])}</span>{tag_chips(pr['tags'])}
   </a>"""
     return f'<div class="cards">{cards}\n</div>'
@@ -190,7 +202,7 @@ def badges(items):
 def doc_head(no, title, sub=None, tag="h1", cls=""):
     """Datasheet heading: dim number and title share a baseline; the sub-line sits on its own row
     under the title, so it never pushes the title out of line."""
-    no_html = f'<span class="doc-no">{e(no)}</span>' if no else ""
+    no_html = f'<span class="doc-no" aria-hidden="true">{e(no)}</span>' if no else ""
     sub_html = f'<p class="doc-sub">{e(sub)}</p>' if sub else ""
     return (f'<header class="doc-head {cls}">{no_html}<{tag} class="doc-title">{e(title)}</{tag}>{sub_html}</header>')
 
@@ -199,16 +211,17 @@ def page_head(no, title, sub=None):
     return doc_head(no, title, sub, cls="compact")
 
 
-def section_head(n, label):
-    return f'<h2 class="sec"><span class="sec-no">{e(n)}</span>{e(label)}</h2>'
+def section_head(n, label, tag="h2"):
+    return f'<{tag} class="sec"><span class="sec-no" aria-hidden="true">{e(n)}</span>{e(label)}</{tag}>'
 
 
-def window(title, inner, tag=None, attrs="", cls=""):
+def window(title, inner, tag=None, attrs="", cls="", heading=None):
     """Content window: sharp frame, mint corner brackets, title bar with decorative lights.
     A tag (e.g. NEW) sits with the title on the left, away from the lights, so it doesn't
     read as a clickable control."""
     tg = f'<span class="window-tag">{e(tag)}</span>' if tag else ""
-    return (f'<div class="window {cls}"{attrs}><div class="window-bar"><span class="window-title">{e(title)}{tg}</span>'
+    t = heading or "span"   # e.g. "h2" where the window title is the section's heading
+    return (f'<div class="window {cls}"{attrs}><div class="window-bar"><{t} class="window-title">{e(title)}{tg}</{t}>'
             f'<span class="window-lights" aria-hidden="true"><i></i><i></i><i></i></span></div>'
             f'<div class="window-body">{inner}\n    </div></div>')
 
@@ -222,9 +235,9 @@ def build_home():
 <section class="hero wrap">
   {window(HOME['profile_title'], f"""
       <p class="hud-label" aria-hidden="true"><span class="hud-text">{e(HOME['player_label'])}</span></p>
-      <h1 class="hero-intro out">{e(HOME['player'])}<span class="sr-only">, game designer:</span><span class="cursor" aria-hidden="true">_</span></h1>
+      <h1 class="hero-intro out">{e(HOME['player'])}<span class="sr-only">, game designer</span><span class="cursor" aria-hidden="true">_</span></h1>
       <p class="hud-label" aria-hidden="true"><span class="hud-text">{e(HOME['class_label'])}</span></p>
-      <div class="out class-chips">{tag_chips(HOME['classes'], full=True)}</div>
+      <div class="out class-chips">{tag_chips(HOME['classes'], full=True, label="Disciplines")}</div>
       <p class="hud-label" aria-hidden="true"><span class="hud-text">{e(HOME['loadout_label'])}</span></p>
       <ul class="tools out" aria-label="Tools I work in">{tools}</ul>""", attrs=' data-console')}
 </section>
@@ -252,7 +265,7 @@ def build_home():
 </section>
 
 <section class="wrap more" aria-labelledby="more-title">
-  <h2 class="sec" id="more-title"><span class="sec-no">/ PICKS</span>More projects</h2>
+  <h2 class="sec" id="more-title"><span class="sec-no" aria-hidden="true">/ PICKS</span>More projects</h2>
   {pick_cards(p, HOME['picks'])}
   <div class="links more-all"><a class="link internal" href="{p}projects/">All {len(PROJECTS)} projects</a></div>
 </section>
@@ -326,7 +339,7 @@ def design_log(pr):
     contrib = "".join(f"<li>{e(t)}</li>" for t in pr["history"])
     hls = [tuple(h) for h in hls]
     menu = "".join(
-        f'<button type="button" class="dl-open" data-go="{k + 1}"><span class="dl-thumb">{placeholder(img)}</span>'
+        f'<button type="button" class="dl-open" data-go="{k + 1}"><span class="dl-thumb">{placeholder(img, decorative=True)}</span>'
         f'<span class="dl-mtext"><span class="dl-mno">{k + 1:02d}</span><span class="dl-mtitle">{e(t)}</span>'
         f'<span class="dl-mteaser">{e(prob)}</span></span><span class="dl-go" aria-hidden="true">OPEN &rarr;</span></button>'
         for k, (t, img, prob, _d, _r, *_l) in enumerate(hls))
@@ -346,11 +359,11 @@ def design_log(pr):
     panes = "".join(
         f'<div class="dl-pane{" on" if i == 0 else ""}" role="tabpanel" id="dl-p{i}" aria-labelledby="dl-t{i}" tabindex="0">'
         f'<div class="dl-content">{c}</div>'
-        f'<div class="dl-step"><button type="button" class="dl-prev"{" disabled" if i == 0 else ""}>&larr; Prev</button>'
+        f'<div class="dl-step"><button type="button" class="dl-prev"{" disabled" if i == 0 else ""}><span aria-hidden="true">&larr; </span>Prev</button>'
         f'<span class="dl-count">{i + 1:02d} / {n:02d}</span>'
-        f'<button type="button" class="dl-next"{" disabled" if i == n - 1 else ""}>Next &rarr;</button></div></div>'
+        f'<button type="button" class="dl-next"{" disabled" if i == n - 1 else ""}>Next<span aria-hidden="true"> &rarr;</span></button></div></div>'
         for i, (_, c) in enumerate(tabs))
-    return (f'<div class="window dl" data-log><div class="window-bar"><span class="window-title">DESIGN LOG</span>'
+    return (f'<div class="window dl" data-log><div class="window-bar"><h2 class="window-title">DESIGN LOG</h2>'
             f'<span class="window-lights" aria-hidden="true"><i></i><i></i><i></i></span></div>'
             f'<div class="dl-tabs" role="tablist" aria-label="Design log">{tl}</div><div class="dl-panes">{panes}</div></div>')
 
@@ -367,7 +380,7 @@ def build_project(i, pr):
     links = "".join(ext_link(lbl, href) for lbl, href in pr["links"])
     links = f'<div class="links">{links}</div>' if links else ""
     awards = "".join(f"<li>{e(a)}</li>" for a in pr.get("awards", []))
-    awards = f'{section_head("/", "Awards")}<ul class="plus-list awards">{awards}</ul>' if awards else ""
+    awards = f'{section_head("/", "Awards", "h3")}<ul class="plus-list awards">{awards}</ul>' if awards else ""
     overview = "".join(f"<p>{e(t)}</p>" for t in pr["overview"])
     history = "".join(f"<li>{e(t)}</li>" for t in pr["history"])
     n = 2
@@ -406,7 +419,7 @@ def build_project(i, pr):
         {links}
       </div>
       {f'<div class="file-awards">{awards}</div>' if awards else ''}
-    </div>""", cls="file-window")}
+    </div>""", cls="file-window", heading="h2")}
   {design_log(pr)}
 </article>
 """
@@ -437,7 +450,7 @@ def build_contact():
 def build_404():
     body = """
 <section class="wrap narrow">
-  <h2 class="sec"><span class="sec-no">/ 404</span>Level not found</h2>
+  <h1 class="sec"><span class="sec-no" aria-hidden="true">/ 404</span>Level not found</h1>
   <div class="prose"><p>This room doesn't exist (yet). Respawn at the start?</p></div>
   <div class="links"><a class="link internal" href="/portfolio/">Back to home</a></div>
 </section>

@@ -133,6 +133,7 @@
 
   log.innerHTML = "";
   opts.innerHTML = "";
+  opts.tabIndex = -1;   // focusable by script only, to hold focus while options are rebuilt
 
   function wait(ms) { return new Promise(function (r) { setTimeout(r, reduce ? 0 : ms); }); }
 
@@ -178,7 +179,9 @@
   }
 
   // The questions not yet asked, plus "View my projects", which is always offered last.
-  function showOptions() {
+  // focusFirst: after a keyboard pick, put focus on the first new option, so keyboard and
+  // screen reader users stay in the chat instead of being dropped back to the top of the page.
+  function showOptions(focusFirst) {
     opts.innerHTML = "";
     data.topics.forEach(function (t, i) {
       if (asked[i]) return;
@@ -186,7 +189,8 @@
       btn.type = "button";
       btn.className = "chat-opt";
       btn.textContent = t.q;
-      btn.addEventListener("click", function () { ask(i); });
+      // detail is 0 when the click came from Enter/Space rather than a mouse or tap
+      btn.addEventListener("click", function (ev) { ask(i, ev.detail === 0); });
       opts.appendChild(btn);
     });
     var a = document.createElement("a");
@@ -194,15 +198,18 @@
     a.href = data.finalHref;
     a.textContent = data.final;
     opts.appendChild(a);
+    if (focusFirst) opts.firstChild.focus();
   }
 
-  async function ask(i) {
+  async function ask(i, byKeyboard) {
     asked[i] = true;
+    // hold focus on the options group while Nat replies (the button that had it is removed)
+    if (byKeyboard) opts.focus();
     opts.innerHTML = "";
     bubble("me", data.topics[i].q);
     await wait(160);
     await natSays(data.topics[i].a);
-    showOptions();
+    showOptions(byKeyboard);
   }
 
   (async function start() {
