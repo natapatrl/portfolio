@@ -80,17 +80,9 @@
     }
   }
 
+  // The questions not yet asked, plus "View my projects", which is always offered last.
   function showOptions() {
     opts.innerHTML = "";
-    var left = data.topics.filter(function (t, i) { return !asked[i]; });
-    if (!left.length) {
-      var a = document.createElement("a");
-      a.className = "chat-opt final";
-      a.href = data.finalHref;
-      a.textContent = data.final;
-      opts.appendChild(a);
-      return;
-    }
     data.topics.forEach(function (t, i) {
       if (asked[i]) return;
       var btn = document.createElement("button");
@@ -100,6 +92,11 @@
       btn.addEventListener("click", function () { ask(i); });
       opts.appendChild(btn);
     });
+    var a = document.createElement("a");
+    a.className = "chat-opt final";
+    a.href = data.finalHref;
+    a.textContent = data.final;
+    opts.appendChild(a);
   }
 
   async function ask(i) {
