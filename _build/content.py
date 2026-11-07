@@ -18,6 +18,7 @@ HOME = {
     "profile_title": "PLAYER PROFILE",
     "player_label": "PLAYER",
     "player": "NAT",
+    "bio": "I design levels and puzzles that feel good to play.",
     "class_label": "CLASS",
     # Shown as the colour-coded discipline chips used on the project tags.
     "classes": ["Gameplay Design", "Level Design", "UX/UI Design"],
@@ -378,15 +379,15 @@ PROJECTS = [
 
 
 # ---------------------------------------------------------------------------------------------
-# Design log (project pages): Overview tab + one tab per highlight + Debrief tab.
-# Each highlight: (tab title, image label, problem, decision, result[, link]).
+# Design log (project pages): Overview tab + one tab per highlight + Retrospective tab.
+# Each highlight: (tab title, image label, problem, decision, result).
 #   - Text in [brackets] is a placeholder saying what goes there; fill it in when the project is
 #     rewritten with Nat. Unbracketed lines are stand-ins condensed from the old Wix text (the full
 #     old text is still in each project's "overview" / "sections" above, no longer shown).
-#   - link = (other project's slug, that project's highlight title). The page shows it as
-#     "EVOLVED FROM ..." (older project) or "REFINED IN ..." (newer project) and opens that tab.
+#   - Optional "retrospective": 1-2 lines on what I learned / what I'd do next.
 # Anonymized is where the earlier ideas come together, all done better: Peritoneum's diegetic
 # tutorial, World X Recipe's diegetic UI, Unpuzzled Business's puzzle flow and player guidance.
+# The pages don't show "evolved from / refined in" link chips; the text itself can mention it.
 DESIGN_LOG = {
     "anonymized": {
         # Puzzle design first: at conventions the most common question was "how did you design the puzzles?"
@@ -394,23 +395,15 @@ DESIGN_LOG = {
             ("PUZZLE DESIGN", "Puzzle flow chart or level sequence",
              "[ how colour-shift puzzles are built: the rules, and how 12+ levels ramp up without spikes ]",
              "[ how you designed, sequenced and documented the puzzles; what improved over Unpuzzled Business ]",
-             "[ result: difficulty curve, playtest or convention feedback ]",
-             ("unpuzzled-business", "PUZZLE FLOW")),
+             "[ result: difficulty curve, playtest or convention feedback ]"),
             ("TUTORIAL", "Tutorial level clip",
              "[ what new players had to learn, and why text pop-ups wouldn't fit ]",
              "[ how the levels teach colour-shifting by doing; what changed since Peritoneum ]",
-             "[ playtest sign it worked: e.g. players clearing the opening without help ]",
-             ("peritoneum", "DIEGETIC TUTORIAL")),
-            ("PLAYER GUIDANCE", "Before / after guidance comparison",
-             "[ where playtesters got lost or misread a puzzle ]",
-             "[ what was changed: colour, light, layout, signposting ]",
-             "[ what playtests showed afterwards ]",
-             ("unpuzzled-business", "PLAYER GUIDANCE")),
+             "[ playtest sign it worked: e.g. players clearing the opening without help ]"),
             ("DIEGETIC UI", "In-world UI / HUD screenshot",
              "[ what information players needed while playing ]",
              "[ how it lives in the game world instead of a HUD; what improved over World X Recipe ]",
-             "[ effect on readability or immersion ]",
-             ("world-x-recipe", "DIEGETIC UI")),
+             "[ effect on readability or immersion ]"),
         ],
     },
     "peritoneum": {
@@ -418,8 +411,7 @@ DESIGN_LOG = {
             ("DIEGETIC TUTORIAL", "Tutorial area screenshot",
              "[ the gun-blast movement is unusual; what players had to figure out ]",
              "[ how the tutorial lets players experiment instead of reading instructions ]",
-             "[ how quickly players got the movement in playtests ]",
-             ("anonymized", "TUTORIAL")),
+             "[ how quickly players got the movement in playtests ]"),
             ("BOSS FIGHT", "Boss fight clip or state diagram",
              "[ what the boss needed to test from everything the player learned ]",
              "[ the state machine design, and working with the programmer to build it ]",
@@ -439,8 +431,7 @@ DESIGN_LOG = {
             ("DIEGETIC UI", "Figma prototype or in-game machine UI",
              "[ what players needed to see: time, score, controls ]",
              "[ how it was built into the arcade machine itself, prototyped in Figma ]",
-             "[ effect on the arcade feel ]",
-             ("anonymized", "DIEGETIC UI")),
+             "[ effect on the arcade feel ]"),
             ("GAME FEEL", "Claw handling clip",
              "[ what felt off about the claw at first ]",
              "[ what was tuned: speed, weight, grab timing ]",
@@ -484,13 +475,11 @@ DESIGN_LOG = {
             ("PUZZLE FLOW", "Puzzle flowchart",
              "The team inherited a vague concept from a former member, and every role was waiting on someone else.",
              "Mapped every puzzle step into one flowchart: theme, mechanics, items and event triggers.",
-             "Art, programming and design could work in parallel, clearing most bottlenecks.",
-             ("anonymized", "PUZZLE DESIGN")),
+             "Art, programming and design could work in parallel, clearing most bottlenecks."),
             ("PLAYER GUIDANCE", "Before / after guidance comparison",
              "Playtesters couldn't read the puzzles; the diegetic design was hiding how the mechanics worked.",
              "Ran guidance-focused playtests, then added leading lines, adjusted lighting and simplified some puzzle elements.",
-             "Puzzles read clearly without breaking immersion.",
-             ("anonymized", "PLAYER GUIDANCE")),
+             "Puzzles read clearly without breaking immersion."),
             ("LIGHTING BUDGET", "Lighting guideline page or lit room",
              "Heavy volumetric and movable lights added for guidance started hurting performance.",
              "Wrote a per-room lighting guideline with the programmers and optimized lights in-engine.",
@@ -498,4 +487,4 @@ DESIGN_LOG = {
         ],
     },
 }
-DEBRIEF_PLACEHOLDER = "[ 1–2 lines: what I learned / what I'd do next ]"
+RETRO_PLACEHOLDER = "[ 1–2 lines: what I learned / what I'd do next ]"

@@ -165,7 +165,6 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 .plus-list { list-style: none; padding: 0; margin: 0; font-family: var(--plex); font-size: var(--fs-body); color: var(--body); }
 .plus-list li { position: relative; padding: 0.3rem 0 0.3rem 1.6rem; line-height: 1.6; }
 .plus-list li::before { content: "+"; content: "+" / ""; position: absolute; left: 0.15rem; top: 0.28rem; color: var(--mint); font-family: var(--mono); }
-.awards li { color: var(--lav); }
 
 /* Image frames: crop-mark corners, no box */
 .frame { margin: 0; }
@@ -188,12 +187,15 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 /* Project page: media + spec readout share one window, so the image no longer fills the screen */
 .file-window { margin-bottom: 2.6rem; }
 .file-window .window-body { padding: 1.4rem 1.5rem 1.5rem; }
-.file-grid { display: grid; grid-template-columns: 1.35fr 1fr; grid-template-areas: "media side" "awards side"; gap: 0 2rem; align-items: start; }
-.file-grid > .frame { grid-area: media; }
-.file-side { grid-area: side; }
-.file-awards { grid-area: awards; }
-.file-awards .sec { margin-top: 1.2rem; }
+.file-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 1.5rem 2rem; align-items: start; }
+.file-main .file-pitch { margin: 1.1rem 0 0; }
 .file-side .links { margin-top: 1.4rem; }
+/* Awards: a small group under the specs, styled like the SPECS / ROLE group labels */
+.file-awards { margin-top: 1.3rem; }
+.file-awards .grp { margin: 0; padding: 0 0 0.5rem; font: 500 var(--fs-caps-s) var(--grot); letter-spacing: 0.24em; color: var(--mint); }
+.file-awards ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4rem; }
+.file-awards li { display: flex; gap: 0.6rem; align-items: baseline; font: 400 var(--fs-body-s)/1.4 var(--plex); color: var(--lav); }
+.file-awards svg { width: 10px; height: 10px; fill: currentColor; flex: none; position: relative; top: 1px; }
 .proj-body { max-width: 760px; }
 
 /* ---------- Mission-select project list ---------- */
@@ -294,6 +296,7 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .hud-label::before { content: ""; display: inline-block; width: 6px; height: 6px; background: var(--mint); margin-right: 0.7rem; vertical-align: 1px; }
 .hud-label + .out { margin-top: 0.35rem; }
 .out + .hud-label { margin-top: 1.3rem; }
+.hero-bio { margin: 0.45rem 0 0; font: 400 var(--fs-body)/1.5 var(--plex); color: var(--body); }
 .hero-intro { margin-bottom: 0; font-size: clamp(1.8rem, 4.4vw, 2.6rem); font-weight: 400; letter-spacing: 0.16em; line-height: 1.2; color: var(--mint); }
 .class-chips .chips { margin-top: 0; gap: 0.5rem; }
 .class-chips .chip { font-size: var(--fs-label); padding: 0.42rem 0.75rem 0.42rem 0.6rem; }
@@ -319,7 +322,23 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 /* typed reveal (site.js); without JS everything is simply shown */
 .js .window.is-typing .hud-text, .js .window.is-typing .out, .js .window.is-typing .hud-label::before { visibility: hidden; }
 .js .window .shown, .js .window .hud-label.shown::before { visibility: visible !important; }
-.featured { padding-bottom: 2rem; }
+.featured { padding-bottom: 2rem; scroll-margin-top: 96px; }
+/* Home: "SCROLL" prompt pinned to the bottom of the screen until the visitor scrolls (site.js adds
+   .gone). The chevron bobs 3 times, then rests (nothing moves forever, WCAG 2.2.2). JS only. */
+.scroll-cue { display: none; }
+.js .scroll-cue {
+  position: fixed; left: 50%; bottom: 1.4rem; z-index: 4; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0.35rem;
+  padding: 0.5rem 0.9rem 0.45rem; text-decoration: none;
+  font: 400 var(--fs-micro)/1 var(--mono); letter-spacing: 0.2em; color: var(--muted);
+  background: rgba(5, 9, 21, 0.85); border: 1px solid var(--line-strong);
+  clip-path: polygon(6px 0, 100% 0, 100% 100%, 0 100%, 0 6px);
+  transition: opacity .3s, visibility .3s;
+}
+.js .scroll-cue:hover { color: var(--mint); border-color: var(--mint); }
+.scroll-cue svg { width: 15px; height: 9px; fill: var(--mint); animation: cue-bob 1.1s steps(2, jump-none) 3 1s; }
+.js .scroll-cue.gone { opacity: 0; visibility: hidden; }
+@keyframes cue-bob { 0%, 100% { transform: none; } 50% { transform: translateY(4px); } }
 .featured .window-body { padding: 1.6rem; }
 .chat-window { margin: 0.5rem 0 1rem; }
 .chat-window .chat { margin: 0; background: none; border: 0; border-radius: 0; }
@@ -453,13 +472,7 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .pdr dd { margin: 0; font: 400 var(--fs-body)/1.55 var(--plex); color: var(--body); }
 .pdr .dec dt { color: var(--mint); } .pdr .dec dd { color: var(--head); }
 .hl-grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: 2rem; align-items: center; }
-.dl-link { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: .2rem .6rem; margin-top: 1.4rem; text-decoration: none;
-  padding: .45rem .7rem; border: 1px dashed var(--line-strong); color: var(--head); font: 500 var(--fs-caps-s) var(--grot); letter-spacing: .14em; text-transform: uppercase; }
-.dl-link-k { font: 400 var(--fs-micro) var(--mono); letter-spacing: .1em; color: var(--lav); }
-.dl-link-t { color: var(--muted); }
-.dl-link::after { content: "\2192"; content: "\2192" / ""; color: var(--mint); }
-.dl-link:hover { border-color: var(--mint); border-style: solid; color: var(--mint); }
-.debrief { margin: 0; font: 400 var(--fs-body)/1.55 var(--plex); color: var(--muted); }
+.retro { margin: 0; font: 400 var(--fs-body)/1.55 var(--plex); color: var(--muted); }
 /* D: OS-style tabs under the window bar; all panes share one grid cell so the window never jumps */
 .dl-tabs { display: flex; gap: 2px; padding: .6rem .8rem 0;
   background: linear-gradient(var(--line-strong), var(--line-strong)) bottom / 100% 1px no-repeat, rgba(158,245,214,.025); }
@@ -617,7 +630,6 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 }
 @media (max-width: 900px) {
   .featured-grid, .two-col, .split, .file-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-  .file-grid { grid-template-areas: "media" "side" "awards"; }
   .cards { grid-template-columns: 1fr 1fr; }
   .split.flip > :first-child { order: 0; }
   .split .frame { margin-top: 0; }

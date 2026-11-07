@@ -25,6 +25,20 @@
 
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // ---------- Home: SCROLL prompt hides once the visitor scrolls (or if there's nothing below) ----------
+  var cue = document.querySelector(".scroll-cue");
+  if (cue) {
+    var cueCheck = function () {
+      var room = document.documentElement.scrollHeight - window.innerHeight;
+      if (window.scrollY > 40 || room < 80) {
+        cue.classList.add("gone");
+        window.removeEventListener("scroll", cueCheck);
+      }
+    };
+    window.addEventListener("scroll", cueCheck, { passive: true });
+    cueCheck();
+  }
+
   var sleep = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
 
   // ---------- Home: profile window types its labels, then shows each value ----------

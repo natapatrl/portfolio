@@ -8,7 +8,7 @@ import os
 import random
 from html import escape as e
 
-from content import SITE, HOME, ABOUT, CONTACT, PROJECTS, DESIGN_LOG, DEBRIEF_PLACEHOLDER
+from content import SITE, HOME, ABOUT, CONTACT, PROJECTS, DESIGN_LOG, RETRO_PLACEHOLDER
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FONTS = ("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700"
@@ -236,13 +236,16 @@ def build_home():
   {window(HOME['profile_title'], f"""
       <p class="hud-label" aria-hidden="true"><span class="hud-text">{e(HOME['player_label'])}</span></p>
       <h1 class="hero-intro out">{e(HOME['player'])}<span class="sr-only">, game designer</span><span class="cursor" aria-hidden="true">_</span></h1>
+      <p class="hero-bio out">{e(HOME['bio'])}</p>
       <p class="hud-label" aria-hidden="true"><span class="hud-text">{e(HOME['class_label'])}</span></p>
       <div class="out class-chips">{tag_chips(HOME['classes'], full=True, label="Disciplines")}</div>
       <p class="hud-label" aria-hidden="true"><span class="hud-text">{e(HOME['loadout_label'])}</span></p>
       <ul class="tools out" aria-label="Tools I work in">{tools}</ul>""", attrs=' data-console')}
 </section>
 
-<section class="wrap featured" aria-label="Latest project">
+<a class="scroll-cue" href="#latest" tabindex="-1" aria-hidden="true"><span>SCROLL</span><svg viewBox="0 0 5 3" shape-rendering="crispEdges"><rect x="0" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/></svg></a>
+
+<section class="wrap featured" id="latest" aria-label="Latest project">
   {window(HOME['latest_title'], f"""
     <div class="featured-grid">
       <a class="featured-media" href="{p}projects/{f['slug']}/" tabindex="-1" aria-hidden="true">{placeholder(f['hero_ph'], 'FIG. 01 / ' + f['title'])}</a>
@@ -318,21 +321,9 @@ def pdr(problem, decision, result):
         f'<div class="{c.strip()}"><dt><b>{n}</b>{lbl}</dt><dd>{e(t)}</dd></div>' for n, lbl, t, c in rows) + "</dl>"
 
 
-def log_link(pr, link):
-    """Cross-link between related highlights: older projects point forward ("REFINED IN"),
-    Anonymized points back ("EVOLVED FROM"). Opens the matching tab on the other page."""
-    slug, title = link
-    j, other = next((j, o) for j, o in enumerate(PROJECTS) if o["slug"] == slug)
-    i = PROJECTS.index(pr)
-    tab = 1 + [h[0] for h in DESIGN_LOG[slug]["highlights"]].index(title)
-    label = "REFINED IN" if j < i else "EVOLVED FROM"      # PROJECTS is newest first
-    return (f'<a class="dl-link" href="../{slug}/#log-{tab}"><span class="dl-link-k">{label}</span>'
-            f'{num(j)} / {e(other["title"])} <span class="dl-link-t">&middot; {e(title.title())}</span></a>')
-
-
 def design_log(pr):
     """Tabbed DESIGN LOG window: Overview (contributions + highlight menu), one tab per highlight
-    (image beside problem / decision / result), Debrief. All panes share one grid cell, so the
+    (image beside problem / decision / result), Retrospective. All panes share one grid cell, so the
     window keeps the same size on every tab."""
     log = DESIGN_LOG.get(pr["slug"], {"highlights": []})
     hls = log["highlights"]
@@ -342,14 +333,14 @@ def design_log(pr):
         f'<button type="button" class="dl-open" data-go="{k + 1}"><span class="dl-thumb">{placeholder(img, decorative=True)}</span>'
         f'<span class="dl-mtext"><span class="dl-mno">{k + 1:02d}</span><span class="dl-mtitle">{e(t)}</span>'
         f'<span class="dl-mteaser">{e(prob)}</span></span><span class="dl-go" aria-hidden="true">OPEN &rarr;</span></button>'
-        for k, (t, img, prob, _d, _r, *_l) in enumerate(hls))
+        for k, (t, img, prob, _d, _r) in enumerate(hls))
     menu_html = f'<div><h3 class="dl-h">HIGHLIGHTS</h3><div class="dl-menu">{menu}</div></div>' if hls else ""
     tabs = [("OVERVIEW", f'''<div class="dl-overview"><div><h3 class="dl-h">{e(pr['history_title'].upper())}</h3>
       <ul class="plus-list">{contrib}</ul></div>{menu_html}</div>''')]
-    for k, (t, img, prob, dec, res, *link) in enumerate(hls):
+    for k, (t, img, prob, dec, res) in enumerate(hls):
         tabs.append((f"{k + 1:02d} {t}", f'<div class="hl-grid">{placeholder(img, f"FIG. {k + 1:02d} / {t.title()}")}'
-                     f'<div>{pdr(prob, dec, res)}{log_link(pr, link[0]) if link else ""}</div></div>'))
-    tabs.append(("DEBRIEF", f'<p class="debrief">{e(log.get("debrief", DEBRIEF_PLACEHOLDER))}</p>'))
+                     f'<div>{pdr(prob, dec, res)}</div></div>'))
+    tabs.append(("RETROSPECTIVE", f'<p class="retro">{e(log.get("retrospective", RETRO_PLACEHOLDER))}</p>'))
     n = len(tabs)
     tl = "".join(
         f'<button type="button" class="dl-tab" role="tab" id="dl-t{i}" aria-controls="dl-p{i}" '
@@ -371,16 +362,18 @@ def design_log(pr):
 def build_project(i, pr):
     p = "../../"
     rows = "".join(f'<div class="row"><dt>{e(k)}</dt><dd>{e(v)}</dd></div>' for k, v in pr["stats"])
-    role_rows = (f'<div class="row"><dt>Roles</dt><dd>{e(pr["roles"].replace(" | ", " / "))}</dd></div>'
-                 f'<div class="row"><dt>Disciplines</dt><dd>{e(" / ".join(pr["tags"]))}</dd></div>')
+    role_rows = f'<div class="row"><dt>Roles</dt><dd>{e(pr["roles"].replace(" | ", " / "))}</dd></div>'
     spec = f"""<dl class="readout">
       <div class="grp">SPECS</div>{rows}
       <div class="grp">ROLE</div>{role_rows}
     </dl>"""
     links = "".join(ext_link(lbl, href) for lbl, href in pr["links"])
     links = f'<div class="links">{links}</div>' if links else ""
-    awards = "".join(f"<li>{e(a)}</li>" for a in pr.get("awards", []))
-    awards = f'{section_head("/", "Awards", "h3")}<ul class="plus-list awards">{awards}</ul>' if awards else ""
+    trophy = "".join(f'<rect x="{x}" y="{y}" width="1" height="1"/>' for y, r in enumerate(BADGE_ICON["award"])
+                     for x, ch in enumerate(r) if ch == "X")
+    trophy = f'<svg viewBox="0 0 5 5" aria-hidden="true" shape-rendering="crispEdges">{trophy}</svg>'
+    awards = "".join(f"<li>{trophy}{e(a)}</li>" for a in pr.get("awards", []))
+    awards = f'<div class="file-awards"><h3 class="grp">AWARDS</h3><ul>{awards}</ul></div>' if awards else ""
     overview = "".join(f"<p>{e(t)}</p>" for t in pr["overview"])
     history = "".join(f"<li>{e(t)}</li>" for t in pr["history"])
     n = 2
@@ -412,13 +405,15 @@ def build_project(i, pr):
   {doc_head(num(i), pr['title'], f"{pr['subtitle']} / {pr['year']} / {pr['kind']}", cls="page-head")}
   {window("PROJECT FILE", f"""
     <div class="file-grid">
-      {placeholder(pr['hero_ph'], 'FIG. 00 / ' + pr['title'], '16/9', 'hero-ph')}
-      <div class="file-side">
+      <div class="file-main">
+        {placeholder(pr['hero_ph'], 'FIG. 00 / ' + pr['title'], '16/9', 'hero-ph')}
         <p class="file-pitch">{e(pr['blurb'])}</p>
+      </div>
+      <div class="file-side">
         {spec}
+        {awards}
         {links}
       </div>
-      {f'<div class="file-awards">{awards}</div>' if awards else ''}
     </div>""", cls="file-window", heading="h2")}
   {design_log(pr)}
 </article>
