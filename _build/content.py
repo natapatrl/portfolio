@@ -385,37 +385,32 @@ PROJECTS = [
 #     old text is still in each project's "overview" / "sections" above, no longer shown).
 #   - link = (other project's slug, that project's highlight title). The page shows it as
 #     "EVOLVED FROM ..." (older project) or "REFINED IN ..." (newer project) and opens that tab.
-# Anonymized is where the earlier ideas come together: Peritoneum's diegetic tutorial, World X
-# Recipe's diegetic UI, Unpuzzled Business's puzzle flow and player guidance, and Biotech Lab's
-# environmental storytelling, all done better.
+# Anonymized is where the earlier ideas come together, all done better: Peritoneum's diegetic
+# tutorial, World X Recipe's diegetic UI, Unpuzzled Business's puzzle flow and player guidance.
 DESIGN_LOG = {
     "anonymized": {
+        # Puzzle design first: at conventions the most common question was "how did you design the puzzles?"
         "highlights": [
+            ("PUZZLE DESIGN", "Puzzle flow chart or level sequence",
+             "[ how colour-shift puzzles are built: the rules, and how 12+ levels ramp up without spikes ]",
+             "[ how you designed, sequenced and documented the puzzles; what improved over Unpuzzled Business ]",
+             "[ result: difficulty curve, playtest or convention feedback ]",
+             ("unpuzzled-business", "PUZZLE FLOW")),
             ("TUTORIAL", "Tutorial level clip",
              "[ what new players had to learn, and why text pop-ups wouldn't fit ]",
              "[ how the levels teach colour-shifting by doing; what changed since Peritoneum ]",
              "[ playtest sign it worked: e.g. players clearing the opening without help ]",
              ("peritoneum", "DIEGETIC TUTORIAL")),
-            ("DIEGETIC UI", "In-world UI / HUD screenshot",
-             "[ what information players needed while playing ]",
-             "[ how it lives in the game world instead of a HUD; what improved over World X Recipe ]",
-             "[ effect on readability or immersion ]",
-             ("world-x-recipe", "DIEGETIC UI")),
-            ("PUZZLE FLOW", "Puzzle flow chart or level sequence",
-             "[ how 12+ levels needed to ramp up without spikes ]",
-             "[ how puzzles were sequenced and documented; what improved over Unpuzzled Business ]",
-             "[ result: smoother difficulty curve, faster level building, etc. ]",
-             ("unpuzzled-business", "PUZZLE FLOW")),
             ("PLAYER GUIDANCE", "Before / after guidance comparison",
              "[ where playtesters got lost or misread a puzzle ]",
              "[ what was changed: colour, light, layout, signposting ]",
              "[ what playtests showed afterwards ]",
              ("unpuzzled-business", "PLAYER GUIDANCE")),
-            ("ENV. STORY", "Environment / world screenshot",
-             "[ what the world needed to say about the rat, the system and the 'cheese' ]",
-             "[ how levels and props tell it without dialogue; builds on Biotech Lab ]",
-             "[ how players picked the story up ]",
-             ("biotech-lab", "SCENE COMPOSITION")),
+            ("DIEGETIC UI", "In-world UI / HUD screenshot",
+             "[ what information players needed while playing ]",
+             "[ how it lives in the game world instead of a HUD; what improved over World X Recipe ]",
+             "[ effect on readability or immersion ]",
+             ("world-x-recipe", "DIEGETIC UI")),
         ],
     },
     "peritoneum": {
@@ -457,8 +452,15 @@ DESIGN_LOG = {
             ("SCENE COMPOSITION", "Point-of-interest / composition screenshot",
              "My first environmental storytelling level; telling the story without words was hard.",
              "Used composition from my photography to place points of interest that guide the player.",
-             "Once the narrative was set, the level came together in the final days.",
-             ("anonymized", "ENV. STORY")),
+             "Once the narrative was set, the level came together in the final days."),
+            ("LEVEL FLOW", "Level blueprint or block-out",
+             "[ what route the player should take, and what they should notice along the way ]",
+             "[ how the blueprint and block-out shape the path from one story beat to the next ]",
+             "[ how playtesters moved through it ]"),
+            ("LIGHT AND SOUND", "Final set-dressed and lit shot",
+             "[ what mood or story detail the space needed to carry ]",
+             "[ how lighting, set dressing, SFX and BGM were used to tell it ]",
+             "[ what players picked up from it ]"),
         ],
     },
     "frost-fortress": {
@@ -483,7 +485,7 @@ DESIGN_LOG = {
              "The team inherited a vague concept from a former member, and every role was waiting on someone else.",
              "Mapped every puzzle step into one flowchart: theme, mechanics, items and event triggers.",
              "Art, programming and design could work in parallel, clearing most bottlenecks.",
-             ("anonymized", "PUZZLE FLOW")),
+             ("anonymized", "PUZZLE DESIGN")),
             ("PLAYER GUIDANCE", "Before / after guidance comparison",
              "Playtesters couldn't read the puzzles; the diegetic design was hiding how the mechanics worked.",
              "Ran guidance-focused playtests, then added leading lines, adjusted lighting and simplified some puzzle elements.",
