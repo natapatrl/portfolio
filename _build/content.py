@@ -378,25 +378,61 @@ PROJECTS = [
 
 
 # ---------------------------------------------------------------------------------------------
-# Design log (project pages): Overview tab + highlight tabs + Debrief tab.
-# Each highlight is problem -> decision -> result. Text in [brackets] is a placeholder to fill in
-# when the project is rewritten with Nat; unbracketed lines are stand-ins condensed from the old
-# Wix text (the full old text is still in each project's "overview" / "sections" above, which
-# are no longer shown on the page). "deep" pages get 3 highlights, the light page gets 1.
-P = "[ 1 sentence ]"
+# Design log (project pages): Overview tab + one tab per highlight + Debrief tab.
+# Each highlight: (tab title, image label, problem, decision, result[, link]).
+#   - Text in [brackets] is a placeholder saying what goes there; fill it in when the project is
+#     rewritten with Nat. Unbracketed lines are stand-ins condensed from the old Wix text (the full
+#     old text is still in each project's "overview" / "sections" above, no longer shown).
+#   - link = (other project's slug, that project's highlight title). The page shows it as
+#     "EVOLVED FROM ..." (older project) or "REFINED IN ..." (newer project) and opens that tab.
+# Anonymized is where the earlier ideas come together: Peritoneum's diegetic tutorial, World X
+# Recipe's diegetic UI, Unpuzzled Business's puzzle flow and player guidance, and Biotech Lab's
+# environmental storytelling, all done better.
 DESIGN_LOG = {
     "anonymized": {
         "highlights": [
-            ("CORE LOOP", "Core loop / colour-shift mechanic GIF", P, P, P),
-            ("LEVELS", "Level layout / puzzle screenshot", P, P, P),
-            ("ACCESSIBILITY", "UI or accessibility options screenshot", P, P, P),
+            ("TUTORIAL", "Tutorial level clip",
+             "[ what new players had to learn, and why text pop-ups wouldn't fit ]",
+             "[ how the levels teach colour-shifting by doing; what changed since Peritoneum ]",
+             "[ playtest sign it worked: e.g. players clearing the opening without help ]",
+             ("peritoneum", "DIEGETIC TUTORIAL")),
+            ("DIEGETIC UI", "In-world UI / HUD screenshot",
+             "[ what information players needed while playing ]",
+             "[ how it lives in the game world instead of a HUD; what improved over World X Recipe ]",
+             "[ effect on readability or immersion ]",
+             ("world-x-recipe", "DIEGETIC UI")),
+            ("PUZZLE FLOW", "Puzzle flow chart or level sequence",
+             "[ how 12+ levels needed to ramp up without spikes ]",
+             "[ how puzzles were sequenced and documented; what improved over Unpuzzled Business ]",
+             "[ result: smoother difficulty curve, faster level building, etc. ]",
+             ("unpuzzled-business", "PUZZLE FLOW")),
+            ("PLAYER GUIDANCE", "Before / after guidance comparison",
+             "[ where playtesters got lost or misread a puzzle ]",
+             "[ what was changed: colour, light, layout, signposting ]",
+             "[ what playtests showed afterwards ]",
+             ("unpuzzled-business", "PLAYER GUIDANCE")),
+            ("ENV. STORY", "Environment / world screenshot",
+             "[ what the world needed to say about the rat, the system and the 'cheese' ]",
+             "[ how levels and props tell it without dialogue; builds on Biotech Lab ]",
+             "[ how players picked the story up ]",
+             ("biotech-lab", "SCENE COMPOSITION")),
         ],
     },
     "peritoneum": {
         "highlights": [
-            ("DIEGETIC TUTORIAL", "Tutorial area screenshot", P, P, P),
-            ("BOSS FIGHT", "Boss fight screenshot or state diagram", P, P, P),
-            ("LEVEL PROGRESSION", "Level screenshot", P, P, P),
+            ("DIEGETIC TUTORIAL", "Tutorial area screenshot",
+             "[ the gun-blast movement is unusual; what players had to figure out ]",
+             "[ how the tutorial lets players experiment instead of reading instructions ]",
+             "[ how quickly players got the movement in playtests ]",
+             ("anonymized", "TUTORIAL")),
+            ("BOSS FIGHT", "Boss fight clip or state diagram",
+             "[ what the boss needed to test from everything the player learned ]",
+             "[ the state machine design, and working with the programmer to build it ]",
+             "[ how the fight played in the end ]"),
+            ("LEVEL PROGRESSION", "Level screenshot",
+             "[ how to ramp 5 levels in 10 days ]",
+             "[ what each level introduces or combines ]",
+             "[ result ]"),
         ],
     },
     "world-x-recipe": {
@@ -404,9 +440,16 @@ DESIGN_LOG = {
             ("WHY CLAW MACHINE", "Claw gameplay",
              "Only 47 hours to build a game around the theme \"Bubbles\".",
              "Chose an arcade claw machine: short loop, clear goal, and bubbles' upward pull maps onto grab and lift.",
-             P),
-            ("UI PROTOTYPING", "Figma UI prototype", P, P, P),
-            ("GAME FEEL", "Claw handling clip", P, P, P),
+             "[ how the idea landed with players / at the jam ]"),
+            ("DIEGETIC UI", "Figma prototype or in-game machine UI",
+             "[ what players needed to see: time, score, controls ]",
+             "[ how it was built into the arcade machine itself, prototyped in Figma ]",
+             "[ effect on the arcade feel ]",
+             ("anonymized", "DIEGETIC UI")),
+            ("GAME FEEL", "Claw handling clip",
+             "[ what felt off about the claw at first ]",
+             "[ what was tuned: speed, weight, grab timing ]",
+             "[ how it felt after tuning ]"),
         ],
     },
     "biotech-lab": {
@@ -414,7 +457,8 @@ DESIGN_LOG = {
             ("SCENE COMPOSITION", "Point-of-interest / composition screenshot",
              "My first environmental storytelling level; telling the story without words was hard.",
              "Used composition from my photography to place points of interest that guide the player.",
-             "Once the narrative was set, the level came together in the final days."),
+             "Once the narrative was set, the level came together in the final days.",
+             ("anonymized", "ENV. STORY")),
         ],
     },
     "frost-fortress": {
@@ -423,24 +467,32 @@ DESIGN_LOG = {
              "A multiplayer map isn't linear: one large play area has to stay balanced and replayable.",
              "Blocked out fast and playtested after every change.",
              "Finished the whole map within a few days."),
-            ("SIGHTLINES", "Top-down map layout with sightlines", P, P, P),
-            ("BALANCE AND FLOW", "In-match screenshot", P, P, P),
+            ("SIGHTLINES", "Top-down map layout with sightlines",
+             "[ which sightlines were too long or one-sided ]",
+             "[ how cover and layout were adjusted ]",
+             "[ effect on fights ]"),
+            ("BALANCE AND FLOW", "In-match screenshot",
+             "[ where players clustered or avoided ]",
+             "[ changes to routes, spawns or objectives ]",
+             "[ how matches played afterwards ]"),
         ],
     },
     "unpuzzled-business": {
         "highlights": [
-            ("PUZZLE FLOWCHART", "Puzzle flowchart",
+            ("PUZZLE FLOW", "Puzzle flowchart",
              "The team inherited a vague concept from a former member, and every role was waiting on someone else.",
              "Mapped every puzzle step into one flowchart: theme, mechanics, items and event triggers.",
-             "Art, programming and design could work in parallel, clearing most bottlenecks."),
+             "Art, programming and design could work in parallel, clearing most bottlenecks.",
+             ("anonymized", "PUZZLE FLOW")),
             ("PLAYER GUIDANCE", "Before / after guidance comparison",
              "Playtesters couldn't read the puzzles; the diegetic design was hiding how the mechanics worked.",
              "Ran guidance-focused playtests, then added leading lines, adjusted lighting and simplified some puzzle elements.",
-             "Puzzles read clearly without breaking immersion."),
+             "Puzzles read clearly without breaking immersion.",
+             ("anonymized", "PLAYER GUIDANCE")),
             ("LIGHTING BUDGET", "Lighting guideline page or lit room",
              "Heavy volumetric and movable lights added for guidance started hurting performance.",
              "Wrote a per-room lighting guideline with the programmers and optimized lights in-engine.",
-             P),
+             "[ result: performance or guidance outcome ]"),
         ],
     },
 }

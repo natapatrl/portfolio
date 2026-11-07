@@ -116,6 +116,9 @@
       pane.querySelector(".dl-next").addEventListener("click", function () { go(i + 1, true); });
     });
     log.querySelectorAll(".dl-open").forEach(function (b) { b.addEventListener("click", function () { go(+b.dataset.go, true); }); });
+    // links from other projects open a specific tab: #log-3
+    var m = location.hash.match(/^#log-(\d+)$/);
+    if (m) { go(+m[1]); log.scrollIntoView({ block: "start" }); }
   });
 
   // ---------- About page: texting game ----------

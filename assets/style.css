@@ -419,13 +419,19 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 
 /* ---------- Project page: DESIGN LOG window ---------- */
 .file-pitch { margin: 0 0 1.3rem; font: 400 var(--fs-body)/1.5 var(--plex); color: var(--head); }
-.dl { margin-top: 0; }
+.dl { margin-top: 0; scroll-margin-top: 100px; }
 .pdr { margin: 0; display: grid; gap: 1rem; }
 .pdr dt { font: 500 var(--fs-caps-s) var(--grot); letter-spacing: .22em; color: var(--muted); margin-bottom: .3rem; }
 .pdr dt b { font: 400 var(--fs-micro) var(--mono); color: var(--dim); margin-right: .6rem; letter-spacing: .05em; }
 .pdr dd { margin: 0; font: 400 var(--fs-body)/1.55 var(--plex); color: var(--body); }
 .pdr .dec dt { color: var(--mint); } .pdr .dec dd { color: var(--head); }
 .hl-grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: 2rem; align-items: center; }
+.dl-link { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: .2rem .6rem; margin-top: 1.4rem; text-decoration: none;
+  padding: .45rem .7rem; border: 1px dashed var(--line-strong); color: var(--head); font: 500 var(--fs-caps-s) var(--grot); letter-spacing: .14em; text-transform: uppercase; }
+.dl-link-k { font: 400 var(--fs-micro) var(--mono); letter-spacing: .1em; color: var(--lav); }
+.dl-link-t { color: var(--muted); }
+.dl-link::after { content: "\2192"; color: var(--mint); }
+.dl-link:hover { border-color: var(--mint); border-style: solid; color: var(--mint); }
 .debrief { margin: 0; font: 400 var(--fs-body)/1.55 var(--plex); color: var(--muted); }
 /* D: OS-style tabs under the window bar; all panes share one grid cell so the window never jumps */
 .dl-tabs { display: flex; gap: 2px; padding: .6rem .8rem 0;
@@ -450,6 +456,9 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 .dl-overview { display: grid; grid-template-columns: 1fr 1.15fr; gap: 2.4rem; align-items: start; }
 .dl-h { margin: 0 0 .8rem; font: 500 var(--fs-caps-s) var(--grot); letter-spacing: .24em; color: var(--mint); }
 .dl-menu { display: grid; gap: .5rem; }
+.dl-menu:has(> :nth-child(4)) { gap: .35rem; }
+.dl-menu:has(> :nth-child(4)) .dl-open { grid-template-columns: 4.6rem 1fr auto; padding: .4rem .7rem .4rem .45rem; }
+.dl-tabs:has(> :nth-child(6)) .dl-tab { padding-inline: .7rem; letter-spacing: .12em; }
 .dl-open { display: grid; grid-template-columns: 6.5rem 1fr auto; gap: 1rem; align-items: center; text-align: left; cursor: pointer;
   padding: .55rem .8rem .55rem .55rem; background: rgba(255,255,255,.02); border: 1px solid var(--line); color: var(--muted); }
 .dl-open:hover, .dl-open:focus-visible { border-color: var(--mint); background: rgba(158,245,214,.06); }

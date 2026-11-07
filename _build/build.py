@@ -305,6 +305,18 @@ def pdr(problem, decision, result):
         f'<div class="{c.strip()}"><dt><b>{n}</b>{lbl}</dt><dd>{e(t)}</dd></div>' for n, lbl, t, c in rows) + "</dl>"
 
 
+def log_link(pr, link):
+    """Cross-link between related highlights: older projects point forward ("REFINED IN"),
+    Anonymized points back ("EVOLVED FROM"). Opens the matching tab on the other page."""
+    slug, title = link
+    j, other = next((j, o) for j, o in enumerate(PROJECTS) if o["slug"] == slug)
+    i = PROJECTS.index(pr)
+    tab = 1 + [h[0] for h in DESIGN_LOG[slug]["highlights"]].index(title)
+    label = "REFINED IN" if j < i else "EVOLVED FROM"      # PROJECTS is newest first
+    return (f'<a class="dl-link" href="../{slug}/#log-{tab}"><span class="dl-link-k">{label}</span>'
+            f'{num(j)} / {e(other["title"])} <span class="dl-link-t">&middot; {e(title.title())}</span></a>')
+
+
 def design_log(pr):
     """Tabbed DESIGN LOG window: Overview (contributions + highlight menu), one tab per highlight
     (image beside problem / decision / result), Debrief. All panes share one grid cell, so the
@@ -312,16 +324,18 @@ def design_log(pr):
     log = DESIGN_LOG.get(pr["slug"], {"highlights": []})
     hls = log["highlights"]
     contrib = "".join(f"<li>{e(t)}</li>" for t in pr["history"])
+    hls = [tuple(h) for h in hls]
     menu = "".join(
         f'<button type="button" class="dl-open" data-go="{k + 1}"><span class="dl-thumb">{placeholder(img)}</span>'
         f'<span class="dl-mtext"><span class="dl-mno">{k + 1:02d}</span><span class="dl-mtitle">{e(t)}</span>'
         f'<span class="dl-mteaser">{e(prob)}</span></span><span class="dl-go" aria-hidden="true">OPEN &rarr;</span></button>'
-        for k, (t, img, prob, _d, _r) in enumerate(hls))
+        for k, (t, img, prob, _d, _r, *_l) in enumerate(hls))
     menu_html = f'<div><h3 class="dl-h">HIGHLIGHTS</h3><div class="dl-menu">{menu}</div></div>' if hls else ""
     tabs = [("OVERVIEW", f'''<div class="dl-overview"><div><h3 class="dl-h">{e(pr['history_title'].upper())}</h3>
       <ul class="plus-list">{contrib}</ul></div>{menu_html}</div>''')]
-    for k, (t, img, prob, dec, res) in enumerate(hls):
-        tabs.append((f"{k + 1:02d} {t}", f'<div class="hl-grid">{placeholder(img, f"FIG. {k + 1:02d} / {t.title()}")}{pdr(prob, dec, res)}</div>'))
+    for k, (t, img, prob, dec, res, *link) in enumerate(hls):
+        tabs.append((f"{k + 1:02d} {t}", f'<div class="hl-grid">{placeholder(img, f"FIG. {k + 1:02d} / {t.title()}")}'
+                     f'<div>{pdr(prob, dec, res)}{log_link(pr, link[0]) if link else ""}</div></div>'))
     tabs.append(("DEBRIEF", f'<p class="debrief">{e(log.get("debrief", DEBRIEF_PLACEHOLDER))}</p>'))
     n = len(tabs)
     tl = "".join(
