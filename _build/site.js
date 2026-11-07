@@ -49,7 +49,26 @@
         }
       }
       con.classList.remove("is-typing");
+      var cur = con.querySelector(".cursor");
+      if (cur) cur.classList.add("go");
     })();
+  }
+
+  // ---------- Home: "Out now" light flickers on once it's on screen ----------
+  var lights = document.querySelectorAll(".badge.b-status");
+  if (lights.length) {
+    if (reduce || !("IntersectionObserver" in window)) {
+      lights.forEach(function (l) { l.classList.add("lit"); });
+    } else {
+      var lio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          en.target.classList.add("lit");
+          lio.unobserve(en.target);
+        });
+      }, { threshold: 1 });
+      lights.forEach(function (l) { lio.observe(l); });
+    }
   }
 
   // ---------- Home: design quest band rips the page open when it scrolls into view ----------
