@@ -76,7 +76,7 @@ def page(rel_out, title, desc, body, active=None, p=None):
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-header">
   <a class="brand" href="{home}" aria-label="Natapatr Lorsathian, home">
-    <img class="brand-mark" src="{p}assets/logo.svg" alt="" width="64" height="44">
+    <img class="brand-mark" src="{p}assets/logo.svg" alt="" width="64" height="36">
     <span class="brand-text"><span class="brand-name">NATAPATR LORSATHIAN</span><span class="brand-role">game designer</span></span>
   </a>
   <nav class="site-nav" aria-label="Main">{nav}</nav>
@@ -431,33 +431,36 @@ def build_404():
     page("404.html", "Not found", "Page not found.", body, p="/portfolio/")
 
 
+LOGO_CELL = 4   # px per logo cell in the top bar
+
+
 def nl_logo():
-    """Pixel NL knocked out of a mint gradient badge. Every element sits on one 1-unit grid
-    (the same size as the letter pixels): a few badge cells at the top-right corner are missing
-    and two drift off to the right."""
-    n = ["X...X", "XX..X", "XX..X", "X.X.X", "X..XX", "X..XX", "X...X"]
-    l = ["X...", "X...", "X...", "X...", "X...", "X...", "XXXX"]
+    """Pixel NL plate (logo concept 6a, 2026-11-07). One grid: the letters, the corner cuts and
+    the "/" are all whole cells. Letters are 5 cells tall with 1-cell strokes; the "/" (the site's
+    link flair) sits in the L's empty top-right corner. Corners are deliberately uneven: top-left
+    loses one cell, bottom-right a two-step cut, the other two stay square. The letters and "/"
+    are real holes, so the header shows through. Mint gradient plus a top sheen."""
+    n = ["X....X", "XX...X", "X.X..X", "X..X.X", "X...XX"]
+    l = ["X....", "X....", "X....", "X....", "XXXXX"]
     glyph = [a + "." + c for a, c in zip(n, l)]
-    bw, bh = len(glyph[0]) + 4, len(glyph) + 4          # badge 14 x 11 cells
-    holes = [(13, 0), (12, 0), (13, 1), (11, 0), (13, 3)]   # cells missing from the badge
-    drift = [(14, 1, 0.7), (15, 0, 0.4)]               # loose cells that broke away
-    vw = bw + 2
-    hole_rects = "".join(f'<rect x="{x}" y="{y}" width="1" height="1" fill="#000"/>' for x, y in holes)
-    px = "".join(f'<rect x="{x + 2}" y="{y + 2}" width="1" height="1"/>'
-                 for y, row in enumerate(glyph) for x, c in enumerate(row) if c == "X")
-    loose = "".join(f'<rect x="{x}" y="{y}" width="1" height="1" fill="url(#g)" opacity="{o}"/>' for x, y, o in drift)
-    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {vw} {bh}" width="{vw * 4}" height="{bh * 4}" '
-            'shape-rendering="crispEdges">'
-            f'<defs><linearGradient id="g" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="{bw}" y2="{bh}">'
+    pad = 2
+    w, h = len(glyph[0]) + pad * 2, len(glyph) + pad * 2      # 16 x 9 cells
+    holes = {(x + pad, y + pad) for y, row in enumerate(glyph) for x, c in enumerate(row) if c == "X"}
+    holes |= {(13, 2), (12, 3), (11, 4)}                       # the "/"
+    holes |= {(0, 0)}                                          # top-left: one cell
+    holes |= {(w - 1, h - 1), (w - 2, h - 1), (w - 1, h - 2)}  # bottom-right: two steps
+    cells = "".join(f'<rect x="{x}" y="{y}" width="1" height="1"/>'
+                    for y in range(h) for x in range(w) if (x, y) not in holes)
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w * LOGO_CELL}" '
+            f'height="{h * LOGO_CELL}" shape-rendering="crispEdges">'
+            f'<defs><linearGradient id="g" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="{w}" y2="{h}">'
             '<stop offset="0" stop-color="#d6fff1"/><stop offset=".55" stop-color="#9ef5d6"/>'
             '<stop offset="1" stop-color="#5fd9b3"/></linearGradient>'
             '<linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".45"/>'
             '<stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>'
-            f'<mask id="m" maskUnits="userSpaceOnUse" x="0" y="0" width="{bw}" height="{bh}">'
-            f'<rect width="{bw}" height="{bh}" fill="#fff"/>{hole_rects}</mask></defs>'
-            f'<g mask="url(#m)"><rect width="{bw}" height="{bh}" fill="url(#g)"/>'
-            f'<rect width="{bw}" height="6" fill="url(#s)"/></g>'
-            f'<g fill="#0b1338">{px}</g>{loose}</svg>')
+            f'<clipPath id="c">{cells}</clipPath></defs>'
+            f'<g clip-path="url(#c)"><rect width="{w}" height="{h}" fill="url(#g)"/>'
+            f'<rect width="{w}" height="5" fill="url(#s)"/></g></svg>')
 
 
 def tear_edge(seed, cell, depth, width=480, loose=5, fill="#000"):
