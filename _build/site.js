@@ -23,6 +23,56 @@
     update();
   }
 
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ---------- Home: console panel types its commands, then shows each output ----------
+  var con = document.querySelector("[data-console]");
+  if (con && !reduce) {
+    con.classList.add("typing");
+    var steps = [];
+    con.querySelectorAll(".console-body > *").forEach(function (el) { steps.push(el); });
+    var sleep = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+    (async function () {
+      await sleep(250);
+      for (var s = 0; s < steps.length; s++) {
+        var el = steps[s], t = el.querySelector(".cmd-text");
+        if (t) {
+          var full = t.textContent;
+          t.textContent = "";
+          t.classList.add("shown");
+          for (var k = 1; k <= full.length; k++) { t.textContent = full.slice(0, k); await sleep(45); }
+          await sleep(180);
+        } else {
+          el.classList.add("shown");
+          await sleep(220);
+        }
+      }
+      con.classList.remove("typing");
+    })();
+  }
+
+  // ---------- Projects page: discipline filter ----------
+  var filters = document.querySelectorAll(".filter");
+  if (filters.length) {
+    var rows = document.querySelectorAll(".mission");
+    var status = document.querySelector(".filter-status");
+    filters.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var f = btn.dataset.filter, shown = 0;
+        filters.forEach(function (b) { b.setAttribute("aria-pressed", b === btn ? "true" : "false"); });
+        var last = null;
+        rows.forEach(function (r) {
+          var on = f === "all" || r.dataset.tags.split(" ").indexOf(f) > -1;
+          r.hidden = !on;
+          r.classList.remove("last-shown");
+          if (on) { shown++; last = r; }
+        });
+        if (last) last.classList.add("last-shown");
+        if (status) status.textContent = f === "all" ? "" : "Showing " + shown + " of " + rows.length;
+      });
+    });
+  }
+
   // ---------- About page: texting game ----------
   var chat = document.querySelector("[data-chat]");
   var dataEl = document.getElementById("chat-data");
@@ -31,7 +81,6 @@
   var data = JSON.parse(dataEl.textContent);
   var log = chat.querySelector(".chat-log");
   var opts = chat.querySelector(".chat-options");
-  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var asked = {};
 
   log.innerHTML = "";

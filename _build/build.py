@@ -136,13 +136,39 @@ def mission_list(p, projects):
     for i, pr in projects:
         title = pr.get("list_title", pr["title"])
         rows += f"""
-  <a class="mission" href="{p}projects/{pr['slug']}/">
+  <a class="mission" href="{p}projects/{pr['slug']}/" data-tags="{e(' '.join(TAG_STYLE[t][0] for t in pr['tags']))}">
     <span class="m-id">{num(i)}</span>
     <span class="m-thumb">{placeholder(pr['hero_ph'])}</span>
     <span class="m-name"><span class="m-title">{e(title)}<span class="slash">/</span></span><span class="m-genre">{e(pr['genre'])}</span>{tag_chips(pr['tags'])}</span>
     {spec_strip(pr)}
   </a>"""
     return f'<nav class="missions" aria-label="Projects">{rows}\n</nav>'
+
+
+def pick_cards(p, slugs):
+    """Compact cards for the home page picks (the Projects page has the full rows)."""
+    cards = ""
+    for slug in slugs:
+        i, pr = next((i, pr) for i, pr in enumerate(PROJECTS) if pr["slug"] == slug)
+        cards += f"""
+  <a class="card" href="{p}projects/{slug}/">
+    {placeholder(pr['hero_ph'], None, '16/9')}
+    <span class="card-head"><span class="m-title">{e(pr.get('list_title', pr['title']))}<span class="slash">/</span></span><span class="card-id">{num(i)}</span></span>
+    <span class="m-genre">{e(pr['genre'])}</span>{tag_chips(pr['tags'])}
+  </a>"""
+    return f'<div class="cards">{cards}\n</div>'
+
+
+def filter_bar():
+    opts = [("all", "All", len(PROJECTS))] + [
+        (cls, t.replace(" Design", ""), sum(t in pr["tags"] for pr in PROJECTS)) for t, (cls, _) in TAG_STYLE.items()]
+    btns = "".join(
+        f'<button type="button" class="filter{" " + cls if cls != "all" else ""}" data-filter="{cls}" '
+        f'aria-pressed="{"true" if cls == "all" else "false"}">{e(label)}<span class="count">{n:02d}</span></button>'
+        for cls, label, n in opts)
+    return (f'<div class="filters" role="group" aria-label="Filter projects by discipline">'
+            f'<span class="filters-label" aria-hidden="true">FILTER /</span>{btns}</div>'
+            f'<p class="filter-status" aria-live="polite"></p>')
 
 
 BADGE_ICON = {
@@ -181,10 +207,19 @@ def build_home():
     p = ""
     f = PROJECTS[0]
     links = ext_link(*f["links"][0])                                          # Steam only on home
+    tools = "".join(f"<li>{e(t)}</li>" for t in HOME["tools"])
     body = f"""
 <section class="hero wrap">
-  <h1 class="hero-intro">{e(HOME['intro'])}<span class="cursor" aria-hidden="true">_</span></h1>
-  <p class="hero-tools">{e(HOME['tools'])}</p>
+  <div class="console" data-console>
+    <div class="console-bar"><span class="console-title">{e(HOME['console_title'])}</span><span class="console-lights" aria-hidden="true"><i></i><i></i><i></i></span></div>
+    <div class="console-body">
+      <p class="cmd" aria-hidden="true"><span class="ps">&gt;</span><span class="cmd-text">{e(HOME['cmd_intro'])}</span></p>
+      <h1 class="hero-intro out">{e(HOME['intro'])}</h1>
+      <p class="cmd" aria-hidden="true"><span class="ps">&gt;</span><span class="cmd-text">{e(HOME['cmd_tools'])}</span></p>
+      <ul class="tools out" aria-label="Tools I work in">{tools}</ul>
+      <p class="cmd idle" aria-hidden="true"><span class="ps">&gt;</span><span class="cursor">_</span></p>
+    </div>
+  </div>
 </section>
 
 <section class="wrap featured" aria-labelledby="featured-title">
@@ -207,8 +242,9 @@ def build_home():
 </section>
 
 <section class="wrap more" aria-labelledby="more-title">
-  <h2 class="sec" id="more-title"><span class="sec-no">/ INDEX</span>More projects</h2>
-  {mission_list(p, list(enumerate(PROJECTS))[1:])}
+  <h2 class="sec" id="more-title"><span class="sec-no">/ PICKS</span>More projects</h2>
+  {pick_cards(p, HOME['picks'])}
+  <div class="links more-all"><a class="link internal" href="{p}projects/">All {len(PROJECTS)} projects</a></div>
 </section>
 """
     page("index.html", None, SITE["description"], body, p=p)
@@ -245,6 +281,7 @@ def build_projects():
     body = f"""
 <section class="wrap section-page">
   {page_head('02', 'Game projects')}
+  {filter_bar()}
   <div class="frame-box list-box">
   {mission_list('../', list(enumerate(PROJECTS)))}
   </div>
@@ -384,18 +421,19 @@ def tear_edge(seed, cell, depth, width=480, loose=5, fill="#000"):
     cols = width // cell
     rects, h = [], 1
     for x in range(cols):
-        h = max(1, min(depth - 1, h + rnd.choice((-1, 0, 0, 1))))
-        rects.append(f'<rect x="{x * cell}" y="0" width="{cell}" height="{h * cell}"/>')
+        h = max(0, min(depth - 1, h + rnd.choice((-1, 0, 0, 1))))
+        if h:
+            rects.append(f'<rect x="{x * cell}" y="0" width="{cell}" height="{h * cell}"/>')
     for _ in range(loose):
-        x, y = rnd.randrange(cols), rnd.randrange(depth - 1, depth + 1)
-        rects.append(f'<rect x="{x * cell}" y="{y * cell}" width="{cell}" height="{cell}"/>')
-    hgt = (depth + 1) * cell
+        x = rnd.randrange(cols)
+        rects.append(f'<rect x="{x * cell}" y="{(depth - 1) * cell}" width="{cell}" height="{cell}"/>')
+    hgt = depth * cell
     return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{hgt}" viewBox="0 0 {width} {hgt}" '
             f'shape-rendering="crispEdges" fill="{fill}">{"".join(rects)}</svg>'), hgt
 
 
 # Pixel size (px), max depth (cells), loose cells per tile, tile width (px) of the quest band rip.
-QUEST_EDGE = {"cell": 14, "depth": 4, "loose": 5, "width": 980}
+QUEST_EDGE = {"cell": 24, "depth": 2, "loose": 3, "width": 960}
 
 
 def build_assets():

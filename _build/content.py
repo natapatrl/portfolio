@@ -14,11 +14,17 @@ SITE = {
 }
 
 HOME = {
+    # Console panel at the top of the home page: each (command, output) pair is "typed" in turn.
+    "console_title": "nat@portfolio:~",
+    "cmd_intro": "whoami",
     "intro": "I'M NAT; A GAMEPLAY, LEVEL, UX/UI DESIGNER.",
-    "tools": "I WORK IN: UNITY \\\\ UNREAL \\\\ FIGMA",
+    "cmd_tools": "ls ./tools",
+    "tools": ["Unity", "Unreal", "Figma"],
     "quest_label": "DESIGN QUEST:",
     "quest": "DEFEAT FRUSTRATION",
     "reward": "USER REWARD: +100 DESIGN POINTS",
+    # Projects shown under the quest band on the home page (by slug). The Projects page lists all.
+    "picks": ["peritoneum", "world-x-recipe", "biotech-lab"],
 }
 
 ABOUT = {
