@@ -341,19 +341,20 @@ def build_project(i, pr):
     </span>
   </nav>
   {doc_head(num(i), pr['title'], f"{pr['subtitle']} / {pr['year']} / {pr['kind']}", cls="page-head")}
-  {placeholder(pr['hero_ph'], 'FIG. 00 / ' + pr['title'], '16/9', 'hero-ph')}
-  <div class="two-col">
-    <div>
-      {section_head('1.0', 'Overview')}
-      <div class="prose">{overview}</div>
-      {section_head('2.0', pr['history_title'])}
-      <ul class="plus-list">{history}</ul>
-    </div>
-    <aside>
-      {spec}
-      {links}
-      {awards}
-    </aside>
+  {window("PROJECT FILE", f"""
+    <div class="file-grid">
+      {placeholder(pr['hero_ph'], 'FIG. 00 / ' + pr['title'], '16/9', 'hero-ph')}
+      <div class="file-side">
+        {spec}
+        {links}
+      </div>
+      {f'<div class="file-awards">{awards}</div>' if awards else ''}
+    </div>""", cls="file-window")}
+  <div class="proj-body">
+    {section_head('1.0', 'Overview')}
+    <div class="prose">{overview}</div>
+    {section_head('2.0', pr['history_title'])}
+    <ul class="plus-list">{history}</ul>
   </div>
   {sections}
   {gallery}

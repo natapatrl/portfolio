@@ -183,7 +183,17 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 .ph::before { top: 0; left: 0; border-right: 0; border-bottom: 0; }
 .ph::after { bottom: 0; right: 0; border-left: 0; border-top: 0; }
 .frame figcaption { font: 400 var(--fs-micro) var(--mono); color: var(--dim); margin-top: 0.55rem; }
-.hero-ph { margin-bottom: 0.5rem; }
+.hero-ph { margin-bottom: 0; }
+/* Project page: media + spec readout share one window, so the image no longer fills the screen */
+.file-window { margin-bottom: 2.6rem; }
+.file-window .window-body { padding: 1.4rem 1.5rem 1.5rem; }
+.file-grid { display: grid; grid-template-columns: 1.35fr 1fr; grid-template-areas: "media side" "awards side"; gap: 0 2rem; align-items: start; }
+.file-grid > .frame { grid-area: media; }
+.file-side { grid-area: side; }
+.file-awards { grid-area: awards; }
+.file-awards .sec { margin-top: 1.2rem; }
+.file-side .links { margin-top: 1.4rem; }
+.proj-body { max-width: 760px; }
 
 /* ---------- Mission-select project list ---------- */
 .missions { display: grid; border-top: 1px solid var(--line-strong); }
@@ -501,7 +511,8 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
   .site-nav { grid-column: 1 / -1; grid-row: 2; justify-content: space-around; }
 }
 @media (max-width: 900px) {
-  .featured-grid, .two-col, .split { grid-template-columns: 1fr; gap: 1.5rem; }
+  .featured-grid, .two-col, .split, .file-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .file-grid { grid-template-areas: "media" "side" "awards"; }
   .cards { grid-template-columns: 1fr 1fr; }
   .split.flip > :first-child { order: 0; }
   .split .frame { margin-top: 0; }
