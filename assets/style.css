@@ -136,6 +136,10 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 .doc-title { font-size: clamp(2rem, 5.5vw, 3.4rem); letter-spacing: 0.05em; text-transform: uppercase; line-height: 1; }
 .doc-sub { font: 400 var(--fs-data)/1.5 var(--mono); color: var(--muted); margin: 0.6rem 0 0; }
 .page-head { margin-bottom: 2rem; }
+.doc-head.no-num { grid-template-columns: 1fr; }
+.doc-kicker { font: 400 var(--fs-label) var(--mono); color: var(--mint); margin: 0 0 0.6rem; }
+.contact-col { max-width: 780px; }
+.readout.contact { margin-top: 2.2rem; }
 
 /* Links: underlined caps, arrow for external */
 .links { display: flex; flex-wrap: wrap; gap: 0.6rem 1.8rem; margin: 1.6rem 0 0; }
@@ -281,7 +285,7 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 .chat-head .avatar { width: 48px; }
 .chat-head .avatar .ph { padding: 0; font-size: 0; border-radius: 50%; border: 1px dashed var(--line-strong); }
 .chat-head .avatar .ph::before, .chat-head .avatar .ph::after { content: none; }
-.chat-name { margin: 0; font: 500 1rem var(--grot); letter-spacing: 0.08em; }
+.chat-name { margin: 0; font: 500 var(--fs-caps-s) var(--grot); letter-spacing: 0.24em; text-transform: uppercase; }
 .chat-status { margin: 0; font: 400 var(--fs-micro) var(--mono); color: var(--mint); }
 .chat-status::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--mint); margin-right: 0.45rem; vertical-align: 1px; }
 .chat-log { min-height: 14rem; }

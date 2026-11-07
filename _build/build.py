@@ -114,6 +114,13 @@ def mission_list(p, projects):
     return f'<nav class="missions" aria-label="Projects">{rows}\n</nav>'
 
 
+def page_head(label, title, sub=None):
+    """Big datasheet heading for pages that aren't numbered items (About, Contact)."""
+    sub = f'<p class="doc-sub">{e(sub)}</p>' if sub else ""
+    return (f'<header class="doc-head page-head no-num"><div><p class="doc-kicker">{e(label)}</p>'
+            f'<h1 class="doc-title">{e(title)}</h1>{sub}</div></header>')
+
+
 def section_head(n, label):
     return f'<h2 class="sec"><span class="sec-no">{e(n)}</span>{e(label)}</h2>'
 
@@ -171,7 +178,7 @@ def build_about():
                        "final": ABOUT["final"], "finalHref": "../projects/"}).replace("</", "<\\/")
     body = f"""
 <section class="wrap narrow">
-  {section_head('/ ABOUT', ABOUT['title'])}
+  {page_head('/ about', ABOUT['title'])}
   <div class="chat" data-chat>
     <div class="chat-head">
       {placeholder('avatar', None, '1/1', 'avatar')}
@@ -269,15 +276,17 @@ def build_project(i, pr):
 def build_contact():
     lines = "".join(f"<p>{e(t)}</p>" for t in CONTACT["lines"])
     body = f"""
-<section class="wrap narrow">
+<section class="wrap">
+  <div class="contact-col">
+  {page_head('/ contact', 'Contact me')}
   {section_head('/ RESUME', CONTACT['heading'])}
   <div class="note prose">{lines}</div>
-  {section_head('/ CONTACT', 'Contact me')}
   <dl class="readout contact">
     <div class="row"><dt>Email</dt><dd>{email_link('../')}</dd></div>
     <div class="row"><dt>LinkedIn</dt><dd>{ext_link(SITE['linkedin_label'], SITE['linkedin'], '')}</dd></div>
     <div class="row"><dt>itch.io</dt><dd>{ext_link('twonah.itch.io', SITE['itch'], '')}</dd></div>
   </dl>
+  </div>
 </section>
 """
     page("contact/index.html", "Contact", "Contact Nat for game design roles and a tailored resume.", body,
