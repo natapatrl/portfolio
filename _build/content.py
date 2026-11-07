@@ -375,3 +375,73 @@ PROJECTS = [
         "gallery_ph": [],
     },
 ]
+
+
+# ---------------------------------------------------------------------------------------------
+# Design log (project pages): Overview tab + highlight tabs + Debrief tab.
+# Each highlight is problem -> decision -> result. Text in [brackets] is a placeholder to fill in
+# when the project is rewritten with Nat; unbracketed lines are stand-ins condensed from the old
+# Wix text (the full old text is still in each project's "overview" / "sections" above, which
+# are no longer shown on the page). "deep" pages get 3 highlights, the light page gets 1.
+P = "[ 1 sentence ]"
+DESIGN_LOG = {
+    "anonymized": {
+        "highlights": [
+            ("CORE LOOP", "Core loop / colour-shift mechanic GIF", P, P, P),
+            ("LEVELS", "Level layout / puzzle screenshot", P, P, P),
+            ("ACCESSIBILITY", "UI or accessibility options screenshot", P, P, P),
+        ],
+    },
+    "peritoneum": {
+        "highlights": [
+            ("DIEGETIC TUTORIAL", "Tutorial area screenshot", P, P, P),
+            ("BOSS FIGHT", "Boss fight screenshot or state diagram", P, P, P),
+            ("LEVEL PROGRESSION", "Level screenshot", P, P, P),
+        ],
+    },
+    "world-x-recipe": {
+        "highlights": [
+            ("WHY CLAW MACHINE", "Claw gameplay",
+             "Only 47 hours to build a game around the theme \"Bubbles\".",
+             "Chose an arcade claw machine: short loop, clear goal, and bubbles' upward pull maps onto grab and lift.",
+             P),
+            ("UI PROTOTYPING", "Figma UI prototype", P, P, P),
+            ("GAME FEEL", "Claw handling clip", P, P, P),
+        ],
+    },
+    "biotech-lab": {
+        "highlights": [
+            ("SCENE COMPOSITION", "Point-of-interest / composition screenshot",
+             "My first environmental storytelling level; telling the story without words was hard.",
+             "Used composition from my photography to place points of interest that guide the player.",
+             "Once the narrative was set, the level came together in the final days."),
+        ],
+    },
+    "frost-fortress": {
+        "highlights": [
+            ("RAPID ITERATION", "Block-out vs. final comparison",
+             "A multiplayer map isn't linear: one large play area has to stay balanced and replayable.",
+             "Blocked out fast and playtested after every change.",
+             "Finished the whole map within a few days."),
+            ("SIGHTLINES", "Top-down map layout with sightlines", P, P, P),
+            ("BALANCE AND FLOW", "In-match screenshot", P, P, P),
+        ],
+    },
+    "unpuzzled-business": {
+        "highlights": [
+            ("PUZZLE FLOWCHART", "Puzzle flowchart",
+             "The team inherited a vague concept from a former member, and every role was waiting on someone else.",
+             "Mapped every puzzle step into one flowchart: theme, mechanics, items and event triggers.",
+             "Art, programming and design could work in parallel, clearing most bottlenecks."),
+            ("PLAYER GUIDANCE", "Before / after guidance comparison",
+             "Playtesters couldn't read the puzzles; the diegetic design was hiding how the mechanics worked.",
+             "Ran guidance-focused playtests, then added leading lines, adjusted lighting and simplified some puzzle elements.",
+             "Puzzles read clearly without breaking immersion."),
+            ("LIGHTING BUDGET", "Lighting guideline page or lit room",
+             "Heavy volumetric and movable lights added for guidance started hurting performance.",
+             "Wrote a per-room lighting guideline with the programmers and optimized lights in-engine.",
+             P),
+        ],
+    },
+}
+DEBRIEF_PLACEHOLDER = "[ 1–2 lines: what I learned / what I'd do next ]"

@@ -90,6 +90,34 @@
     });
   }
 
+  // ---------- Project pages: DESIGN LOG tabs ----------
+  document.querySelectorAll("[data-log]").forEach(function (log) {
+    var t = log.querySelectorAll(".dl-tab"), p = log.querySelectorAll(".dl-pane");
+    function go(i, focus) {
+      if (i < 0 || i >= t.length) return;
+      t.forEach(function (x, j) {
+        var on = j === i;
+        x.setAttribute("aria-selected", on ? "true" : "false");
+        x.tabIndex = on ? 0 : -1;
+        p[j].classList.toggle("on", on);
+      });
+      t[i].querySelector(".dl-pip").classList.add("seen");
+      if (focus) t[i].focus();
+    }
+    t.forEach(function (x, i) {
+      x.addEventListener("click", function () { go(i); });
+      x.addEventListener("keydown", function (e) {
+        var k = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: t.length - 1 }[e.key];
+        if (k !== undefined) { e.preventDefault(); go(Math.max(0, Math.min(t.length - 1, k)), true); }
+      });
+    });
+    p.forEach(function (pane, i) {
+      pane.querySelector(".dl-prev").addEventListener("click", function () { go(i - 1, true); });
+      pane.querySelector(".dl-next").addEventListener("click", function () { go(i + 1, true); });
+    });
+    log.querySelectorAll(".dl-open").forEach(function (b) { b.addEventListener("click", function () { go(+b.dataset.go, true); }); });
+  });
+
   // ---------- About page: texting game ----------
   var chat = document.querySelector("[data-chat]");
   var dataEl = document.getElementById("chat-data");

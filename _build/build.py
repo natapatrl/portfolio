@@ -8,7 +8,7 @@ import os
 import random
 from html import escape as e
 
-from content import SITE, HOME, ABOUT, CONTACT, PROJECTS
+from content import SITE, HOME, ABOUT, CONTACT, PROJECTS, DESIGN_LOG, DEBRIEF_PLACEHOLDER
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FONTS = ("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700"
@@ -299,6 +299,48 @@ def build_projects():
          active="PROJECTS")
 
 
+def pdr(problem, decision, result):
+    rows = [("01", "PROBLEM", problem, ""), ("02", "DECISION", decision, " dec"), ("03", "RESULT", result, "")]
+    return '<dl class="pdr">' + "".join(
+        f'<div class="{c.strip()}"><dt><b>{n}</b>{lbl}</dt><dd>{e(t)}</dd></div>' for n, lbl, t, c in rows) + "</dl>"
+
+
+def design_log(pr):
+    """Tabbed DESIGN LOG window: Overview (contributions + highlight menu), one tab per highlight
+    (image beside problem / decision / result), Debrief. All panes share one grid cell, so the
+    window keeps the same size on every tab."""
+    log = DESIGN_LOG.get(pr["slug"], {"highlights": []})
+    hls = log["highlights"]
+    contrib = "".join(f"<li>{e(t)}</li>" for t in pr["history"])
+    menu = "".join(
+        f'<button type="button" class="dl-open" data-go="{k + 1}"><span class="dl-thumb">{placeholder(img)}</span>'
+        f'<span class="dl-mtext"><span class="dl-mno">{k + 1:02d}</span><span class="dl-mtitle">{e(t)}</span>'
+        f'<span class="dl-mteaser">{e(prob)}</span></span><span class="dl-go" aria-hidden="true">OPEN &rarr;</span></button>'
+        for k, (t, img, prob, _d, _r) in enumerate(hls))
+    menu_html = f'<div><h3 class="dl-h">HIGHLIGHTS</h3><div class="dl-menu">{menu}</div></div>' if hls else ""
+    tabs = [("OVERVIEW", f'''<div class="dl-overview"><div><h3 class="dl-h">{e(pr['history_title'].upper())}</h3>
+      <ul class="plus-list">{contrib}</ul></div>{menu_html}</div>''')]
+    for k, (t, img, prob, dec, res) in enumerate(hls):
+        tabs.append((f"{k + 1:02d} {t}", f'<div class="hl-grid">{placeholder(img, f"FIG. {k + 1:02d} / {t.title()}")}{pdr(prob, dec, res)}</div>'))
+    tabs.append(("DEBRIEF", f'<p class="debrief">{e(log.get("debrief", DEBRIEF_PLACEHOLDER))}</p>'))
+    n = len(tabs)
+    tl = "".join(
+        f'<button type="button" class="dl-tab" role="tab" id="dl-t{i}" aria-controls="dl-p{i}" '
+        f'aria-selected="{"true" if i == 0 else "false"}" tabindex="{0 if i == 0 else -1}">'
+        f'<span class="dl-pip{" seen" if i == 0 else ""}" aria-hidden="true"></span>{e(t)}</button>'
+        for i, (t, _) in enumerate(tabs))
+    panes = "".join(
+        f'<div class="dl-pane{" on" if i == 0 else ""}" role="tabpanel" id="dl-p{i}" aria-labelledby="dl-t{i}" tabindex="0">'
+        f'<div class="dl-content">{c}</div>'
+        f'<div class="dl-step"><button type="button" class="dl-prev"{" disabled" if i == 0 else ""}>&larr; Prev</button>'
+        f'<span class="dl-count">{i + 1:02d} / {n:02d}</span>'
+        f'<button type="button" class="dl-next"{" disabled" if i == n - 1 else ""}>Next &rarr;</button></div></div>'
+        for i, (_, c) in enumerate(tabs))
+    return (f'<div class="window dl" data-log><div class="window-bar"><span class="window-title">DESIGN LOG</span>'
+            f'<span class="window-lights" aria-hidden="true"><i></i><i></i><i></i></span></div>'
+            f'<div class="dl-tabs" role="tablist" aria-label="Design log">{tl}</div><div class="dl-panes">{panes}</div></div>')
+
+
 def build_project(i, pr):
     p = "../../"
     rows = "".join(f'<div class="row"><dt>{e(k)}</dt><dd>{e(v)}</dd></div>' for k, v in pr["stats"])
@@ -345,19 +387,13 @@ def build_project(i, pr):
     <div class="file-grid">
       {placeholder(pr['hero_ph'], 'FIG. 00 / ' + pr['title'], '16/9', 'hero-ph')}
       <div class="file-side">
+        <p class="file-pitch">{e(pr['blurb'])}</p>
         {spec}
         {links}
       </div>
       {f'<div class="file-awards">{awards}</div>' if awards else ''}
     </div>""", cls="file-window")}
-  <div class="proj-body">
-    {section_head('1.0', 'Overview')}
-    <div class="prose">{overview}</div>
-    {section_head('2.0', pr['history_title'])}
-    <ul class="plus-list">{history}</ul>
-  </div>
-  {sections}
-  {gallery}
+  {design_log(pr)}
 </article>
 """
     page(f"projects/{pr['slug']}/index.html", pr["title"],

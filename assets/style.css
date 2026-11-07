@@ -416,6 +416,63 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 .split.flip > :first-child { order: 2; }
 .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin: 3rem 0 0; }
 
+
+/* ---------- Project page: DESIGN LOG window ---------- */
+.file-pitch { margin: 0 0 1.3rem; font: 400 var(--fs-body)/1.5 var(--plex); color: var(--head); }
+.dl { margin-top: 0; }
+.pdr { margin: 0; display: grid; gap: 1rem; }
+.pdr dt { font: 500 var(--fs-caps-s) var(--grot); letter-spacing: .22em; color: var(--muted); margin-bottom: .3rem; }
+.pdr dt b { font: 400 var(--fs-micro) var(--mono); color: var(--dim); margin-right: .6rem; letter-spacing: .05em; }
+.pdr dd { margin: 0; font: 400 var(--fs-body)/1.55 var(--plex); color: var(--body); }
+.pdr .dec dt { color: var(--mint); } .pdr .dec dd { color: var(--head); }
+.hl-grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: 2rem; align-items: center; }
+.debrief { margin: 0; font: 400 var(--fs-body)/1.55 var(--plex); color: var(--muted); }
+/* D: OS-style tabs under the window bar; all panes share one grid cell so the window never jumps */
+.dl-tabs { display: flex; gap: 2px; padding: .6rem .8rem 0;
+  background: linear-gradient(var(--line-strong), var(--line-strong)) bottom / 100% 1px no-repeat, rgba(158,245,214,.025); }
+.dl-tab { display: flex; align-items: center; gap: .55rem; white-space: nowrap; cursor: pointer;
+  padding: .6rem .95rem .55rem; background: rgba(255,255,255,.02); color: var(--muted);
+  border: 1px solid var(--line); border-bottom-color: var(--line-strong);
+  font: 500 var(--fs-caps-s) var(--grot); letter-spacing: .18em;
+  clip-path: polygon(7px 0, 100% 0, 100% 100%, 0 100%, 0 7px); }
+.dl-tab:hover { color: var(--head); background: rgba(158,245,214,.06); }
+.dl-tab[aria-selected="true"] { color: var(--mint); background: #060b1d; border-color: var(--line-strong); border-top: 2px solid var(--mint); border-bottom-color: #060b1d; }
+.dl-pip { width: 6px; height: 6px; background: var(--lav); flex: none; }
+.dl-pip.seen { background: var(--line-strong); }
+.dl-tab[aria-selected="true"] .dl-pip { background: var(--mint); }
+.dl-panes { display: grid; padding: 1.6rem 1.6rem 1.1rem; }
+.dl-pane { grid-area: 1 / 1; visibility: hidden; display: flex; flex-direction: column; }
+.dl-pane.on { visibility: visible; }
+.dl-content { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.dl-content > .dl-overview { align-self: stretch; margin-bottom: auto; }
+.js .dl-pane.on .dl-content { animation: pane-in .22s ease-out; }
+@keyframes pane-in { from { opacity: 0; transform: translateX(6px); } to { opacity: 1; transform: none; } }
+.dl-overview { display: grid; grid-template-columns: 1fr 1.15fr; gap: 2.4rem; align-items: start; }
+.dl-h { margin: 0 0 .8rem; font: 500 var(--fs-caps-s) var(--grot); letter-spacing: .24em; color: var(--mint); }
+.dl-menu { display: grid; gap: .5rem; }
+.dl-open { display: grid; grid-template-columns: 6.5rem 1fr auto; gap: 1rem; align-items: center; text-align: left; cursor: pointer;
+  padding: .55rem .8rem .55rem .55rem; background: rgba(255,255,255,.02); border: 1px solid var(--line); color: var(--muted); }
+.dl-open:hover, .dl-open:focus-visible { border-color: var(--mint); background: rgba(158,245,214,.06); }
+.dl-thumb .ph { font-size: 0; padding: 0; } .dl-thumb .ph::before, .dl-thumb .ph::after { width: 8px; height: 8px; }
+.dl-mtext { display: grid; gap: .15rem; }
+.dl-mno { font: 400 var(--fs-micro) var(--mono); color: var(--dim); }
+.dl-mtitle { font: 500 var(--fs-caps) var(--grot); letter-spacing: .16em; color: var(--head); }
+.dl-mteaser { font: 400 var(--fs-body-s)/1.4 var(--plex); color: var(--muted); display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+.dl-go { font: 400 var(--fs-micro) var(--mono); color: var(--mint); letter-spacing: .08em; }
+.dl-step { display: flex; justify-content: space-between; align-items: center; margin-top: 1.4rem; padding-top: .9rem; border-top: 1px solid var(--line); }
+.dl-step button { background: none; border: 0; cursor: pointer; font: 500 var(--fs-caps-s) var(--grot); letter-spacing: .2em; text-transform: uppercase; color: var(--head); padding: .3rem 0; }
+.dl-step button:hover { color: var(--mint); }
+.dl-step button:disabled { color: var(--dim); opacity: .5; cursor: default; }
+.dl-count { font: 400 var(--fs-label) var(--mono); color: var(--muted); }
+@media (max-width: 900px) {
+  .dl-tabs { overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; }
+  .hl-grid { grid-template-columns: 1fr; gap: 1.2rem; }
+  .dl-overview { grid-template-columns: 1fr; gap: 1.6rem; }
+  .dl-open { grid-template-columns: 4.5rem 1fr; } .dl-go { display: none; }
+  .dl-panes { padding: 1.2rem 1.1rem .9rem; }
+}
+@media (prefers-reduced-motion: reduce) { .js .dl-pane.on .dl-content { animation: none; } }
+
 /* ---------- About (chat window + texting game) ---------- */
 .chat {
   margin: 0.5rem 0 1rem;
