@@ -83,7 +83,7 @@ def page(rel_out, title, desc, body, active=None, p=None):
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-header">
   <a class="brand" href="{home}" aria-label="Natapatr Lorsathian, home">
-    <img class="brand-mark" src="{p}assets/logo.svg" alt="" width="64" height="36">
+    <img class="brand-mark" src="{p}assets/logo.svg" alt="" width="80" height="45">
     <span class="brand-text"><span class="brand-name">NATAPATR LORSATHIAN</span><span class="brand-role">game designer</span></span>
   </a>
   <nav class="site-nav" aria-label="Main">{nav}</nav>
@@ -453,7 +453,7 @@ def build_404():
     page("404.html", "Not found", "Page not found.", body, p="/portfolio/")
 
 
-LOGO_CELL = 4   # px per logo cell in the top bar
+LOGO_CELL = 5   # px per logo cell in the top bar
 
 
 def nl_logo():
