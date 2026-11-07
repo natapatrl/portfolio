@@ -30,7 +30,7 @@
   // ---------- Home: profile window types its labels, then shows each value ----------
   var con = document.querySelector("[data-console]");
   if (con && !reduce) {
-    con.classList.add("typing");
+    con.classList.add("is-typing");
     var steps = Array.prototype.slice.call(con.querySelectorAll(".window-body > *"));
     (async function () {
       await sleep(250);
@@ -48,7 +48,7 @@
           await sleep(220);
         }
       }
-      con.classList.remove("typing");
+      con.classList.remove("is-typing");
     })();
   }
 

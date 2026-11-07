@@ -272,8 +272,8 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
   background: rgba(158, 245, 214, 0.05);
   font: 500 var(--fs-caps-s) var(--grot); letter-spacing: 0.24em; color: var(--muted);
 }
-.window-right { display: flex; align-items: center; gap: 0.9rem; }
-.window-status { font: 400 var(--fs-micro) var(--mono); letter-spacing: 0.1em; color: var(--mint); }
+.window-title { display: flex; align-items: center; gap: 0.8rem; }
+.window-tag { font: 500 var(--fs-micro)/1 var(--mono); letter-spacing: 0.1em; color: var(--deep); background: var(--mint); padding: 0.22rem 0.4rem; }
 .window-lights { display: flex; gap: 5px; }
 .window-lights i { width: 7px; height: 7px; background: var(--line-strong); }
 .window-lights i:first-child { background: var(--mint); }
@@ -282,7 +282,11 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 .hud-label::before { content: ""; display: inline-block; width: 6px; height: 6px; background: var(--mint); margin-right: 0.7rem; vertical-align: 1px; }
 .hud-label + .out { margin-top: 0.35rem; }
 .out + .hud-label { margin-top: 1.3rem; }
-.hero-intro { margin-bottom: 0; font-size: clamp(1.2rem, 3vw, 1.9rem); font-weight: 400; letter-spacing: 0.1em; line-height: 1.3; color: var(--mint); }
+.hero-intro { margin-bottom: 0; font-size: clamp(1.8rem, 4.4vw, 2.6rem); font-weight: 400; letter-spacing: 0.16em; line-height: 1.2; color: var(--mint); }
+.class-chips .chips { margin-top: 0; gap: 0.5rem; }
+.class-chips .chip { font-size: var(--fs-label); padding: 0.42rem 0.75rem 0.42rem 0.6rem; }
+.class-chips .chip svg { width: 12px; height: 12px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .tools { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0; margin-bottom: 0; }
 .tools li {
   font: 500 var(--fs-caps) var(--grot); letter-spacing: 0.18em; text-transform: uppercase; color: var(--head);
@@ -290,10 +294,17 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 }
 .cursor { color: var(--mint); animation: blink 1.1s steps(1) infinite; }
 /* typed reveal (site.js); without JS everything is simply shown */
-.js .window.typing .hud-text, .js .window.typing .out, .js .window.typing .hud-label::before { visibility: hidden; }
+.js .window.is-typing .hud-text, .js .window.is-typing .out, .js .window.is-typing .hud-label::before { visibility: hidden; }
 .js .window .shown, .js .window .hud-label.shown::before { visibility: visible !important; }
 .featured { padding-bottom: 2rem; }
 .featured .window-body { padding: 1.6rem; }
+.chat-window { margin: 0.5rem 0 1rem; }
+.chat-window .chat { margin: 0; background: none; border: 0; border-radius: 0; }
+.contact-window .window-body { padding-top: 0.4rem; }
+.contact-window .window-body > .sec:first-child { border-top: 0; margin-top: 0.6rem; }
+.list-window .window-body { padding: 1.1rem 1.2rem 0.6rem; }
+.list-window .missions { border-top: 0; }
+.list-window .mission:last-child, .list-window .mission.last-shown { border-bottom: 0; }
 .featured-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 2.6rem; align-items: start; }
 .featured-media { display: block; text-decoration: none; }
 .featured-body { padding-top: 0.3rem; }
@@ -375,13 +386,16 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 .filter:hover { background: color-mix(in srgb, var(--c) 10%, transparent); }
 .filter[aria-pressed="true"] { background: var(--c); color: var(--deep); border-color: var(--c); }
 .filter[aria-pressed="true"] .count { color: var(--deep); opacity: 0.6; }
-.filter-status { margin: 0 0 0.6rem; font: 400 var(--fs-micro) var(--mono); color: var(--dim); min-height: 1em; }
+.filter-status { margin-left: auto; font: 400 var(--fs-micro) var(--mono); color: var(--muted); }
 .mission[hidden] { display: none; }
-.list-box .mission.last-shown { border-bottom: 0; }
 
 /* ---------- Project page ---------- */
 .project { padding-bottom: 2rem; }
-.back { display: inline-block; margin-bottom: 1.8rem; }
+.proj-nav { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem 2rem; padding-bottom: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--line-strong); }
+.proj-step { display: flex; align-items: center; flex-wrap: wrap; gap: 0.8rem 1.6rem; }
+.proj-count { font: 400 var(--fs-label) var(--mono); color: var(--muted); }
+.proj-count b { font-weight: 400; color: var(--mint); margin: 0 0.3rem; }
+.back { display: inline-block; }
 .back::after { content: none !important; }
 .back::before { content: "\2190 "; color: var(--mint); }
 .two-col { display: grid; grid-template-columns: 1.5fr 1fr; gap: 3.5rem; }
@@ -391,7 +405,6 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 .split .frame { margin-top: 2.4rem; }
 .split.flip > :first-child { order: 2; }
 .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin: 3rem 0 0; }
-.pager { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; border-top: 2px solid var(--head); margin-top: 4rem; padding-top: 1.4rem; }
 
 /* ---------- About (chat window + texting game) ---------- */
 .chat {
@@ -455,6 +468,8 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
 /* ---------- Contact ---------- */
+.note { border-left: 2px solid var(--mint); padding: 0.2rem 0 0.2rem 1.2rem; }
+.note p { color: var(--head); opacity: 0.85; }
 .contact-line { font: 400 var(--fs-body)/1.5 var(--plex); color: var(--body); margin: 1.2rem 0 1.4rem; }
 .contact-line .prompt { font-family: var(--mono); color: var(--mint); margin-right: 0.7rem; }
 .readout.contact .row { grid-template-columns: 7rem 1fr; padding: 0.95rem 0 0.95rem 1rem; }

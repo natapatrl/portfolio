@@ -16,11 +16,15 @@ SITE = {
 HOME = {
     # Home windows read like a game's UI (player profile, loadout), not a code terminal.
     "profile_title": "PLAYER PROFILE",
+    "player_label": "PLAYER",
+    "player": "NAT",
     "class_label": "CLASS",
-    "intro": "I'M NAT; A GAMEPLAY, LEVEL, UX/UI DESIGNER.",
+    # Shown as the colour-coded discipline chips used on the project tags.
+    "classes": ["Gameplay Design", "Level Design", "UX/UI Design"],
     "loadout_label": "LOADOUT",
     "tools": ["Unity", "Unreal", "Figma"],
     "latest_title": "LATEST PROJECT",
+    "latest_tag": "NEW",
     "quest_label": "DESIGN QUEST:",
     "quest": "DEFEAT FRUSTRATION",
     "reward": "USER REWARD: +100 DESIGN POINTS",

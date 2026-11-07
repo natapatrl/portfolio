@@ -108,13 +108,13 @@ TAG_STYLE = {
 }
 
 
-def tag_chips(tags):
+def tag_chips(tags, full=False):
     out = ""
     for t in tags:
         cls, icon = TAG_STYLE.get(t, ("", []))
         px = "".join(f'<rect x="{x}" y="{y}" width="1" height="1"/>' for y, r in enumerate(icon) for x, ch in enumerate(r) if ch == "X")
         svg = f'<svg viewBox="0 0 5 5" aria-hidden="true" shape-rendering="crispEdges">{px}</svg>' if px else ""
-        out += f'<span class="chip {cls}">{svg}{e(t.replace(" Design", ""))}</span>'
+        out += f'<span class="chip {cls}">{svg}{e(t if full else t.replace(" Design", ""))}</span>'
     return f'<span class="chips">{out}</span>'
 
 
@@ -167,8 +167,8 @@ def filter_bar():
         f'aria-pressed="{"true" if cls == "all" else "false"}">{e(label)}<span class="count">{n:02d}</span></button>'
         for cls, label, n in opts)
     return (f'<div class="filters" role="group" aria-label="Filter projects by discipline">'
-            f'<span class="filters-label" aria-hidden="true">FILTER /</span>{btns}</div>'
-            f'<p class="filter-status" aria-live="polite"></p>')
+            f'<span class="filters-label" aria-hidden="true">FILTER /</span>{btns}'
+            f'<span class="filter-status" aria-live="polite"></span></div>')
 
 
 BADGE_ICON = {
@@ -203,11 +203,13 @@ def section_head(n, label):
     return f'<h2 class="sec"><span class="sec-no">{e(n)}</span>{e(label)}</h2>'
 
 
-def window(title, inner, status=None, attrs=""):
-    """Content window: sharp frame, mint corner brackets, title bar with status lights."""
-    st = f'<span class="window-status">{e(status)}</span>' if status else ""
-    return (f'<div class="window"{attrs}><div class="window-bar"><span class="window-title">{e(title)}</span>'
-            f'<span class="window-right">{st}<span class="window-lights" aria-hidden="true"><i></i><i></i><i></i></span></span></div>'
+def window(title, inner, tag=None, attrs="", cls=""):
+    """Content window: sharp frame, mint corner brackets, title bar with decorative lights.
+    A tag (e.g. NEW) sits with the title on the left, away from the lights, so it doesn't
+    read as a clickable control."""
+    tg = f'<span class="window-tag">{e(tag)}</span>' if tag else ""
+    return (f'<div class="window {cls}"{attrs}><div class="window-bar"><span class="window-title">{e(title)}{tg}</span>'
+            f'<span class="window-lights" aria-hidden="true"><i></i><i></i><i></i></span></div>'
             f'<div class="window-body">{inner}\n    </div></div>')
 
 
@@ -219,8 +221,10 @@ def build_home():
     body = f"""
 <section class="hero wrap">
   {window(HOME['profile_title'], f"""
+      <p class="hud-label" aria-hidden="true"><span class="hud-text">{e(HOME['player_label'])}</span></p>
+      <h1 class="hero-intro out">{e(HOME['player'])}<span class="sr-only">, game designer:</span><span class="cursor" aria-hidden="true">_</span></h1>
       <p class="hud-label" aria-hidden="true"><span class="hud-text">{e(HOME['class_label'])}</span></p>
-      <h1 class="hero-intro out">{e(HOME['intro'])}<span class="cursor" aria-hidden="true">_</span></h1>
+      <div class="out class-chips">{tag_chips(HOME['classes'], full=True)}</div>
       <p class="hud-label" aria-hidden="true"><span class="hud-text">{e(HOME['loadout_label'])}</span></p>
       <ul class="tools out" aria-label="Tools I work in">{tools}</ul>""", attrs=' data-console')}
 </section>
@@ -235,7 +239,7 @@ def build_home():
         <p class="feat-tag">{e(f.get('tagline', f['blurb']))}</p>
         <div class="links">{links}<a class="link internal" href="{p}projects/{f['slug']}/">Full breakdown</a></div>
       </div>
-    </div>""", status="NEW")}
+    </div>""", tag=HOME["latest_tag"])}
 </section>
 
 <section class="quest" aria-label="Design quest" data-rip>
@@ -268,6 +272,7 @@ def build_about():
     body = f"""
 <section class="wrap section-page">
   {page_head('01', ABOUT['title'])}
+  <div class="window chat-window"><div class="window-bar"><span class="window-title">MESSAGES</span><span class="window-lights" aria-hidden="true"><i></i><i></i><i></i></span></div>
   <div class="chat" data-chat>
     <div class="chat-head">
       {placeholder('avatar', None, '1/1', 'avatar')}
@@ -275,7 +280,7 @@ def build_about():
     </div>
     <div class="chat-log" aria-live="polite">{fallback}</div>
     <div class="chat-options" role="group" aria-label="Reply options"><a class="chat-opt final" href="../projects/">{e(ABOUT['final'])}</a></div>
-  </div>
+  </div></div>
   <script type="application/json" id="chat-data">{data}</script>
 </section>
 """
@@ -287,10 +292,7 @@ def build_projects():
     body = f"""
 <section class="wrap section-page">
   {page_head('02', 'Game projects')}
-  {filter_bar()}
-  <div class="frame-box list-box">
-  {mission_list('../', list(enumerate(PROJECTS)))}
-  </div>
+  {window("PROJECT INDEX", filter_bar() + mission_list('../', list(enumerate(PROJECTS))), cls="list-window")}
 </section>
 """
     page("projects/index.html", "Projects", "Game design projects by Natapatr (Nat) Lorsathian.", body,
@@ -330,7 +332,14 @@ def build_project(i, pr):
     next_pr = PROJECTS[(i + 1) % len(PROJECTS)]
     body = f"""
 <article class="wrap project">
-  <a class="back link internal" href="{p}projects/">All projects</a>
+  <nav class="proj-nav" aria-label="Project navigation">
+    <a class="back link internal" href="{p}projects/">All projects</a>
+    <span class="proj-step">
+      <a class="link internal prev" href="{p}projects/{prev_pr['slug']}/" aria-label="Previous project: {e(prev_pr['title'])}">{num(i - 1 if i else len(PROJECTS) - 1)} / {e(prev_pr['title'])}</a>
+      <span class="proj-count" aria-hidden="true">{num(i)}<b>/</b>{len(PROJECTS):02d}</span>
+      <a class="link internal" href="{p}projects/{next_pr['slug']}/" aria-label="Next project: {e(next_pr['title'])}">{num((i + 1) % len(PROJECTS))} / {e(next_pr['title'])}</a>
+    </span>
+  </nav>
   {doc_head(num(i), pr['title'], f"{pr['subtitle']} / {pr['year']} / {pr['kind']}", cls="page-head")}
   {placeholder(pr['hero_ph'], 'FIG. 00 / ' + pr['title'], '16/9', 'hero-ph')}
   <div class="two-col">
@@ -348,10 +357,6 @@ def build_project(i, pr):
   </div>
   {sections}
   {gallery}
-  <nav class="pager" aria-label="More projects">
-    <a class="link internal prev" href="{p}projects/{prev_pr['slug']}/">{num(i - 1 if i else len(PROJECTS) - 1)} / {e(prev_pr['title'])}</a>
-    <a class="link internal" href="{p}projects/{next_pr['slug']}/">{num((i + 1) % len(PROJECTS))} / {e(next_pr['title'])}</a>
-  </nav>
 </article>
 """
     page(f"projects/{pr['slug']}/index.html", pr["title"],
@@ -363,7 +368,7 @@ def build_contact():
     body = f"""
 <section class="wrap section-page">
   {page_head('03', 'Contact me')}
-  <div class="frame-box">
+  {window("COMMS", f"""
     {section_head('/ RESUME', CONTACT['heading'])}
     <div class="note prose">{lines}</div>
     {section_head('/ CHANNELS', 'Reach me at')}
@@ -371,8 +376,7 @@ def build_contact():
       <div class="row"><dt>Email</dt><dd>{email_link('../')}</dd></div>
       <div class="row"><dt>LinkedIn</dt><dd>{ext_link(SITE['linkedin_label'], SITE['linkedin'], '')}</dd></div>
       <div class="row"><dt>itch.io</dt><dd>{ext_link('twonah.itch.io', SITE['itch'], '')}</dd></div>
-    </dl>
-  </div>
+    </dl>""", cls="contact-window")}
 </section>
 """
     page("contact/index.html", "Contact", "Contact Nat for game design roles and a tailored resume.", body,
