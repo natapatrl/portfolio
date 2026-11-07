@@ -100,6 +100,24 @@ def page(rel_out, title, desc, body, active=None, p=None):
     write(rel_out, html)
 
 
+TAG_STYLE = {
+    # tag: (css class, 5x5 pixel icon rows)
+    "Gameplay Design": ("t-gameplay", [".X...", "XXX..", ".X.X.", "...X.", "....."]),   # d-pad + button
+    "Level Design": ("t-level", ["....X", "...XX", "..XXX", ".XXXX", "XXXXX"]),          # stairs
+    "UX/UI Design": ("t-ux", ["X....", "XX...", "XXX..", "XX...", "..X.."]),             # cursor
+}
+
+
+def tag_chips(tags):
+    out = ""
+    for t in tags:
+        cls, icon = TAG_STYLE.get(t, ("", []))
+        px = "".join(f'<rect x="{x}" y="{y}" width="1" height="1"/>' for y, r in enumerate(icon) for x, ch in enumerate(r) if ch == "X")
+        svg = f'<svg viewBox="0 0 5 5" aria-hidden="true" shape-rendering="crispEdges">{px}</svg>' if px else ""
+        out += f'<span class="chip {cls}">{svg}{e(t.replace(" Design", ""))}</span>'
+    return f'<span class="chips">{out}</span>'
+
+
 def mission_list(p, projects):
     rows = ""
     for i, pr in projects:
@@ -109,7 +127,7 @@ def mission_list(p, projects):
     <span class="m-id">{num(i)}</span>
     <span class="m-thumb">{placeholder(pr['hero_ph'])}</span>
     <span class="m-name"><span class="m-title">{e(title)}<span class="slash">/</span></span><small>{e(pr['blurb'])}</small>
-      <span class="m-meta">{e(pr['year'])} / {e(pr['kind'])} / {e(' / '.join(pr['tags']))}</span></span>
+      <span class="m-meta">{e(pr['year'])} / {e(pr['kind'])}</span>{tag_chips(pr['tags'])}</span>
   </a>"""
     return f'<nav class="missions" aria-label="Projects">{rows}\n</nav>'
 
@@ -133,7 +151,6 @@ def section_head(n, label):
 def build_home():
     p = ""
     f = PROJECTS[0]
-    awards = "".join(f"<li>{e(a)}</li>" for a in f.get("awards", [])[:1])   # top award only on home
     links = ext_link(*f["links"][0])                                          # Steam only on home
     body = f"""
 <section class="hero wrap">
@@ -146,9 +163,8 @@ def build_home():
     <a class="featured-media" href="{p}projects/{f['slug']}/" tabindex="-1" aria-hidden="true">{placeholder(f['hero_ph'], 'FIG. 01 / ' + f['title'])}</a>
     <div class="featured-body">
       <p class="feat-kicker">/ LATEST PROJECT</p>
-      {doc_head(None, f['title'], f['roles'].replace(' | ', ' / '), tag="h2", cls="featured-head")}
-      <div class="prose"><p>{e(f['blurb'])}</p></div>
-      <ul class="plus-list awards">{awards}</ul>
+      {doc_head(None, f['title'], None, tag="h2", cls="featured-head")}
+      <div class="prose"><p>{e(f.get('tagline', f['blurb']))}</p></div>
       <div class="links">{links}<a class="link internal" href="{p}projects/{f['slug']}/">Full breakdown</a></div>
     </div>
   </div>
@@ -198,7 +214,7 @@ def build_about():
 def build_projects():
     body = f"""
 <section class="wrap section-page">
-  {page_head('02', 'Game projects', 'Gameplay / Level / UX/UI design, 2024 to now')}
+  {page_head('02', 'Game projects')}
   <div class="frame-box list-box">
   {mission_list('../', list(enumerate(PROJECTS)))}
   </div>

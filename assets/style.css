@@ -132,7 +132,7 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
   border-bottom: 2px solid var(--head);
   padding-bottom: 1rem;
 }
-.doc-no { grid-column: 1; grid-row: 1; font: 300 clamp(3rem, 8vw, 5.2rem)/1 var(--grot); color: var(--dim); }
+.doc-no { grid-column: 1; grid-row: 1; font: 300 clamp(3rem, 8vw, 5.2rem)/1 var(--grot); color: var(--mint); }
 .doc-title { grid-column: 2; grid-row: 1; font-size: clamp(2rem, 5.5vw, 3.4rem); letter-spacing: 0.05em; text-transform: uppercase; line-height: 1; }
 .doc-sub { grid-column: 2; grid-row: 2; font: 400 var(--fs-data)/1.5 var(--mono); color: var(--muted); margin: 0.55rem 0 0; }
 .doc-head:not(:has(.doc-no)) .doc-title, .doc-head:not(:has(.doc-no)) .doc-sub { grid-column: 1 / -1; }
@@ -227,6 +227,26 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 .mission:hover .m-title .slash::after { opacity: 1; animation: blink 1s steps(1) infinite; }
 .m-name small { display: block; font: 400 var(--fs-body-s)/1.5 var(--plex); color: var(--muted); margin-top: 0.25rem; max-width: 60ch; }
 .m-meta { display: block; font: 400 var(--fs-micro)/1.6 var(--mono); color: var(--dim); margin-top: 0.45rem; }
+/* discipline tags: small HUD chips with a pixel icon, colour-coded */
+.chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.55rem; }
+.chip {
+  --c: var(--mint);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.28rem 0.6rem 0.28rem 0.5rem;
+  font: 500 var(--fs-micro)/1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c);
+  background: color-mix(in srgb, var(--c) 9%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c) 45%, transparent);
+  clip-path: polygon(5px 0, 100% 0, 100% 100%, 0 100%, 0 5px);
+}
+.chip svg { width: 10px; height: 10px; fill: currentColor; flex: none; }
+.chip.t-level { --c: var(--lav); }
+.chip.t-ux { --c: #9dc4ff; }
+.mission:hover .chip { background: color-mix(in srgb, var(--c) 16%, transparent); }
 
 /* ---------- Spec readout ---------- */
 .readout { margin: 0; font: 400 var(--fs-data)/1.5 var(--mono); }
@@ -251,7 +271,7 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 .featured { padding-bottom: 2rem; }
 .featured-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 2.6rem; align-items: start; }
 .featured-media { display: block; text-decoration: none; }
-.featured-body .doc-head { margin-bottom: 1.1rem; }
+.featured-body .doc-head { margin-bottom: 1.1rem; border-bottom-color: var(--line-strong); border-bottom-width: 1px; }
 .feat-kicker { font: 400 var(--fs-label) var(--mono); color: var(--mint); margin: 0 0 0.7rem; }
 .featured-body .doc-title { font-size: clamp(1.8rem, 3.6vw, 2.5rem); }
 .featured-body .awards { margin-top: 0.4rem; }

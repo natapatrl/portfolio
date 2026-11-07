@@ -87,6 +87,7 @@ PROJECTS = [
         "tags": ["Gameplay Design", "Level Design", "UX/UI Design"],
         "blurb": "Movement-based color-shifting puzzle game; Global Game Jam 2026 submission "
                  "under the theme 'Mask'.",
+        "tagline": "Movement-based color-shifting puzzle game, out now on Steam.",
         "awards": [
             "1st Place - Game Dev Hub Bangkok (Global Game Jam 2026)",
             "Finalist - BIDC Rising Star Award 2026",
