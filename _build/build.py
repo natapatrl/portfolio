@@ -76,7 +76,7 @@ def page(rel_out, title, desc, body, active=None, p=None):
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-header">
   <a class="brand" href="{home}" aria-label="Natapatr Lorsathian, home">
-    <img class="brand-mark" src="{p}assets/logo.svg" alt="" width="56" height="44">
+    <img class="brand-mark" src="{p}assets/logo.svg" alt="" width="64" height="44">
     <span class="brand-text"><span class="brand-name">NATAPATR LORSATHIAN</span><span class="brand-role">game designer</span></span>
   </a>
   <nav class="site-nav" aria-label="Main">{nav}</nav>
@@ -114,11 +114,11 @@ def mission_list(p, projects):
     return f'<nav class="missions" aria-label="Projects">{rows}\n</nav>'
 
 
-def page_head(label, title, sub=None):
-    """Big datasheet heading for pages that aren't numbered items (About, Contact)."""
+def page_head(no, title, sub=None):
+    """Same big datasheet heading as the project pages: dim number + title over a heavy rule."""
     sub = f'<p class="doc-sub">{e(sub)}</p>' if sub else ""
-    return (f'<header class="doc-head page-head no-num"><div><p class="doc-kicker">{e(label)}</p>'
-            f'<h1 class="doc-title">{e(title)}</h1>{sub}</div></header>')
+    return (f'<header class="doc-head page-head"><span class="doc-no">{e(no)}</span>'
+            f'<div><h1 class="doc-title">{e(title)}</h1>{sub}</div></header>')
 
 
 def section_head(n, label):
@@ -144,7 +144,7 @@ def build_home():
       <div class="doc-head">
         <span class="doc-no">01</span>
         <div><h3 class="doc-title" id="featured-title">{e(f['title'])}</h3>
-        <p class="doc-sub">{e(f['subtitle'])} / {e(f['roles'])}</p></div>
+        <p class="doc-sub">{e(f['roles'])}</p></div>
       </div>
       <div class="prose"><p>{e(f['blurb'])}</p></div>
       <ul class="plus-list awards">{awards}</ul>
@@ -178,7 +178,7 @@ def build_about():
                        "final": ABOUT["final"], "finalHref": "../projects/"}).replace("</", "<\\/")
     body = f"""
 <section class="wrap narrow">
-  {page_head('/ about', ABOUT['title'])}
+  {page_head('01', ABOUT['title'])}
   <div class="chat" data-chat>
     <div class="chat-head">
       {placeholder('avatar', None, '1/1', 'avatar')}
@@ -197,10 +197,7 @@ def build_about():
 def build_projects():
     body = f"""
 <section class="wrap">
-  <div class="doc-head page-head">
-    <span class="doc-no">{len(PROJECTS):02d}</span>
-    <div><h1 class="doc-title">Game projects</h1><p class="doc-sub">Gameplay / Level / UX/UI design, 2024 to now</p></div>
-  </div>
+  {page_head('02', 'Game projects', 'Gameplay / Level / UX/UI design, 2024 to now')}
   {mission_list('../', list(enumerate(PROJECTS)))}
 </section>
 """
@@ -276,16 +273,17 @@ def build_project(i, pr):
 def build_contact():
     lines = "".join(f"<p>{e(t)}</p>" for t in CONTACT["lines"])
     body = f"""
-<section class="wrap">
-  <div class="contact-col">
-  {page_head('/ contact', 'Contact me')}
-  {section_head('/ RESUME', CONTACT['heading'])}
-  <div class="note prose">{lines}</div>
-  <dl class="readout contact">
-    <div class="row"><dt>Email</dt><dd>{email_link('../')}</dd></div>
-    <div class="row"><dt>LinkedIn</dt><dd>{ext_link(SITE['linkedin_label'], SITE['linkedin'], '')}</dd></div>
-    <div class="row"><dt>itch.io</dt><dd>{ext_link('twonah.itch.io', SITE['itch'], '')}</dd></div>
-  </dl>
+<section class="wrap narrow">
+  {page_head('03', 'Contact me')}
+  <div class="frame-box">
+    {section_head('/ RESUME', CONTACT['heading'])}
+    <div class="note prose">{lines}</div>
+    {section_head('/ CHANNELS', 'Reach me at')}
+    <dl class="readout contact">
+      <div class="row"><dt>Email</dt><dd>{email_link('../')}</dd></div>
+      <div class="row"><dt>LinkedIn</dt><dd>{ext_link(SITE['linkedin_label'], SITE['linkedin'], '')}</dd></div>
+      <div class="row"><dt>itch.io</dt><dd>{ext_link('twonah.itch.io', SITE['itch'], '')}</dd></div>
+    </dl>
   </div>
 </section>
 """
@@ -305,21 +303,32 @@ def build_404():
 
 
 def nl_logo():
-    """Pixel NL monogram knocked out of a mint gradient badge with a soft top sheen."""
+    """Pixel NL knocked out of a mint gradient badge. Every element sits on one 1-unit grid
+    (the same size as the letter pixels): a few badge cells at the top-right corner are missing
+    and two drift off to the right."""
     n = ["X...X", "XX..X", "XX..X", "X.X.X", "X..XX", "X..XX", "X...X"]
     l = ["X...", "X...", "X...", "X...", "X...", "X...", "XXXX"]
     glyph = [a + "." + c for a, c in zip(n, l)]
-    w, h = len(glyph[0]) + 4, len(glyph) + 4
+    bw, bh = len(glyph[0]) + 4, len(glyph) + 4          # badge 14 x 11 cells
+    holes = [(13, 0), (12, 0), (13, 1), (11, 0), (13, 3)]   # cells missing from the badge
+    drift = [(14, 1, 0.7), (15, 0, 0.4)]               # loose cells that broke away
+    vw = bw + 2
+    hole_rects = "".join(f'<rect x="{x}" y="{y}" width="1" height="1" fill="#000"/>' for x, y in holes)
     px = "".join(f'<rect x="{x + 2}" y="{y + 2}" width="1" height="1"/>'
                  for y, row in enumerate(glyph) for x, c in enumerate(row) if c == "X")
-    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" shape-rendering="crispEdges">'
-            f'<defs><linearGradient id="g" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="{w}" y2="{h}">'
+    loose = "".join(f'<rect x="{x}" y="{y}" width="1" height="1" fill="url(#g)" opacity="{o}"/>' for x, y, o in drift)
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {vw} {bh}" width="{vw * 4}" height="{bh * 4}" '
+            'shape-rendering="crispEdges">'
+            f'<defs><linearGradient id="g" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="{bw}" y2="{bh}">'
             '<stop offset="0" stop-color="#d6fff1"/><stop offset=".55" stop-color="#9ef5d6"/>'
             '<stop offset="1" stop-color="#5fd9b3"/></linearGradient>'
             '<linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".45"/>'
-            '<stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>'
-            f'<rect width="{w}" height="{h}" fill="url(#g)"/><rect width="{w}" height="{h / 2}" fill="url(#s)"/>'
-            f'<g fill="#0b1338">{px}</g></svg>')
+            '<stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>'
+            f'<mask id="m" maskUnits="userSpaceOnUse" x="0" y="0" width="{bw}" height="{bh}">'
+            f'<rect width="{bw}" height="{bh}" fill="#fff"/>{hole_rects}</mask></defs>'
+            f'<g mask="url(#m)"><rect width="{bw}" height="{bh}" fill="url(#g)"/>'
+            f'<rect width="{bw}" height="6" fill="url(#s)"/></g>'
+            f'<g fill="#0b1338">{px}</g>{loose}</svg>')
 
 
 def build_assets():

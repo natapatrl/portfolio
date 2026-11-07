@@ -60,7 +60,7 @@ ABOUT = {
             "a": [
                 "Anonymized! It started as our Global Game Jam 2026 entry and won 1st place at "
                 "Game Dev Hub Bangkok.",
-                "Now it's being developed into a full game, and the demo is already on Steam.",
+                "Since then we've developed it into a full game, and it's out now on Steam.",
             ],
         },
     ],
@@ -96,10 +96,10 @@ PROJECTS = [
             ("Team size", "4"),
             ("Engine", "Unity"),
             ("Timeframe", "72 hours (jam)"),
-            ("Status", "Jam version completed // Steam release in development"),
+            ("Status", "Out now on Steam"),
         ],
         "links": [
-            ("Play the demo on Steam", "https://store.steampowered.com/app/4765400/ANONYMIZED_Demo/"),
+            ("View on Steam", "https://store.steampowered.com/app/4765400/ANONYMIZED_Demo/"),
             ("Jam version on itch.io", "https://arkudada.itch.io/anonymized"),
         ],
         "hero_ph": "Anonymized key art or gameplay screenshot",
