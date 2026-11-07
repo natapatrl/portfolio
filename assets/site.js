@@ -73,10 +73,10 @@
   async function natSays(lines) {
     for (var i = 0; i < lines.length; i++) {
       typing(true);
-      await wait(500 + Math.min(lines[i].length * 14, 1100));
+      await wait(220 + Math.min(lines[i].length * 5, 480));
       typing(false);
       bubble("them", lines[i]);
-      await wait(250);
+      await wait(110);
     }
   }
 
@@ -106,13 +106,13 @@
     asked[i] = true;
     opts.innerHTML = "";
     bubble("me", data.topics[i].q);
-    await wait(350);
+    await wait(160);
     await natSays(data.topics[i].a);
     showOptions();
   }
 
   (async function start() {
-    await wait(300);
+    await wait(120);
     await natSays(data.intro);
     showOptions();
     scrollDown();

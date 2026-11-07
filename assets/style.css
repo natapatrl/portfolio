@@ -265,12 +265,12 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
   margin: 0.5rem 0 1rem;
   background: rgba(5, 9, 21, 0.5);
   border: 1px solid var(--line-strong);
-  border-radius: 20px;
+  border-radius: 8px;
   padding: 1.1rem 1.2rem 1.3rem;
 }
 .chat-head { display: flex; align-items: center; gap: 0.9rem; padding-bottom: 1rem; margin-bottom: 0.8rem; border-bottom: 1px solid var(--line); }
 .chat-head .avatar { width: 48px; }
-.chat-head .avatar .ph { padding: 0; font-size: 0; border-radius: 50%; border: 1px dashed var(--line-strong); }
+.chat-head .avatar .ph { padding: 0; font-size: 0; border-radius: 6px; border: 1px dashed var(--line-strong); }
 .chat-head .avatar .ph::before, .chat-head .avatar .ph::after { content: none; }
 .chat-name { margin: 0; font: 500 1rem var(--grot); letter-spacing: 0.08em; }
 .chat-status { margin: 0; font: 400 0.68rem var(--mono); color: var(--mint); }
@@ -281,17 +281,17 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
   width: fit-content;
   margin: 0.55rem 0;
   padding: 0.75rem 1.1rem;
-  border-radius: 18px;
+  border-radius: 8px;
   color: #1a1f3d;
   font: 400 1.02rem/1.55 var(--plex);
 }
 .bubble p { margin: 0; }
-.bubble.them { background: var(--lav); border-bottom-left-radius: 5px; }
-.bubble.me { background: var(--mint); margin-left: auto; border-bottom-right-radius: 5px; }
-.js .chat-log .bubble { opacity: 0; transform: translateY(8px); transition: opacity 0.3s, transform 0.3s; }
+.bubble.them { background: var(--lav); border-bottom-left-radius: 2px; }
+.bubble.me { background: var(--mint); margin-left: auto; border-bottom-right-radius: 2px; }
+.js .chat-log .bubble { opacity: 0; transform: translateY(8px); transition: opacity 0.2s, transform 0.2s; }
 .js .chat-log .bubble.shown { opacity: 1; transform: none; }
 .typing { display: inline-flex; gap: 5px; padding: 0.95rem 1.1rem; }
-.typing span { width: 7px; height: 7px; border-radius: 50%; background: #6b5b8a; animation: pulse 1.2s infinite; }
+.typing span { width: 7px; height: 7px; border-radius: 1px; background: #6b5b8a; animation: pulse 1.2s infinite; }
 .typing span:nth-child(2) { animation-delay: 0.2s; }
 .typing span:nth-child(3) { animation-delay: 0.4s; }
 .chat-options {
@@ -309,7 +309,7 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
   color: var(--mint);
   background: transparent;
   border: 1px solid rgba(158, 245, 214, 0.55);
-  border-radius: 999px;
+  border-radius: 6px;
   padding: 0.55rem 1.05rem;
   cursor: pointer;
   text-decoration: none;
