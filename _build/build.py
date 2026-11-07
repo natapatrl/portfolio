@@ -3,6 +3,7 @@
 Run from the repo root:  python3 _build/build.py
 Folders starting with "_" are not published by GitHub Pages, so this script stays private to the repo.
 """
+import json
 import os
 import random
 from html import escape as e
@@ -105,6 +106,7 @@ def mission_list(p, projects):
         rows += f"""
   <a class="mission" href="{p}projects/{pr['slug']}/">
     <span class="m-id">{num(i)}</span>
+    <span class="m-thumb">{placeholder(pr['hero_ph'])}</span>
     <span class="m-name"><span class="m-title">{e(title)}<span class="slash">/</span></span><small>{e(pr['blurb'])}</small></span>
     <span class="m-meta"><span>{e(pr['year'])}</span><span>{e(pr['kind'])}</span><span>{e(' / '.join(pr['tags']))}</span></span>
   </a>"""
@@ -158,20 +160,26 @@ def build_home():
 
 
 def build_about():
-    bubbles = "\n".join(
-        f'<div class="bubble {side}"><p>{e(text)}</p></div>' for side, text in ABOUT["chat"])
+    # Full transcript as plain HTML (what visitors without JavaScript see); site.js replaces it
+    # with the interactive version using the JSON script below.
+    fallback = "".join(f'<div class="bubble them"><p>{e(t)}</p></div>' for t in ABOUT["intro"])
+    for t in ABOUT["topics"]:
+        fallback += f'<div class="bubble me"><p>{e(t["q"])}</p></div>'
+        fallback += "".join(f'<div class="bubble them"><p>{e(a)}</p></div>' for a in t["a"])
+    data = json.dumps({"intro": ABOUT["intro"], "topics": ABOUT["topics"],
+                       "final": ABOUT["final"], "finalHref": "../projects/"}).replace("</", "<\\/")
     body = f"""
 <section class="wrap narrow">
   {section_head('/ ABOUT', ABOUT['title'])}
-  <div class="chat">
+  <div class="chat" data-chat>
     <div class="chat-head">
       {placeholder('avatar', None, '1/1', 'avatar')}
-      <div><p class="chat-name">Nat</p><p class="chat-status">&gt; online_</p></div>
+      <div><p class="chat-name">Nat</p><p class="chat-status">online</p></div>
     </div>
-{bubbles}
-    <div class="bubble them typing" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="chat-log" aria-live="polite">{fallback}</div>
+    <div class="chat-options" role="group" aria-label="Reply options"><a class="chat-opt final" href="../projects/">{e(ABOUT['final'])}</a></div>
   </div>
-  <div class="links"><a class="link internal" href="../projects/">See my projects</a><a class="link internal" href="../contact/">Get in touch</a></div>
+  <script type="application/json" id="chat-data">{data}</script>
 </section>
 """
     page("about/index.html", "About", "About Nat - a versatile game designer who enjoys UI/UX and level design the most.",

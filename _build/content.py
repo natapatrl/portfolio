@@ -23,17 +23,48 @@ HOME = {
 
 ABOUT = {
     "title": "WHO AM I?",
-    # (side, text): side "them" = left lavender bubble, "me" = right mint bubble
-    "chat": [
-        ("them", "Hello, I'm Natapatr Lorsathian (Nat for short)."),
-        ("them", "I'm a versatile game designer. While proficient with the basics of every "
-                 "design discipline, I enjoy UI/UX and level design the most."),
-        ("me", "I firmly believe that a great game must first and foremost feel good to play."),
-        ("me", "While fun is undoubtedly the foundation of game design, even the most enjoyable "
-               "game can quickly become frustrating if it's not user-friendly."),
-        ("me", "Striking a balance between fun and user experience is key to creating a truly "
-               "great gameplay experience."),
+    # Interactive chat. Nat's messages are the left (lavender) bubbles; the reader's picks are
+    # the right (mint) bubbles. Each topic disappears once asked. When none are left, the only
+    # option is the final link.
+    "intro": [
+        "Hello, I'm Natapatr Lorsathian (Nat for short).",
+        "I'm a versatile game designer. While proficient with the basics of every design "
+        "discipline, I enjoy UI/UX and level design the most.",
+        "Ask me anything below!",
     ],
+    "topics": [
+        {
+            "q": "What makes a game great to you?",
+            "a": [
+                "I firmly believe that a great game must first and foremost feel good to play.",
+                "While fun is undoubtedly the foundation of game design, even the most enjoyable "
+                "game can quickly become frustrating if it's not user-friendly.",
+            ],
+        },
+        {
+            "q": "So what's your design goal?",
+            "a": [
+                "Striking a balance between fun and user experience is key to creating a truly "
+                "great gameplay experience.",
+            ],
+        },
+        {
+            "q": "What tools do you work with?",
+            "a": [
+                "Unity, Unreal (including UEFN, Fortnite's level editor) and Figma, which I use "
+                "to prototype UI.",
+            ],
+        },
+        {
+            "q": "What are you working on right now?",
+            "a": [
+                "Anonymized! It started as our Global Game Jam 2026 entry and won 1st place at "
+                "Game Dev Hub Bangkok.",
+                "Now it's being developed into a full game, and the demo is already on Steam.",
+            ],
+        },
+    ],
+    "final": "View my projects",
 }
 
 CONTACT = {
