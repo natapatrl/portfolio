@@ -108,17 +108,22 @@ def mission_list(p, projects):
   <a class="mission" href="{p}projects/{pr['slug']}/">
     <span class="m-id">{num(i)}</span>
     <span class="m-thumb">{placeholder(pr['hero_ph'])}</span>
-    <span class="m-name"><span class="m-title">{e(title)}<span class="slash">/</span></span><small>{e(pr['blurb'])}</small></span>
-    <span class="m-meta"><span>{e(pr['year'])}</span><span>{e(pr['kind'])}</span><span>{e(' / '.join(pr['tags']))}</span></span>
+    <span class="m-name"><span class="m-title">{e(title)}<span class="slash">/</span></span><small>{e(pr['blurb'])}</small>
+      <span class="m-meta">{e(pr['year'])} / {e(pr['kind'])} / {e(' / '.join(pr['tags']))}</span></span>
   </a>"""
     return f'<nav class="missions" aria-label="Projects">{rows}\n</nav>'
 
 
+def doc_head(no, title, sub=None, tag="h1", cls=""):
+    """Datasheet heading: dim number and title share a baseline; the sub-line sits on its own row
+    under the title, so it never pushes the title out of line."""
+    no_html = f'<span class="doc-no">{e(no)}</span>' if no else ""
+    sub_html = f'<p class="doc-sub">{e(sub)}</p>' if sub else ""
+    return (f'<header class="doc-head {cls}">{no_html}<{tag} class="doc-title">{e(title)}</{tag}>{sub_html}</header>')
+
+
 def page_head(no, title, sub=None):
-    """Same big datasheet heading as the project pages: dim number + title over a heavy rule."""
-    sub = f'<p class="doc-sub">{e(sub)}</p>' if sub else ""
-    return (f'<header class="doc-head page-head"><span class="doc-no">{e(no)}</span>'
-            f'<div><h1 class="doc-title">{e(title)}</h1>{sub}</div></header>')
+    return doc_head(no, title, sub, cls="compact")
 
 
 def section_head(n, label):
@@ -128,8 +133,8 @@ def section_head(n, label):
 def build_home():
     p = ""
     f = PROJECTS[0]
-    awards = "".join(f"<li>{e(a)}</li>" for a in f.get("awards", []))
-    links = "".join(ext_link(lbl, href) for lbl, href in f["links"])
+    awards = "".join(f"<li>{e(a)}</li>" for a in f.get("awards", [])[:1])   # top award only on home
+    links = ext_link(*f["links"][0])                                          # Steam only on home
     body = f"""
 <section class="hero wrap">
   <h1 class="hero-intro">{e(HOME['intro'])}<span class="cursor" aria-hidden="true">_</span></h1>
@@ -137,15 +142,11 @@ def build_home():
 </section>
 
 <section class="wrap featured" aria-labelledby="featured-title">
-  {section_head('/ FEATURED', 'Latest project')}
   <div class="featured-grid">
     <a class="featured-media" href="{p}projects/{f['slug']}/" tabindex="-1" aria-hidden="true">{placeholder(f['hero_ph'], 'FIG. 01 / ' + f['title'])}</a>
     <div class="featured-body">
-      <div class="doc-head">
-        <span class="doc-no">01</span>
-        <div><h3 class="doc-title" id="featured-title">{e(f['title'])}</h3>
-        <p class="doc-sub">{e(f['roles'])}</p></div>
-      </div>
+      <p class="feat-kicker">/ LATEST PROJECT</p>
+      {doc_head(None, f['title'], f['roles'].replace(' | ', ' / '), tag="h2", cls="featured-head")}
       <div class="prose"><p>{e(f['blurb'])}</p></div>
       <ul class="plus-list awards">{awards}</ul>
       <div class="links">{links}<a class="link internal" href="{p}projects/{f['slug']}/">Full breakdown</a></div>
@@ -177,7 +178,7 @@ def build_about():
     data = json.dumps({"intro": ABOUT["intro"], "topics": ABOUT["topics"],
                        "final": ABOUT["final"], "finalHref": "../projects/"}).replace("</", "<\\/")
     body = f"""
-<section class="wrap narrow">
+<section class="wrap section-page">
   {page_head('01', ABOUT['title'])}
   <div class="chat" data-chat>
     <div class="chat-head">
@@ -196,9 +197,11 @@ def build_about():
 
 def build_projects():
     body = f"""
-<section class="wrap">
+<section class="wrap section-page">
   {page_head('02', 'Game projects', 'Gameplay / Level / UX/UI design, 2024 to now')}
+  <div class="frame-box list-box">
   {mission_list('../', list(enumerate(PROJECTS)))}
+  </div>
 </section>
 """
     page("projects/index.html", "Projects", "Game design projects by Natapatr (Nat) Lorsathian.", body,
@@ -239,11 +242,7 @@ def build_project(i, pr):
     body = f"""
 <article class="wrap project">
   <a class="back link internal" href="{p}projects/">All projects</a>
-  <header class="doc-head page-head">
-    <span class="doc-no">{num(i)}</span>
-    <div><h1 class="doc-title">{e(pr['title'])}</h1>
-    <p class="doc-sub">{e(pr['subtitle'])} / {e(pr['year'])} / {e(pr['kind'])}</p></div>
-  </header>
+  {doc_head(num(i), pr['title'], f"{pr['subtitle']} / {pr['year']} / {pr['kind']}", cls="page-head")}
   {placeholder(pr['hero_ph'], 'FIG. 00 / ' + pr['title'], '16/9', 'hero-ph')}
   <div class="two-col">
     <div>
@@ -273,7 +272,7 @@ def build_project(i, pr):
 def build_contact():
     lines = "".join(f"<p>{e(t)}</p>" for t in CONTACT["lines"])
     body = f"""
-<section class="wrap narrow">
+<section class="wrap section-page">
   {page_head('03', 'Contact me')}
   <div class="frame-box">
     {section_head('/ RESUME', CONTACT['heading'])}
