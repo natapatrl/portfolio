@@ -54,7 +54,7 @@ a:hover { color: var(--head); }
 p { margin: 0 0 0.85rem; }
 h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; margin: 0; }
 .wrap { width: min(1120px, 100% - 2.5rem); margin-inline: auto; }
-.narrow { width: min(780px, 100% - 2.5rem); }
+.narrow { width: min(880px, 100% - 2.5rem); }
 .skip { position: absolute; left: -999px; }
 .skip:focus { left: 1rem; top: 1rem; background: var(--head); color: var(--deep); padding: 0.5rem 1rem; z-index: 9; }
 :focus-visible { outline: 1px solid var(--mint); outline-offset: 4px; }
@@ -96,6 +96,7 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 .read-cells { display: flex; gap: 3px; }
 .read-cells i { width: 8px; height: 14px; background: rgba(158, 245, 214, 0.14); }
 .read-cells i.on { background: var(--mint); }
+.read.off { visibility: hidden; }
 .read-pct { min-width: 2.8rem; color: var(--head); text-align: right; }
 
 /* ---------- Shared type ---------- */
@@ -111,7 +112,7 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
   padding-top: 0.75rem;
   margin: 2.4rem 0 1rem;
 }
-.sec-no { font: 400 var(--fs-label) var(--mono); letter-spacing: 0.04em; color: var(--mint); text-transform: none; }
+.sec-no { font: 400 var(--fs-label) var(--mono); letter-spacing: 0.04em; color: var(--mint); text-transform: none; white-space: nowrap; flex: none; }
 
 /* Datasheet heading: dim number + title share one baseline; the sub-line gets its own row */
 .doc-head {
@@ -157,7 +158,7 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 .link::after { content: " \2197"; content: " \2197" / ""; color: var(--mint); }
 .link.internal::after { content: " \2192"; content: " \2192" / ""; }
 .link.internal.prev::after { content: none; }
-.link.internal.prev::before { content: "\2190 "; content: "\2190 " / ""; color: var(--mint); }
+.link.internal.prev::before { content: "\2190"; content: "\2190" / ""; color: var(--mint); margin-right: 0.4em; }
 .link:hover { color: var(--mint); }
 .footer-links .link { font-size: var(--fs-caps-s); }
 
@@ -301,12 +302,16 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .class-chips .chips { margin-top: 0; gap: 0.5rem; }
 .class-chips .chip { font-size: var(--fs-label); padding: 0.42rem 0.75rem 0.42rem 0.6rem; }
 .class-chips .chip svg { width: 12px; height: 12px; }
+.chip-link { text-decoration: none; cursor: pointer; transition: background .15s, border-color .15s; }
+.chip-go { font-family: var(--grot); margin-left: 0.1rem; opacity: 0.55; transition: transform .15s, opacity .15s; }
+.chip-link:hover, .chip-link:focus-visible { background: color-mix(in srgb, var(--c) 18%, transparent); border-color: var(--c); }
+.chip-link:hover .chip-go, .chip-link:focus-visible .chip-go { opacity: 1; transform: translateX(2px); }
+.chip-link:focus-visible { outline: 1px solid var(--c); outline-offset: -5px; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.tools { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0; margin-bottom: 0; }
-.tools li {
-  font: 500 var(--fs-caps) var(--grot); letter-spacing: 0.18em; text-transform: uppercase; color: var(--head);
-  padding: 0.4rem 0.8rem; border: 1px solid var(--line-strong); background: rgba(255, 255, 255, 0.03);
-}
+/* LOADOUT: plain text with pixel separators, so it doesn't look like buttons (the CLASS chips are the clickable ones) */
+.tools { list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0; padding: 0; margin-bottom: 0; }
+.tools li { font: 500 var(--fs-caps) var(--grot); letter-spacing: 0.18em; text-transform: uppercase; color: var(--head); padding: 0.2rem 0; }
+.tools li + li::before { content: ""; display: inline-block; width: 4px; height: 4px; background: var(--dim); margin: 0 1rem 0 0.85rem; vertical-align: 3px; }
 /* Home cursor: solid until the profile window finishes typing (site.js adds .go), then blinks
    3 times and drops to an idle glow on the same beat. Never blinks forever (WCAG 2.2.2). */
 .cursor { display: inline-block; color: var(--mint); }
@@ -323,22 +328,26 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .js .window.is-typing .hud-text, .js .window.is-typing .out, .js .window.is-typing .hud-label::before { visibility: hidden; }
 .js .window .shown, .js .window .hud-label.shown::before { visibility: visible !important; }
 .featured { padding-bottom: 2rem; scroll-margin-top: 116px; }
-/* Home: "SCROLL" prompt pinned to the bottom of the screen until the visitor scrolls (site.js adds
-   .gone). The chevron bobs 3 times, then rests (nothing moves forever, WCAG 2.2.2). JS only. */
+/* Home: "SCROLL" prompt, standing upright in the empty right-hand margin so it never covers content.
+   Only on screens wide enough to have that margin (1240px+); hidden once the visitor scrolls (site.js
+   adds .gone). The chevron bobs 3 times, then rests (nothing moves forever, WCAG 2.2.2). JS only. */
 .scroll-cue { display: none; }
 .js .scroll-cue {
-  position: fixed; left: 50%; bottom: 1.4rem; z-index: 4; transform: translateX(-50%);
-  display: flex; flex-direction: column; align-items: center; gap: 0.35rem;
-  padding: 0.5rem 0.9rem 0.45rem; text-decoration: none;
+  position: fixed; right: max(0.5rem, calc((100vw - 1120px) / 4 - 15px)); bottom: 1.6rem; z-index: 4;
+  display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+  padding: 0.75rem 0.4rem 0.6rem; text-decoration: none;
   font: 400 var(--fs-micro)/1 var(--mono); letter-spacing: 0.2em; color: var(--muted);
   background: rgba(5, 9, 21, 0.85); border: 1px solid var(--line-strong);
   clip-path: polygon(6px 0, 100% 0, 100% 100%, 0 100%, 0 6px);
   transition: opacity .3s, visibility .3s;
+  box-sizing: content-box; width: 18px;
 }
 .js .scroll-cue:hover { color: var(--mint); border-color: var(--mint); }
+.scroll-cue span { writing-mode: vertical-rl; }
 .scroll-cue svg { width: 15px; height: 9px; fill: var(--mint); animation: cue-bob 1.1s steps(2, jump-none) 3 1s; }
 .js .scroll-cue.gone { opacity: 0; visibility: hidden; }
 @keyframes cue-bob { 0%, 100% { transform: none; } 50% { transform: translateY(4px); } }
+@media (max-width: 1239px) { .js .scroll-cue { display: none; } }
 .featured .window-body { padding: 1.6rem; }
 .chat-window { margin: 0.5rem 0 1rem; }
 .chat-window .chat { margin: 0; background: none; border: 0; border-radius: 0; }
@@ -347,7 +356,7 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .list-window .window-body { padding: 1.1rem 1.2rem 0.6rem; }
 .list-window .missions { border-top: 0; }
 .list-window .mission:last-child, .list-window .mission.last-shown { border-bottom: 0; }
-.featured-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 2.6rem; align-items: start; }
+.featured-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 2.6rem; align-items: center; }
 .featured-media { display: block; text-decoration: none; }
 .featured-body { padding-top: 0.3rem; }
 .featured-body .doc-head { margin-bottom: 1.1rem; border-bottom-color: var(--line-strong); border-bottom-width: 1px; }
@@ -378,7 +387,8 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
   48% { opacity: .3; animation-timing-function: step-end; }
   58%, 100% { opacity: 1; }
 }
-.quest { position: relative; margin: 4.5rem 0; }
+.quest { scroll-margin-top: 116px;
+ position: relative; margin: 4.5rem 0; }
 .quest-band { text-align: center; background: #000; padding: 1.4rem 1rem; position: relative; }
 /* Rip-open (site.js adds .rip-ready, then .ripped when the band scrolls into view):
    a mint seam slashes across, then the page tears open into the band in pixel-sized steps. */
@@ -451,9 +461,10 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .proj-step { display: flex; align-items: center; flex-wrap: wrap; gap: 0.8rem 1.6rem; }
 .proj-count { font: 400 var(--fs-label) var(--mono); color: var(--muted); }
 .proj-count b { font-weight: 400; color: var(--mint); margin: 0 0.3rem; }
+.pn-short { display: none; }
 .back { display: inline-block; }
 .back::after { content: none !important; }
-.back::before { content: "\2190 "; content: "\2190 " / ""; color: var(--mint); }
+.back::before { content: "\2190"; content: "\2190" / ""; color: var(--mint); margin-right: 0.4em; }
 .two-col { display: grid; grid-template-columns: 1.5fr 1fr; gap: 3.5rem; }
 .two-col aside { padding-top: 2.4rem; }
 .two-col aside .sec { margin-top: 2rem; }
@@ -471,7 +482,7 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .pdr dt b { font: 400 var(--fs-micro) var(--mono); color: var(--dim); margin-right: .6rem; letter-spacing: .05em; }
 .pdr dd { margin: 0; font: 400 var(--fs-body)/1.55 var(--plex); color: var(--body); }
 .pdr .dec dt { color: var(--mint); } .pdr .dec dd { color: var(--head); }
-.hl-grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: 2rem; align-items: center; }
+.hl-grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: 2rem; align-items: start; }
 .retro { margin: 0; font: 400 var(--fs-body)/1.55 var(--plex); color: var(--muted); }
 /* D: OS-style tabs under the window bar; all panes share one grid cell so the window never jumps */
 .dl-tabs { display: flex; gap: 2px; padding: .6rem .8rem 0;
@@ -489,7 +500,7 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .dl-panes { display: grid; padding: 1.6rem 1.6rem 1.1rem; }
 .dl-pane { grid-area: 1 / 1; visibility: hidden; display: flex; flex-direction: column; }
 .dl-pane.on { visibility: visible; }
-.dl-content { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.dl-content { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; }
 .dl-content > .dl-overview { align-self: stretch; margin-bottom: auto; }
 .js .dl-pane.on .dl-content { animation: pane-in .22s ease-out; }
 @keyframes pane-in { from { opacity: 0; transform: translateX(6px); } to { opacity: 1; transform: none; } }
@@ -514,7 +525,11 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .dl-step button:disabled { color: var(--dim); opacity: .5; cursor: default; }
 .dl-count { font: 400 var(--fs-label) var(--mono); color: var(--muted); }
 @media (max-width: 900px) {
-  .dl-tabs { overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; }
+  .dl-tabs { flex-wrap: wrap; gap: 4px; padding: .6rem .8rem .6rem; background: rgba(158,245,214,.025); border-bottom: 1px solid var(--line-strong); }
+  .dl-tab, .dl-tabs:has(> :nth-child(6)) .dl-tab { padding: .5rem .75rem; letter-spacing: .12em; border: 1px solid var(--line); }
+  .dl-tab[aria-selected="true"] { border-color: var(--mint); border-top-width: 1px; background: rgba(158,245,214,.08); }
+  .dl-pane { display: none; }
+  .dl-pane.on { display: flex; }
   .hl-grid { grid-template-columns: 1fr; gap: 1.2rem; }
   .dl-overview { grid-template-columns: 1fr; gap: 1.6rem; }
   .dl-open { grid-template-columns: 4.5rem 1fr; } .dl-go { display: none; }
@@ -598,7 +613,7 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .site-footer {
   border-top: 1px solid var(--line-strong);
   background: rgba(5, 9, 21, 0.7);
-  padding: 1.3rem 1.6rem;
+  padding: 1.3rem 2rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -629,14 +644,15 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
   .brand-name { font-size: var(--fs-caps); letter-spacing: 0.2em; }
   .site-nav a { padding-inline: 0.75rem; }
   .read-cells i { width: 6px; }
+  .site-footer { padding-inline: 1.4rem; }
 }
 @media (max-width: 1000px) {
   .site-header { grid-template-columns: 1fr auto; height: auto; padding: 0.7rem 1.2rem 0.3rem; gap: 0.4rem 1rem; }
   .site-nav { grid-column: 1 / -1; grid-row: 2; justify-content: space-around; }
+  .site-footer { padding-inline: 1.2rem; }
 }
 @media (max-width: 900px) {
   .featured-grid, .two-col, .split, .file-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-  .cards { grid-template-columns: 1fr 1fr; }
   .split.flip > :first-child { order: 0; }
   .split .frame { margin-top: 0; }
   .two-col aside { padding-top: 0.5rem; }
@@ -655,8 +671,16 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
   .site-nav a { padding: 0.55rem 0.3rem; font-size: var(--fs-caps); letter-spacing: 0.16em; }
   .brand-name { font-size: var(--fs-caps); letter-spacing: 0.2em; white-space: normal; }
   .brand-mark { width: 64px; height: 36px; }
-  .read-cells { display: none; }
+  .read { display: none; }
+  .site-header { grid-template-columns: 1fr; }
+  .site-footer { padding-inline: 1rem; }
   .hero { padding-top: 1.6rem; }
+  /* project prev / next: All projects on its own line, then Prev · 01/06 · Next across */
+  .proj-nav { flex-direction: column; align-items: stretch; gap: 0.9rem; }
+  .back { align-self: flex-start; }
+  .proj-step { justify-content: space-between; flex-wrap: nowrap; gap: 1rem; }
+  .pn-full { display: none; }
+  .pn-short { display: inline; }
   .window-body, .featured .window-body { padding: 1.2rem 1.1rem; }
   .cards { grid-template-columns: 1fr; }
   .bubble { max-width: 92%; }
@@ -664,6 +688,9 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
   .m-name, .m-spec { grid-column: 1; }
   .m-spec { flex-wrap: wrap; }
   .readout .row, .readout.contact .row { grid-template-columns: 1fr; gap: 0.15rem; }
+}
+@media (max-width: 360px) {
+  .site-nav a { letter-spacing: 0.1em; padding-inline: 0.15rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

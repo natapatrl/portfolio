@@ -7,12 +7,15 @@
   });
 
   // ---------- READ meter in the top bar: fills as the page scrolls ----------
+  // Hidden on pages too short to scroll (and on phones, in CSS).
+  var readEl = document.querySelector(".read");
   var cellsEl = document.querySelector(".read-cells"), pctEl = document.querySelector(".read-pct");
   if (cellsEl && pctEl) {
     for (var c = 0; c < 12; c++) cellsEl.appendChild(document.createElement("i"));
     var cells = cellsEl.querySelectorAll("i");
     var update = function () {
       var max = document.documentElement.scrollHeight - window.innerHeight;
+      if (readEl) readEl.classList.toggle("off", max < 40);
       var p = max > 0 ? Math.min(1, window.scrollY / max) : 1;
       var on = Math.round(p * cells.length);
       cells.forEach(function (el, i) { el.classList.toggle("on", i < on); });
@@ -42,12 +45,19 @@
   var sleep = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
 
   // ---------- Home: profile window types its labels, then shows each value ----------
+  // Plays once per visit (browser tab); coming back to Home shows everything straight away.
   var con = document.querySelector("[data-console]");
-  if (con && !reduce) {
+  var introSeen = false;
+  try { introSeen = sessionStorage.getItem("introSeen") === "1"; sessionStorage.setItem("introSeen", "1"); } catch (err) {}
+  if (con && (reduce || introSeen)) {
+    var cur0 = con.querySelector(".cursor");
+    if (cur0 && !reduce) cur0.classList.add("go");
+  }
+  if (con && !reduce && !introSeen) {
     con.classList.add("is-typing");
     var steps = Array.prototype.slice.call(con.querySelectorAll(".window-body > *"));
     (async function () {
-      await sleep(250);
+      await sleep(150);
       for (var s = 0; s < steps.length; s++) {
         var el = steps[s], t = el.querySelector(".hud-text");
         if (t) {
@@ -55,11 +65,11 @@
           t.textContent = "";
           el.classList.add("shown");
           t.classList.add("shown");
-          for (var k = 1; k <= full.length; k++) { t.textContent = full.slice(0, k); await sleep(45); }
-          await sleep(160);
+          for (var k = 1; k <= full.length; k++) { t.textContent = full.slice(0, k); await sleep(30); }
+          await sleep(110);
         } else {
           el.classList.add("shown");
-          await sleep(220);
+          await sleep(150);
         }
       }
       con.classList.remove("is-typing");
@@ -106,8 +116,9 @@
   if (filters.length) {
     var rows = document.querySelectorAll(".mission");
     var status = document.querySelector(".filter-status");
-    filters.forEach(function (btn) {
-      btn.addEventListener("click", function () {
+    // The chosen filter is kept in the address (#level), so Back from a project and the
+    // CLASS chips on Home open the list already filtered.
+    var applyFilter = function (btn, remember) {
         var f = btn.dataset.filter, shown = 0;
         filters.forEach(function (b) { b.setAttribute("aria-pressed", b === btn ? "true" : "false"); });
         var last = null;
@@ -119,8 +130,19 @@
         });
         if (last) last.classList.add("last-shown");
         if (status) status.textContent = f === "all" ? "" : "Showing " + shown + " of " + rows.length;
-      });
+        if (remember) {
+          try { history.replaceState(null, "", f === "all" ? location.pathname : "#" + f.replace("t-", "")); } catch (err) {}
+        }
+    };
+    filters.forEach(function (btn) {
+      btn.addEventListener("click", function () { applyFilter(btn, true); });
     });
+    var fromHash = function () {
+      var want = "t-" + location.hash.slice(1);
+      filters.forEach(function (b) { if (b.dataset.filter === want) applyFilter(b, false); });
+    };
+    fromHash();
+    window.addEventListener("hashchange", fromHash);
   }
 
   // ---------- Project pages: DESIGN LOG tabs ----------

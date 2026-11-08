@@ -115,16 +115,22 @@ TAG_STYLE = {
 }
 
 
-def tag_chips(tags, full=False, label=None):
-    """Discipline chips. With a label they become a labelled list (home profile window);
-    inside project links they stay plain spans."""
+def tag_chips(tags, full=False, label=None, link=None):
+    """Discipline chips. With a label they become a labelled list (home profile window); with
+    link (the path to the site root) each chip opens the Projects page filtered to it (#level).
+    Inside project links they stay plain spans."""
     item = "li" if label else "span"
     out = ""
     for t in tags:
         cls, icon = TAG_STYLE.get(t, ("", []))
         px = "".join(f'<rect x="{x}" y="{y}" width="1" height="1"/>' for y, r in enumerate(icon) for x, ch in enumerate(r) if ch == "X")
         svg = f'<svg viewBox="0 0 5 5" aria-hidden="true" shape-rendering="crispEdges">{px}</svg>' if px else ""
-        out += f'<{item} class="chip {cls}">{svg}{e(t if full else t.replace(" Design", ""))}</{item}>'
+        text = e(t if full else t.replace(" Design", ""))
+        if link is not None:
+            out += (f'<{item}><a class="chip chip-link {cls}" href="{link}projects/#{cls[2:]}" '
+                    f'aria-label="{text} projects">{svg}{text}<span class="chip-go" aria-hidden="true">&rarr;</span></a></{item}>')
+        else:
+            out += f'<{item} class="chip {cls}">{svg}{text}</{item}>'
     if label:
         return f'<ul class="chips" aria-label="{e(label)}">{out}</ul>'
     return f'<span class="chips">{out}</span>'
@@ -146,7 +152,7 @@ def spec_strip(pr):
 def mission_list(p, projects):
     rows = ""
     for i, pr in projects:
-        title = pr.get("list_title", pr["title"])
+        title = pr["title"]
         rows += f"""
   <a class="mission" href="{p}projects/{pr['slug']}/" data-tags="{e(' '.join(TAG_STYLE[t][0] for t in pr['tags']))}">
     <span class="m-id" aria-hidden="true">{num(i)}</span>
@@ -165,7 +171,7 @@ def pick_cards(p, slugs):
         cards += f"""
   <a class="card" href="{p}projects/{slug}/">
     {placeholder(pr['hero_ph'], None, '16/9', decorative=True)}
-    <span class="card-head"><span class="m-title">{e(pr.get('list_title', pr['title']))}<span class="slash" aria-hidden="true">/</span></span><span class="card-id" aria-hidden="true">{num(i)}</span></span>
+    <span class="card-head"><span class="m-title">{e(pr['title'])}<span class="slash" aria-hidden="true">/</span></span><span class="card-id" aria-hidden="true">{num(i)}</span></span>
     <span class="m-genre">{e(pr['genre'])}</span>{tag_chips(pr['tags'])}
   </a>"""
     return f'<div class="cards">{cards}\n</div>'
@@ -238,12 +244,12 @@ def build_home():
       <h1 class="hero-intro out">{e(HOME['player'])}<span class="sr-only">, game designer</span><span class="cursor" aria-hidden="true">_</span></h1>
       <p class="hero-bio out">{e(HOME['bio'])}</p>
       <p class="hud-label" aria-hidden="true"><span class="hud-text">{e(HOME['class_label'])}</span></p>
-      <div class="out class-chips">{tag_chips(HOME['classes'], full=True, label="Disciplines")}</div>
+      <div class="out class-chips">{tag_chips(HOME['classes'], full=True, label="Disciplines", link=p)}</div>
       <p class="hud-label" aria-hidden="true"><span class="hud-text">{e(HOME['loadout_label'])}</span></p>
       <ul class="tools out" aria-label="Tools I work in">{tools}</ul>""", attrs=' data-console')}
 </section>
 
-<a class="scroll-cue" href="#latest" tabindex="-1" aria-hidden="true"><span>SCROLL</span><svg viewBox="0 0 5 3" shape-rendering="crispEdges"><rect x="0" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/></svg></a>
+<a class="scroll-cue" href="#quest" tabindex="-1" aria-hidden="true"><span>SCROLL</span><svg viewBox="0 0 5 3" shape-rendering="crispEdges"><rect x="0" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/></svg></a>
 
 <section class="wrap featured" id="latest" aria-label="Latest project">
   {window(HOME['latest_title'], f"""
@@ -258,7 +264,7 @@ def build_home():
     </div>""", tag=HOME["latest_tag"])}
 </section>
 
-<section class="quest" aria-label="Design quest" data-rip>
+<section class="quest" id="quest" aria-label="Design quest" data-rip>
   <span class="quest-seam" aria-hidden="true"></span>
   <div class="quest-band">
     <p class="quest-label">{e(HOME['quest_label'])}</p>
@@ -306,7 +312,7 @@ def build_about():
 
 def build_projects():
     body = f"""
-<section class="wrap section-page">
+<section class="wrap">
   {page_head('02', 'Game projects')}
   {window("PROJECT INDEX", filter_bar() + mission_list('../', list(enumerate(PROJECTS))), cls="list-window")}
 </section>
@@ -323,8 +329,8 @@ def pdr(problem, decision, result):
 
 def design_log(pr):
     """Tabbed DESIGN LOG window: Overview (contributions + highlight menu), one tab per highlight
-    (image beside problem / decision / result), Retrospective. All panes share one grid cell, so the
-    window keeps the same size on every tab."""
+    (image beside problem / decision / result), Retrospective. Above 900px all panes share one grid
+    cell, so the window keeps the same size on every tab; on smaller screens each tab sizes itself."""
     log = DESIGN_LOG.get(pr["slug"], {"highlights": []})
     hls = log["highlights"]
     contrib = "".join(f"<li>{e(t)}</li>" for t in pr["history"])
@@ -397,9 +403,9 @@ def build_project(i, pr):
   <nav class="proj-nav" aria-label="Project navigation">
     <a class="back link internal" href="{p}projects/">All projects</a>
     <span class="proj-step">
-      <a class="link internal prev" href="{p}projects/{prev_pr['slug']}/" aria-label="Previous project: {e(prev_pr['title'])}">{num(i - 1 if i else len(PROJECTS) - 1)} / {e(prev_pr['title'])}</a>
+      <a class="link internal prev" href="{p}projects/{prev_pr['slug']}/" aria-label="Previous project: {e(prev_pr['title'])}"><span class="pn-full">{num(i - 1 if i else len(PROJECTS) - 1)} / {e(prev_pr['title'])}</span><span class="pn-short">Prev</span></a>
       <span class="proj-count" aria-hidden="true">{num(i)}<b>/</b>{len(PROJECTS):02d}</span>
-      <a class="link internal" href="{p}projects/{next_pr['slug']}/" aria-label="Next project: {e(next_pr['title'])}">{num((i + 1) % len(PROJECTS))} / {e(next_pr['title'])}</a>
+      <a class="link internal" href="{p}projects/{next_pr['slug']}/" aria-label="Next project: {e(next_pr['title'])}"><span class="pn-full">{num((i + 1) % len(PROJECTS))} / {e(next_pr['title'])}</span><span class="pn-short">Next</span></a>
     </span>
   </nav>
   {doc_head(num(i), pr['title'], f"{pr['subtitle']} / {pr['year']} / {pr['kind']}", cls="page-head")}
