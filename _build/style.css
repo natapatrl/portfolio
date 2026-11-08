@@ -32,7 +32,9 @@
 }
 
 * { box-sizing: border-box; }
-html { background: var(--ink); scroll-behavior: smooth; }
+/* --hh (top bar height) and --nh (sticky project nav height) are set by site.js, so in-page jumps
+   and keyboard focus never land under the sticky bars. */
+html { background: var(--ink); scroll-behavior: smooth; scroll-padding-top: calc(var(--hh, 92px) + var(--nh, 0px) + 16px); }
 body {
   margin: 0;
   color: var(--head);
@@ -49,12 +51,13 @@ body {
 }
 main { flex: 1; }
 main > section:first-child:not(.hero), main > article:first-child { padding-top: 2.8rem; }
+main > article.project:first-child { padding-top: 2rem; }
 a { color: var(--mint); }
 a:hover { color: var(--head); }
 p { margin: 0 0 0.85rem; }
 h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; margin: 0; }
 .wrap { width: min(1120px, 100% - 2.5rem); margin-inline: auto; }
-.narrow { width: min(880px, 100% - 2.5rem); }
+
 .skip { position: absolute; left: -999px; }
 .skip:focus { left: 1rem; top: 1rem; background: var(--head); color: var(--deep); padding: 0.5rem 1rem; z-index: 9; }
 :focus-visible { outline: 1px solid var(--mint); outline-offset: 4px; }
@@ -92,12 +95,12 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 .site-nav a::before { content: ""; width: 7px; height: 7px; background: var(--mint); opacity: 0; }
 .site-nav a:hover::before, .site-nav a.active::before { opacity: 1; }
 .site-nav a.active { color: var(--mint); }
-.read { display: flex; align-items: center; gap: 0.75rem; font: 400 var(--fs-label) var(--mono); color: var(--muted); letter-spacing: 0.1em; }
+.read { display: flex; align-items: center; gap: 0.6rem; font: 400 var(--fs-label) var(--mono); color: var(--muted); letter-spacing: 0.1em; }
 .read-cells { display: flex; gap: 3px; }
 .read-cells i { width: 8px; height: 14px; background: rgba(158, 245, 214, 0.14); }
 .read-cells i.on { background: var(--mint); }
 .read.off { visibility: hidden; }
-.read-pct { min-width: 2.8rem; color: var(--head); text-align: right; }
+.read-pct { min-width: 4ch; color: var(--head); text-align: left; }
 
 /* ---------- Shared type ---------- */
 .prose p { font-family: var(--plex); color: var(--body); font-size: var(--fs-body); line-height: 1.72; max-width: 64ch; }
@@ -141,7 +144,8 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 .list-box .mission:last-child { border-bottom: 0; }
 
 /* About / Projects / Contact share one centered column */
-.section-page { width: min(880px, 100% - 2.5rem); }
+/* Every page uses the same 1120px frame (user, 2026-11-08), so nothing jumps between pages. */
+.section-page { }
 
 /* Links: underlined caps, arrow for external */
 .links { display: flex; flex-wrap: wrap; gap: 0.6rem 1.8rem; margin: 1.6rem 0 0; }
@@ -303,15 +307,12 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .class-chips .chip { font-size: var(--fs-label); padding: 0.42rem 0.75rem 0.42rem 0.6rem; }
 .class-chips .chip svg { width: 12px; height: 12px; }
 .chip-link { text-decoration: none; cursor: pointer; transition: background .15s, border-color .15s; }
-.chip-go { font-family: var(--grot); margin-left: 0.1rem; opacity: 0.55; transition: transform .15s, opacity .15s; }
-.chip-link:hover, .chip-link:focus-visible { background: color-mix(in srgb, var(--c) 18%, transparent); border-color: var(--c); }
-.chip-link:hover .chip-go, .chip-link:focus-visible .chip-go { opacity: 1; transform: translateX(2px); }
+.chip-link:hover, .chip-link:focus-visible { background: color-mix(in srgb, var(--c) 20%, transparent); border-color: var(--c); }
 .chip-link:focus-visible { outline: 1px solid var(--c); outline-offset: -5px; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-/* LOADOUT: plain text with pixel separators, so it doesn't look like buttons (the CLASS chips are the clickable ones) */
-.tools { list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0; padding: 0; margin-bottom: 0; }
-.tools li { font: 500 var(--fs-caps) var(--grot); letter-spacing: 0.18em; text-transform: uppercase; color: var(--head); padding: 0.2rem 0; }
-.tools li + li::before { content: ""; display: inline-block; width: 4px; height: 4px; background: var(--dim); margin: 0 1rem 0 0.85rem; vertical-align: 3px; }
+/* LOADOUT: the same tag shape as CLASS, in a neutral colour (not clickable) */
+.tools.chips { margin-top: 0; gap: 0.5rem; }
+.chip.t-tool { --c: #c9d0f0; font-size: var(--fs-label); padding: 0.42rem 0.8rem; }
 /* Home cursor: solid until the profile window finishes typing (site.js adds .go), then blinks
    3 times and drops to an idle glow on the same beat. Never blinks forever (WCAG 2.2.2). */
 .cursor { display: inline-block; color: var(--mint); }
@@ -327,15 +328,15 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 /* typed reveal (site.js); without JS everything is simply shown */
 .js .window.is-typing .hud-text, .js .window.is-typing .out, .js .window.is-typing .hud-label::before { visibility: hidden; }
 .js .window .shown, .js .window .hud-label.shown::before { visibility: visible !important; }
-.featured { padding-bottom: 2rem; scroll-margin-top: 116px; }
+.featured { padding-bottom: 2rem; }
 /* Home: "SCROLL" prompt, standing upright in the empty right-hand margin so it never covers content.
    Only on screens wide enough to have that margin (1240px+); hidden once the visitor scrolls (site.js
    adds .gone). The chevron bobs 3 times, then rests (nothing moves forever, WCAG 2.2.2). JS only. */
 .scroll-cue { display: none; }
 .js .scroll-cue {
-  position: fixed; right: max(0.5rem, calc((100vw - 1120px) / 4 - 15px)); bottom: 1.6rem; z-index: 4;
+  position: fixed; right: max(4px, calc((100vw - 1120px) / 4 - 13px)); bottom: 1.6rem; z-index: 4;
   display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
-  padding: 0.75rem 0.4rem 0.6rem; text-decoration: none;
+  padding: 0.7rem 0.25rem 0.55rem; text-decoration: none;
   font: 400 var(--fs-micro)/1 var(--mono); letter-spacing: 0.2em; color: var(--muted);
   background: rgba(5, 9, 21, 0.85); border: 1px solid var(--line-strong);
   clip-path: polygon(6px 0, 100% 0, 100% 100%, 0 100%, 0 6px);
@@ -347,12 +348,13 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .scroll-cue svg { width: 15px; height: 9px; fill: var(--mint); animation: cue-bob 1.1s steps(2, jump-none) 3 1s; }
 .js .scroll-cue.gone { opacity: 0; visibility: hidden; }
 @keyframes cue-bob { 0%, 100% { transform: none; } 50% { transform: translateY(4px); } }
-@media (max-width: 1239px) { .js .scroll-cue { display: none; } }
 .featured .window-body { padding: 1.6rem; }
 .chat-window { margin: 0.5rem 0 1rem; }
 .chat-window .chat { margin: 0; background: none; border: 0; border-radius: 0; }
 .contact-window .window-body { padding-top: 0.4rem; }
-.contact-window .window-body > .sec:first-child { border-top: 0; margin-top: 0.6rem; }
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 3rem; }
+.contact-grid > div:first-child .sec { border-top: 0; margin-top: 0.6rem; }
+@media (min-width: 901px) { .contact-grid .sec { border-top: 0; margin-top: 0.6rem; } }
 .list-window .window-body { padding: 1.1rem 1.2rem 0.6rem; }
 .list-window .missions { border-top: 0; }
 .list-window .mission:last-child, .list-window .mission.last-shown { border-bottom: 0; }
@@ -387,8 +389,7 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
   48% { opacity: .3; animation-timing-function: step-end; }
   58%, 100% { opacity: 1; }
 }
-.quest { scroll-margin-top: 116px;
- position: relative; margin: 4.5rem 0; }
+.quest { position: relative; margin: 4.5rem 0; }
 .quest-band { text-align: center; background: #000; padding: 1.4rem 1rem; position: relative; }
 /* Rip-open (site.js adds .rip-ready, then .ripped when the band scrolls into view):
    a mint seam slashes across, then the page tears open into the band in pixel-sized steps. */
@@ -457,7 +458,11 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 
 /* ---------- Project page ---------- */
 .project { padding-bottom: 2rem; }
-.proj-nav { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem 2rem; padding-bottom: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--line-strong); }
+/* Project nav sticks under the top bar while scrolling, so previous / next project are always in
+   reach. Once stuck (site.js adds .stuck) it gets the top bar's background across the full width. */
+.proj-nav { position: sticky; top: var(--hh, 92px); z-index: 4; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem 2rem; padding: 0.8rem 0; margin-bottom: 2rem; border-bottom: 1px solid var(--line-strong); }
+.proj-nav.stuck { background: #060b26; box-shadow: 0 0 0 100vmax #060b26; clip-path: inset(0 -100vmax); border-bottom-color: transparent; }
+.proj-nav.stuck::after { content: ""; position: absolute; left: -100vmax; right: -100vmax; bottom: 0; height: 1px; background: var(--line-strong); }
 .proj-step { display: flex; align-items: center; flex-wrap: wrap; gap: 0.8rem 1.6rem; }
 .proj-count { font: 400 var(--fs-label) var(--mono); color: var(--muted); }
 .proj-count b { font-weight: 400; color: var(--mint); margin: 0 0.3rem; }
@@ -476,7 +481,7 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 
 /* ---------- Project page: DESIGN LOG window ---------- */
 .file-pitch { margin: 0 0 1.3rem; font: 400 var(--fs-body)/1.5 var(--plex); color: var(--head); }
-.dl { margin-top: 0; scroll-margin-top: 116px; }
+.dl { margin-top: 0; }
 .pdr { margin: 0; display: grid; gap: 1rem; }
 .pdr dt { font: 500 var(--fs-caps-s) var(--grot); letter-spacing: .22em; color: var(--muted); margin-bottom: .3rem; }
 .pdr dt b { font: 400 var(--fs-micro) var(--mono); color: var(--dim); margin-right: .6rem; letter-spacing: .05em; }
@@ -554,7 +559,7 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .chat-status::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--mint); margin-right: 0.45rem; vertical-align: 1px; }
 .chat-log { min-height: 14rem; }
 .bubble {
-  max-width: 74%;
+  max-width: min(74%, 560px);
   width: fit-content;
   margin: 0.55rem 0;
   padding: 0.75rem 1.1rem;
@@ -652,7 +657,7 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
   .site-footer { padding-inline: 1.2rem; }
 }
 @media (max-width: 900px) {
-  .featured-grid, .two-col, .split, .file-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .featured-grid, .two-col, .split, .file-grid, .contact-grid { grid-template-columns: 1fr; gap: 1.5rem; }
   .split.flip > :first-child { order: 0; }
   .split .frame { margin-top: 0; }
   .two-col aside { padding-top: 0.5rem; }
@@ -676,9 +681,8 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
   .site-footer { padding-inline: 1rem; }
   .hero { padding-top: 1.6rem; }
   /* project prev / next: All projects on its own line, then Prev · 01/06 · Next across */
-  .proj-nav { flex-direction: column; align-items: stretch; gap: 0.9rem; }
-  .back { align-self: flex-start; }
-  .proj-step { justify-content: space-between; flex-wrap: nowrap; gap: 1rem; }
+  .proj-nav { flex-wrap: nowrap; gap: 1rem; }
+  .proj-step { flex-wrap: nowrap; gap: 0.9rem; }
   .pn-full { display: none; }
   .pn-short { display: inline; }
   .window-body, .featured .window-body { padding: 1.2rem 1.1rem; }
@@ -691,6 +695,7 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 }
 @media (max-width: 360px) {
   .site-nav a { letter-spacing: 0.1em; padding-inline: 0.15rem; }
+  .proj-count { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

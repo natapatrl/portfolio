@@ -87,7 +87,7 @@ def page(rel_out, title, desc, body, active=None, p=None):
     <span class="brand-text"><span class="brand-name">NATAPATR LORSATHIAN</span><span class="brand-role">game designer</span></span>
   </a>
   <nav class="site-nav" aria-label="Main">{nav}</nav>
-  <div class="read" aria-hidden="true"><span class="read-label">READ</span><span class="read-cells"></span><span class="read-pct">0%</span></div>
+  <div class="read" aria-hidden="true"><span class="read-label">SCROLL</span><span class="read-cells"></span><span class="read-pct">0%</span></div>
 </header>
 <main id="main">
 {body}
@@ -128,7 +128,7 @@ def tag_chips(tags, full=False, label=None, link=None):
         text = e(t if full else t.replace(" Design", ""))
         if link is not None:
             out += (f'<{item}><a class="chip chip-link {cls}" href="{link}projects/#{cls[2:]}" '
-                    f'aria-label="{text} projects">{svg}{text}<span class="chip-go" aria-hidden="true">&rarr;</span></a></{item}>')
+                    f'aria-label="{text} projects">{svg}{text}</a></{item}>')
         else:
             out += f'<{item} class="chip {cls}">{svg}{text}</{item}>'
     if label:
@@ -236,7 +236,7 @@ def build_home():
     p = ""
     f = PROJECTS[0]
     links = ext_link(*f["links"][0])                                          # Steam only on home
-    tools = "".join(f"<li>{e(t)}</li>" for t in HOME["tools"])
+    tools = "".join(f'<li class="chip t-tool">{e(t)}</li>' for t in HOME["tools"])
     body = f"""
 <section class="hero wrap">
   {window(HOME['profile_title'], f"""
@@ -246,7 +246,7 @@ def build_home():
       <p class="hud-label" aria-hidden="true"><span class="hud-text">{e(HOME['class_label'])}</span></p>
       <div class="out class-chips">{tag_chips(HOME['classes'], full=True, label="Disciplines", link=p)}</div>
       <p class="hud-label" aria-hidden="true"><span class="hud-text">{e(HOME['loadout_label'])}</span></p>
-      <ul class="tools out" aria-label="Tools I work in">{tools}</ul>""", attrs=' data-console')}
+      <ul class="chips tools out" aria-label="Tools I work in">{tools}</ul>""", attrs=' data-console')}
 </section>
 
 <a class="scroll-cue" href="#quest" tabindex="-1" aria-hidden="true"><span>SCROLL</span><svg viewBox="0 0 5 3" shape-rendering="crispEdges"><rect x="0" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/></svg></a>
@@ -401,7 +401,7 @@ def build_project(i, pr):
     body = f"""
 <article class="wrap project">
   <nav class="proj-nav" aria-label="Project navigation">
-    <a class="back link internal" href="{p}projects/">All projects</a>
+    <a class="back link internal" href="{p}projects/"><span class="pn-full">All projects</span><span class="pn-short">Projects</span></a>
     <span class="proj-step">
       <a class="link internal prev" href="{p}projects/{prev_pr['slug']}/" aria-label="Previous project: {e(prev_pr['title'])}"><span class="pn-full">{num(i - 1 if i else len(PROJECTS) - 1)} / {e(prev_pr['title'])}</span><span class="pn-short">Prev</span></a>
       <span class="proj-count" aria-hidden="true">{num(i)}<b>/</b>{len(PROJECTS):02d}</span>
@@ -434,14 +434,17 @@ def build_contact():
 <section class="wrap section-page">
   {page_head('03', 'Contact me')}
   {window("COMMS", f"""
+    <div class="contact-grid"><div>
     {section_head('/ RESUME', CONTACT['heading'])}
     <div class="note prose">{lines}</div>
+    </div><div>
     {section_head('/ CHANNELS', 'Reach me at')}
     <dl class="readout contact">
       <div class="row"><dt>Email</dt><dd>{email_link('../')}</dd></div>
       <div class="row"><dt>LinkedIn</dt><dd>{ext_link(SITE['linkedin_label'], SITE['linkedin'], '')}</dd></div>
       <div class="row"><dt>itch.io</dt><dd>{ext_link('twonah.itch.io', SITE['itch'], '')}</dd></div>
-    </dl>""", cls="contact-window")}
+    </dl>
+    </div></div>""", cls="contact-window")}
 </section>
 """
     page("contact/index.html", "Contact", "Contact Nat for game design roles and a tailored resume.", body,
@@ -450,7 +453,7 @@ def build_contact():
 
 def build_404():
     body = """
-<section class="wrap narrow">
+<section class="wrap section-page">
   <h1 class="sec"><span class="sec-no" aria-hidden="true">/ 404</span>Level not found</h1>
   <div class="prose"><p>This room doesn't exist (yet). Respawn at the start?</p></div>
   <div class="links"><a class="link internal" href="/portfolio/">Back to home</a></div>

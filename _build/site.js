@@ -28,6 +28,26 @@
 
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // ---------- Sticky bars: share their heights with CSS (--hh, --nh) ----------
+  var header = document.querySelector(".site-header"), pnav = document.querySelector(".proj-nav");
+  var root = document.documentElement;
+  var measure = function () {
+    if (header) root.style.setProperty("--hh", header.offsetHeight + "px");
+    if (pnav) root.style.setProperty("--nh", pnav.offsetHeight + "px");
+  };
+  measure();
+  window.addEventListener("resize", measure);
+  if (pnav) {
+    // .stuck = the project nav is pinned under the top bar (gives it a solid background)
+    var stuckCheck = function () {
+      var top = header ? header.offsetHeight : 0;
+      pnav.classList.toggle("stuck", window.scrollY > 0 && pnav.getBoundingClientRect().top <= top + 0.5);
+    };
+    window.addEventListener("scroll", stuckCheck, { passive: true });
+    window.addEventListener("resize", stuckCheck);
+    stuckCheck();
+  }
+
   // ---------- Home: SCROLL prompt hides once the visitor scrolls (or if there's nothing below) ----------
   var cue = document.querySelector(".scroll-cue");
   if (cue) {
