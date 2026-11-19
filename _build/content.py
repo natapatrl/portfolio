@@ -46,7 +46,8 @@ ABOUT = {
     # Text is kept general on purpose (no project names): details live on the project pages.
     "intro": [
         "Hi, I'm Natapatr. Nat for short.",
-        "I'm a game designer. Level design and UX/UI are my favorites.",
+        "I'm a game designer, currently based in Bangkok, Thailand.",
+        "Level design and UX/UI are my favorites.",
     ],
     "topics": [
         {
@@ -58,10 +59,6 @@ ABOUT = {
                 "I had to relearn it every time, and misclicks cost me matches.",
                 "Others reworked characters into something more basic, and the charm was gone.",
                 "That's what made me want to start designing.",
-                # Optional (Nat to decide after trying the chat).
-                "I was set on becoming an artist at first. When that didn't work out, I applied to a "
-                "game design course at university with nothing left to lose.",
-                "I did surprisingly well, so I stayed.",
             ],
         },
         {
@@ -101,22 +98,6 @@ ABOUT = {
                 "should get a reaction.",
                 "That's why I'd rather add levels that teach each step than hold the player's hand. "
                 "Figuring it out yourself is the reward.",
-            ],
-        },
-        {
-            "id": "style",
-            "q": "What's your style?",
-            "a": [
-                "Understated. I like being different, just not loudly.",
-                "What I aim for is quiet elegance.",
-            ],
-        },
-        {
-            "id": "tools",
-            "q": "What tools do you use?",
-            "a": [
-                "Unity and Unreal (incl. UEFN), and Figma for UI prototypes.",
-                "Confluence for design docs, Jira and Trello for sprints.",
             ],
         },
         {
