@@ -41,7 +41,8 @@ ABOUT = {
     #   - "after": a follow-up, only offered once the topic with that id has been asked
     #     (shown first in the options, since it continues the conversation).
     #   - An answer line can be {"link": text, "to": "latest"}: Nat sends a link. "latest" is
-    #     the first project in PROJECTS (the one featured on Home), so it follows the list order.
+    #     the first project in PROJECTS (the one featured on Home), so it follows the list order;
+    #     "contact" is the Contact page.
     # Text is kept general on purpose (no project names): details live on the project pages.
     "intro": [
         "Hi, I'm Natapatr. Nat for short.",
@@ -52,14 +53,15 @@ ABOUT = {
             "id": "start",
             "q": "How did you get into game design?",
             "a": [
-                "Frustration, mostly.",
-                "I played a lot of games, and what bugged me most were questionable dev decisions.",
+                "Frustration, mostly. At a lot of everyday things, games included.",
                 "One mobile game I used to play changed its UI and font three times in a month. "
                 "I had to relearn it every time, and misclicks cost me matches.",
                 "Others reworked characters into something more basic, and the charm was gone.",
+                "That's what made me want to start designing.",
                 # Optional (Nat to decide after trying the chat).
-                "Before game design, I was set on becoming an artist. When that didn't work out, I "
-                "applied to KMUTT with nothing left to lose. I did surprisingly well, so I stayed.",
+                "I was set on becoming an artist at first. When that didn't work out, I applied to a "
+                "game design course at university with nothing left to lose.",
+                "I did surprisingly well, so I stayed.",
             ],
         },
         {
@@ -78,7 +80,8 @@ ABOUT = {
             "q": "How do you approach design?",
             "a": [
                 "I break things down to the fundamentals first: why they work, and where they fail.",
-                "Then I look at it from a completely different angle. Same song, different instrument.",
+                "Then I look at it from a completely different angle, like a player's instead of a "
+                "designer's. Same song, different instrument.",
             ],
         },
         {
@@ -105,8 +108,7 @@ ABOUT = {
             "q": "What's your style?",
             "a": [
                 "Understated. I like being different, just not loudly.",
-                "What I aim for is quiet elegance. A design has to pass my own standards before "
-                "anyone else's, even if it already works.",
+                "What I aim for is quiet elegance.",
             ],
         },
         {
@@ -121,6 +123,14 @@ ABOUT = {
             "id": "now",
             "q": "Working on anything now?",
             "a": [{"link": "Check out my latest work here", "to": "latest"}],
+        },
+        {
+            "id": "hire",
+            "q": "Are you open to work?",
+            "a": [
+                "Yep, I am.",
+                {"link": "Reach out to me here", "to": "contact"},
+            ],
         },
     ],
     "final": "View my projects",

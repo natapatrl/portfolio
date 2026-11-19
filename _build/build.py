@@ -285,12 +285,14 @@ def build_home():
 def build_about():
     # Full transcript as plain HTML (what visitors without JavaScript see); site.js replaces it
     # with the interactive version using the JSON script below.
-    # Link answers ({"link": text, "to": "latest"}) point at the first project in PROJECTS.
+    # Link answers: {"link": text, "to": "latest"} -> first project in PROJECTS; "contact" -> Contact.
     latest = PROJECTS[0]["slug"]
+    host = SITE["base_url"].split("://", 1)[1]
+    targets = {"latest": f"projects/{latest}", "contact": "contact"}
     def resolve(a):
         if isinstance(a, dict):
-            return {"link": a["link"], "href": f"../projects/{latest}/",
-                    "url": f"{SITE['base_url'].split('://', 1)[1]}projects/{latest}"}
+            path = targets[a["to"]]
+            return {"link": a["link"], "href": f"../{path}/", "url": host + path}
         return a
     topics = [dict(t, a=[resolve(a) for a in t["a"]]) for t in ABOUT["topics"]]
 
