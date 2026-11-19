@@ -285,11 +285,27 @@ def build_home():
 def build_about():
     # Full transcript as plain HTML (what visitors without JavaScript see); site.js replaces it
     # with the interactive version using the JSON script below.
-    fallback = "".join(f'<div class="bubble them"><p>{e(t)}</p></div>' for t in ABOUT["intro"])
-    for t in ABOUT["topics"]:
+    # Link answers ({"link": text, "to": "latest"}) point at the first project in PROJECTS.
+    latest = PROJECTS[0]["slug"]
+    def resolve(a):
+        if isinstance(a, dict):
+            return {"link": a["link"], "href": f"../projects/{latest}/",
+                    "url": f"{SITE['base_url'].split('://', 1)[1]}projects/{latest}"}
+        return a
+    topics = [dict(t, a=[resolve(a) for a in t["a"]]) for t in ABOUT["topics"]]
+
+    def nat_bubble(a):
+        if isinstance(a, dict):
+            return (f'<div class="bubble them link-msg"><a href="{a["href"]}">'
+                    f'<span class="lm-text">{e(a["link"])}</span>'
+                    f'<span class="lm-url">{e(a["url"])}</span></a></div>')
+        return f'<div class="bubble them"><p>{e(a)}</p></div>'
+
+    fallback = "".join(nat_bubble(t) for t in ABOUT["intro"])
+    for t in topics:
         fallback += f'<div class="bubble me"><p>{e(t["q"])}</p></div>'
-        fallback += "".join(f'<div class="bubble them"><p>{e(a)}</p></div>' for a in t["a"])
-    data = json.dumps({"intro": ABOUT["intro"], "topics": ABOUT["topics"],
+        fallback += "".join(nat_bubble(a) for a in t["a"])
+    data = json.dumps({"intro": ABOUT["intro"], "topics": topics,
                        "final": ABOUT["final"], "finalHref": "../projects/"}).replace("</", "<\\/")
     body = f"""
 <section class="wrap section-page">

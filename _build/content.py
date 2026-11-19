@@ -38,33 +38,89 @@ ABOUT = {
     # Interactive chat. Nat's messages are the left (lavender) bubbles; the reader's picks are
     # the right (mint) bubbles. Each topic disappears once asked. When none are left, the only
     # option is the final link.
+    #   - "after": a follow-up, only offered once the topic with that id has been asked
+    #     (shown first in the options, since it continues the conversation).
+    #   - An answer line can be {"link": text, "to": "latest"}: Nat sends a link. "latest" is
+    #     the first project in PROJECTS (the one featured on Home), so it follows the list order.
+    # Text is kept general on purpose (no project names): details live on the project pages.
     "intro": [
         "Hi, I'm Natapatr. Nat for short.",
         "I'm a game designer. Level design and UX/UI are my favorites.",
-        "Ask me anything!",
     ],
     "topics": [
         {
-            "q": "What makes a game great?",
+            "id": "start",
+            "q": "How did you get into game design?",
             "a": [
-                "It has to feel good to play.",
-                "Fun is the foundation, but even a fun game gets frustrating if it isn't user-friendly.",
+                "Frustration, mostly.",
+                "I played a lot of games, and what bugged me most were questionable dev decisions.",
+                "One mobile game I used to play changed its UI and font three times in a month. "
+                "I had to relearn it every time, and misclicks cost me matches.",
+                "Others reworked characters into something more basic, and the charm was gone.",
+                # Optional (Nat to decide after trying the chat).
+                "Before game design, I was set on becoming an artist. When that didn't work out, I "
+                "applied to KMUTT with nothing left to lose. I did surprisingly well, so I stayed.",
             ],
         },
         {
-            "q": "Your design goal?",
-            "a": ["Balancing fun with a smooth user experience."],
+            "id": "instead",
+            "after": "start",
+            "q": "So what would you do?",
+            "a": [
+                "Keep the skill ceiling, lower the floor. Usually that means less for the player to "
+                "remember and process at once.",
+                "And don't make players relearn what they already know. Changes get built around "
+                "the old layout, like button placements and keybinds.",
+            ],
         },
         {
+            "id": "approach",
+            "q": "How do you approach design?",
+            "a": [
+                "I break things down to the fundamentals first: why they work, and where they fail.",
+                "Then I look at it from a completely different angle. Same song, different instrument.",
+            ],
+        },
+        {
+            "id": "pillars",
+            "after": "approach",
+            "q": "How do you decide what goes in?",
+            "a": [
+                "It has to serve the game's design pillars. If it can't, it usually doesn't make the "
+                "cut, unless it's a big QOL win.",
+            ],
+        },
+        {
+            "id": "frustration",
+            "q": "When does challenge become frustration?",
+            "a": [
+                "When it's overly repetitive, but mostly when effort goes unrewarded. Every action "
+                "should get a reaction.",
+                "That's why I'd rather add levels that teach each step than hold the player's hand. "
+                "Figuring it out yourself is the reward.",
+            ],
+        },
+        {
+            "id": "style",
+            "q": "What's your style?",
+            "a": [
+                "Understated. I like being different, just not loudly.",
+                "What I aim for is quiet elegance. A design has to pass my own standards before "
+                "anyone else's, even if it already works.",
+            ],
+        },
+        {
+            "id": "tools",
             "q": "What tools do you use?",
-            "a": ["Unity, Unreal (incl. UEFN) and Figma for UI prototypes."],
+            "a": [
+                "Unity and Unreal (incl. UEFN), and Figma for UI prototypes.",
+                "Confluence for design docs, Jira and Trello for sprints.",
+            ],
         },
         {
+            "id": "now",
             "q": "Working on anything now?",
-            "a": [
-                "Anonymized! Our Global Game Jam 2026 entry, 1st place at Game Dev Hub Bangkok.",
-                "We grew it into a full game. It's out now on Steam.",
-            ],
+            "a": [{"link": "Check out my latest work here", "to": "latest"}],
         },
     ],
     "final": "View my projects",

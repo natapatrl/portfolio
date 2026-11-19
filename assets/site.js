@@ -217,12 +217,28 @@
     if (r.bottom > window.innerHeight) window.scrollBy({ top: r.bottom - window.innerHeight + 24, behavior: reduce ? "auto" : "smooth" });
   }
 
+  // A line is plain text, or {link, href, url}: Nat sends a link, shown like a chat link preview.
   function bubble(side, text) {
     var b = document.createElement("div");
     b.className = "bubble " + side;
-    var p = document.createElement("p");
-    p.textContent = text;
-    b.appendChild(p);
+    if (typeof text === "object") {
+      b.classList.add("link-msg");
+      var a = document.createElement("a");
+      a.href = text.href;
+      var t = document.createElement("span");
+      t.className = "lm-text";
+      t.textContent = text.link;
+      var u = document.createElement("span");
+      u.className = "lm-url";
+      u.textContent = text.url;
+      a.appendChild(t);
+      a.appendChild(u);
+      b.appendChild(a);
+    } else {
+      var p = document.createElement("p");
+      p.textContent = text;
+      b.appendChild(p);
+    }
     log.appendChild(b);
     requestAnimationFrame(function () { b.classList.add("shown"); });
     scrollDown();
@@ -246,7 +262,8 @@
   async function natSays(lines) {
     for (var i = 0; i < lines.length; i++) {
       typing(true);
-      await wait(220 + Math.min(lines[i].length * 5, 480));
+      var len = typeof lines[i] === "object" ? 40 : lines[i].length;
+      await wait(220 + Math.min(len * 5, 480));
       typing(false);
       bubble("them", lines[i]);
       await wait(110);
@@ -258,8 +275,19 @@
   // screen reader users stay in the chat instead of being dropped back to the top of the page.
   function showOptions(focusFirst) {
     opts.innerHTML = "";
+    // Topics not yet asked; a follow-up ("after") only once its parent was asked, and listed
+    // first, since it carries on from what Nat just said.
+    var ids = {};
+    data.topics.forEach(function (t, i) { if (t.id) ids[t.id] = i; });
+    var open = [];
     data.topics.forEach(function (t, i) {
       if (asked[i]) return;
+      if (t.after && !asked[ids[t.after]]) return;
+      open.push(i);
+    });
+    open.sort(function (a, b) { return (data.topics[b].after ? 1 : 0) - (data.topics[a].after ? 1 : 0) || a - b; });
+    open.forEach(function (i) {
+      var t = data.topics[i];
       var btn = document.createElement("button");
       btn.type = "button";
       btn.className = "chat-opt";

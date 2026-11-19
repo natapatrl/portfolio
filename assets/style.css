@@ -570,6 +570,14 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .bubble p { margin: 0; }
 .bubble.them { background: var(--lav); border-bottom-left-radius: 1px; }
 .bubble.me { background: var(--mint); margin-left: auto; border-bottom-right-radius: 1px; }
+/* Nat sending a link: a link-preview card inside the bubble */
+.bubble.link-msg { padding: 0.35rem; }
+.link-msg a { display: block; padding: 0.6rem 0.85rem 0.65rem; border-radius: 3px; background: rgba(26, 31, 61, 0.1); color: #1a1f3d; text-decoration: none; border-left: 3px solid #1a1f3d; }
+.link-msg .lm-text { display: block; font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
+.link-msg .lm-text::after { content: "\00a0\2192"; content: "\00a0\2192" / ""; }
+.link-msg .lm-url { display: block; margin-top: 0.2rem; font: 400 var(--fs-label) var(--mono); color: #3d3566; overflow-wrap: anywhere; }
+.link-msg a:hover { background: rgba(26, 31, 61, 0.18); }
+.link-msg a:focus-visible { outline: 2px solid #1a1f3d; outline-offset: 2px; }
 .js .chat-log .bubble { opacity: 0; transform: translateY(8px); transition: opacity 0.2s, transform 0.2s; }
 .js .chat-log .bubble.shown { opacity: 1; transform: none; }
 .typing { display: inline-flex; gap: 5px; padding: 0.95rem 1.1rem; }
