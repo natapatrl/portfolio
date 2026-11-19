@@ -108,7 +108,10 @@ ABOUT = {
         {
             "id": "hire",
             "q": "Are you open to work?",
-            "a": [{"link": "Feel free to reach out here", "to": "contact"}],
+            "a": [
+                "I'm open to all arrangements, whether that's remote, on-site or relocating.",
+                {"link": "Feel free to reach out here", "to": "contact"},
+            ],
         },
     ],
     "final": "View my projects",
