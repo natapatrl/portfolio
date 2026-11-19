@@ -92,7 +92,7 @@ ABOUT = {
         },
         {
             "id": "frustration",
-            "q": "When does challenge become frustration?",
+            "q": "Challenge vs frustration?",
             "a": [
                 "When it's overly repetitive, but mostly when effort goes unrewarded. Every action "
                 "should get a reaction.",

@@ -605,6 +605,7 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
   cursor: pointer;
   text-decoration: none;
   animation: rise 0.25s ease-out;
+  text-align: right;   /* a label that wraps stays aligned with the right-hand reply column */
 }
 .chat-opt:hover, .chat-opt:focus-visible { background: rgba(158, 245, 214, 0.12); color: var(--head); }
 .chat-opt.final { background: var(--mint); color: var(--deep); border-color: var(--mint); font-weight: 500; }
