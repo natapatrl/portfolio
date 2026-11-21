@@ -341,8 +341,12 @@ def build_projects():
 
 def pdr(problem, decision, result):
     rows = [("01", "PROBLEM", problem, ""), ("02", "DECISION", decision, " dec"), ("03", "RESULT", result, "")]
+    def body(t):   # a string is one paragraph; a list becomes "+" bullets
+        if isinstance(t, (list, tuple)):
+            return '<ul class="plus-list pdr-list">' + "".join(f"<li>{e(x)}</li>" for x in t) + "</ul>"
+        return e(t)
     return '<dl class="pdr">' + "".join(
-        f'<div class="{c.strip()}"><dt><b>{n}</b>{lbl}</dt><dd>{e(t)}</dd></div>' for n, lbl, t, c in rows) + "</dl>"
+        f'<div class="{c.strip()}"><dt><b>{n}</b>{lbl}</dt><dd>{body(t)}</dd></div>' for n, lbl, t, c in rows) + "</dl>"
 
 
 def cap_title(t):

@@ -173,12 +173,10 @@ PROJECTS = [
             "As the team's only game designer, designed every mechanic and the core loop, pitching "
             "and iterating each with the team before it was final",
             "Designed 120+ levels across 10 worlds for the full release",
-            "Designed all of the game's UI and feedback, and proposed the walking animation so "
-            "movement is easy to read",
-            "Designed undo, soft and hard reset, and a softlock prompt, none of which the jam "
+            "Designed all of the game's UI and game feedback",
+            "Designed undo, restart and a prompt for when players get stuck, none of which the jam "
             "version had",
-            "Built and tested every level in Unity, in rounds: alone against the level's purpose, "
-            "then watching teammates play, then outside players",
+            "Built and playtested every level in Unity",
         ],
         "sections": [],
         "gallery_ph": ["Level layout / puzzle screenshot", "UI or accessibility options screenshot"],
@@ -444,43 +442,40 @@ DESIGN_LOG = {
         # Puzzle design first: at conventions the most common question was "how did you design the puzzles?"
         "highlights": [
             ("PUZZLE DESIGN", "Puzzle flow chart or level sequence",
-             "At the jam, the game had 12 levels built on three things: changing color, mixing colors "
-             "and firewalls. Players found the difficulty jumps too steep. The full game needed 120+ "
-             "levels that get harder without just getting longer.",
-             "I made difficulty come from mechanics reacting to each other. Teaching levels focus on "
-             "one idea, while challenge levels and \"final exam\" levels combine everything learned so "
-             "far. Challenging shouldn't mean tedious, so levels that needed filler moves got reworked. "
-             "Splitting one level's two phases, for example, halved its solution and kept the "
-             "challenge where it mattered.",
-             "At conventions, most players kept solving until their time ran out: peak hours needed a "
-             "15-minute limit, and a few finished the 30+ level demo in 40 minutes. \"How did you "
-             "design the puzzles?\" was the question I heard most.",
+             ["The jam version had 12 levels on three mechanics: changing color, mixing colors and firewalls",
+              "Players found the difficulty jumps too steep",
+              "Growing to 120+ levels meant difficulty had to rise without levels just getting longer"],
+             ["Difficulty comes from mechanics reacting to each other, not from length",
+              "Teaching levels focus on one idea; challenge and \"final exam\" levels combine everything learned",
+              "Challenging shouldn't mean tedious, so levels that needed filler moves were reworked"],
+             ["The puzzles stood out: \"How did you design the puzzles?\" was the question I heard most",
+              "Players stayed engaged: at conventions, most kept solving until their time ran out"],
              "Harder levels, not longer ones"),
             ("TUTORIAL", "Tutorial level clip",
-             "The first version dropped players into the core mechanic with no introduction. Some "
-             "mashed through without noticing they'd changed color, then struggled later. Unlike "
-             "mainstream puzzle mechanics, such as pushing boxes in Sokoban, these rules were new to "
-             "most players.",
-             "The game barely uses text, so the levels show instead of tell. Level 1 is a small maze "
-             "where firewalls are just walls. Level 2 closes that path, so the only way through is a "
-             "tile that changes the player's color. World 1 then lets players change color with their "
-             "own moves, like a power-up. Each later mechanic opens with a simple practice path, with room to "
-             "experiment.",
-             "Most players got it instantly in level 2. Unprompted, they said things like \"Ohhh, I "
-             "get it now.\"",
+             ["The jam version dropped players into the core mechanic with no introduction",
+              "Some passed the first level by mashing inputs, never learned the rule, and struggled later",
+              "Unlike mainstream puzzle mechanics, such as pushing boxes in Sokoban, the rules were new to "
+              "most players"],
+             ["No text: the levels show the rules",
+              "Level 1 is a small maze where firewalls block the way",
+              "Level 2 closes that path, so the only way through is a tile that changes the player's color",
+              "Changing color with your own moves comes later, in World 1, as a power-up",
+              "Every new mechanic opens with a simple practice level, with room to experiment"],
+             ["Most players grasped the core rule on level 2, judging by their reactions",
+              "The tutorial drew far more praise than the jam's"],
              "A tutorial that shows instead of tells"),
             ("DIEGETIC UI", "In-world UI / HUD screenshot",
-             "From the jam on, the game had a clear style and a console around the board, but it was "
-             "hard to read. "
-             "Its only player aid was a fixed mix-formula sheet, and only a few players figured the "
-             "game out by watching closely.",
-             "I reworked that same console to react to the player and show more. Holding a button "
-             "projects holograms of where the player will change color and which steps get there. "
-             "The combo display follows the current color, a ring shows mixing, and an invalid move "
-             "shows the color the player would have turned.",
-             "The UI now completes the diegetic tutorial. Playtesters learned the mechanics without "
-             "outside help, could tell what each move would do, and got less frustrated operating "
-             "the game.",
+             ["In the jam version, the only player aid was a fixed mix-formula sheet",
+              "Invalid moves failed without showing why",
+              "The game felt abstract; only a few players figured it out by watching closely"],
+             ["Reworked the in-world console around the play grid to react to the player and show more",
+              "Holding a button previews, as holograms, where the player will change color and the moves "
+              "to get there",
+              "The input display follows the current color and shows when the player is mixing",
+              "An invalid move shows the color the player would have turned, so they see why it failed"],
+             ["The UI now teaches alongside the levels",
+              "Playtesters learned the mechanics without outside help and could tell what each move "
+              "would do"],
              "Turning a hard-to-read console into a live guide"),
         ],
         "retrospective": "As my first commercial release, Anonymized showed me how wide real players' "

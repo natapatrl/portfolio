@@ -488,6 +488,9 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .pdr dt b { font: 400 var(--fs-micro) var(--mono); color: var(--dim); margin-right: .6rem; letter-spacing: .05em; }
 .pdr dd { margin: 0; font: 400 var(--fs-body)/1.55 var(--plex); color: var(--body); }
 .pdr .dec dt { color: var(--mint); } .pdr .dec dd { color: var(--head); }
+.pdr-list { font-size: inherit; color: inherit; }
+.pdr-list li { padding: .12rem 0 .12rem 1.4rem; line-height: 1.5; }
+.pdr-list li::before { top: .1rem; }
 .hl-grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: 2rem; align-items: start; }
 .retro { margin: 0; font: 400 var(--fs-body)/1.55 var(--plex); color: var(--muted); }
 /* D: OS-style tabs under the window bar; all panes share one grid cell so the window never jumps */
