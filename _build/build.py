@@ -442,6 +442,7 @@ def build_project(i, pr):
       <div class="file-main">
         {placeholder(pr['hero_ph'], 'FIG. 00 / ' + pr['title'], '16/9', 'hero-ph')}
         <p class="file-pitch">{e(pr['blurb'])}</p>
+        {f'<p class="file-plays">{e(pr["plays"])}</p>' if pr.get('plays') else ''}
       </div>
       <div class="file-side">
         {spec}

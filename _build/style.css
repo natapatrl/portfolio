@@ -194,6 +194,7 @@ h1, h2, h3 { font-family: var(--grot); font-weight: 500; line-height: 1.15; marg
 .file-window .window-body { padding: 1.4rem 1.5rem 1.5rem; }
 .file-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 1.5rem 2rem; align-items: start; }
 .file-main .file-pitch { margin: 1.1rem 0 0; }
+.file-plays { margin: .6rem 0 0; font: 400 var(--fs-body-s)/1.55 var(--plex); color: var(--muted); }   /* how the game plays, under the pitch */
 .file-side .links { margin-top: 1.4rem; }
 /* Awards: a small group under the specs, styled like the SPECS / ROLE group labels */
 .file-awards { margin-top: 1.3rem; }

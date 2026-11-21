@@ -137,13 +137,16 @@ PROJECTS = [
         "tags": ["Gameplay Design", "Level Design", "UX/UI Design"],
         "blurb": "A grid-based movement puzzle game that grew from an award-winning game jam entry "
                  "into a full commercial release.",
+        "plays": "Play as a digital rat and hack your way into the retro-futuristic grid-based movement "
+                 "puzzle world of Anonymized, where you shift hues and dive layers deep in search of the "
+                 "one true Source Cheese.",
         "tagline": "Movement-based color-shifting puzzle game.",
         "genre": "Color-shift puzzle",
         # Short HUD badges on the home featured block (kept to a couple of words each).
         "badges": [("award", "1st place / GGJ 2026 Bangkok"), ("status", "Out now")],
         "awards": [
             "1st Place - Game Dev Hub Bangkok (Global Game Jam 2026)",
-            "Finalist - BIDC Rising Star Award 2026",
+            "Finalist - Rising Star Award, Bangkok International Digital Content Festival (BIDC) 2026",
             "Finalist - Rising Tide 4, Platformer, Puzzles & Arcade (Blue Ocean Games)",
         ],
         "stats": [
@@ -169,15 +172,16 @@ PROJECTS = [
         "history": [
             "As the team's only game designer, designed every mechanic and the core loop, pitching "
             "and iterating each with the team before it was final",
-            "Designed 120+ levels for the full release",
+            "Designed 120+ levels across 10 worlds for the full release",
             "Designed all of the game's UI and feedback, and proposed the walking animation so "
             "movement is easy to read",
             "Designed undo, soft and hard reset, and a softlock prompt, none of which the jam "
             "version had",
-            "Made the game playable on keyboard, controller and dance pad: simple main controls, "
-            "extra controls only as player aids, and color-blind symbols extended to areas the jam "
-            "version missed",
-            "Ran extensive playtests to polish the UI, UX and levels",
+            "Made the game playable on keyboard, controller and even a dance pad, so players can run "
+            "the rat's maze with their whole body; main controls stay simple, and color-blind symbols "
+            "cover areas the jam version missed",
+            "Built and tested every level in Unity, in rounds: alone against the level's purpose, "
+            "then watching teammates play, then outside players",
         ],
         "sections": [],
         "gallery_ph": ["Level layout / puzzle screenshot", "UI or accessibility options screenshot"],
@@ -443,32 +447,34 @@ DESIGN_LOG = {
         # Puzzle design first: at conventions the most common question was "how did you design the puzzles?"
         "highlights": [
             ("PUZZLE DESIGN", "Puzzle flow chart or level sequence",
-             "The jam version had 12 levels built on three things: changing color, mixing colors and "
-             "firewalls. Players found the difficulty jumps too steep. The full game needed 120+ "
+             "At the jam, the game had 12 levels built on three things: changing color, mixing colors "
+             "and firewalls. Players found the difficulty jumps too steep. The full game needed 120+ "
              "levels that get harder without just getting longer.",
              "I made difficulty come from mechanics reacting to each other. Teaching levels focus on "
              "one idea, while challenge levels and \"final exam\" levels combine everything learned so "
-             "far. Length was never the challenge, so levels that needed filler moves got reworked. "
-             "Splitting one level's two phases, for example, cut its solution in half.",
-             "\"How did you design the puzzles?\" was the question I heard most at conventions. Queues "
-             "got so long that peak hours needed a 15-minute limit, and a few finished the 30+ level "
-             "demo in 40 minutes.",
+             "far. Challenging shouldn't mean tedious, so levels that needed filler moves got reworked. "
+             "Splitting one level's two phases, for example, halved its solution and kept the "
+             "challenge where it mattered.",
+             "At conventions, most players kept solving until their time ran out: peak hours needed a "
+             "15-minute limit, and a few finished the 30+ level demo in 40 minutes. \"How did you "
+             "design the puzzles?\" was the question I heard most.",
              "Harder levels, not longer ones"),
             ("TUTORIAL", "Tutorial level clip",
-             "The jam version dropped players into the core mechanic with no introduction. Some "
+             "The first version dropped players into the core mechanic with no introduction. Some "
              "mashed through without noticing they'd changed color, then struggled later. Unlike "
              "mainstream puzzle mechanics, such as pushing boxes in Sokoban, these rules were new to "
              "most players.",
              "The game barely uses text, so the levels show instead of tell. Level 1 is a small maze "
              "where firewalls are just walls. Level 2 closes that path, so the only way through is a "
-             "tile that changes the player's color. World 1 then hands players color changing as a "
-             "power-up. Each later mechanic opens with a simple practice path, with room to "
+             "tile that changes the player's color. World 1 then lets players change color with their "
+             "own moves, like a power-up. Each later mechanic opens with a simple practice path, with room to "
              "experiment.",
              "Most players got it instantly in level 2. Unprompted, they said things like \"Ohhh, I "
              "get it now.\"",
              "A tutorial that shows instead of tells"),
             ("DIEGETIC UI", "In-world UI / HUD screenshot",
-             "The jam version already had the console and a clear style, but it was hard to read. "
+             "From the jam on, the game had a clear style and a console around the board, but it was "
+             "hard to read. "
              "Its only player aid was a fixed mix-formula sheet, and only a few players figured the "
              "game out by watching closely.",
              "I reworked that same console to react to the player and show more. Holding a button "
@@ -476,7 +482,7 @@ DESIGN_LOG = {
              "The combo display follows the current color, a ring shows mixing, and an invalid move "
              "shows the color the player would have turned.",
              "The UI now completes the diegetic tutorial. Playtesters learned the mechanics without "
-             "outside help, could tell what each move would cost, and got less frustrated operating "
+             "outside help, could tell what each move would do, and got less frustrated operating "
              "the game.",
              "Turning a hard-to-read console into a live guide"),
         ],
