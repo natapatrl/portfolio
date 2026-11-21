@@ -447,9 +447,18 @@ DESIGN_LOG = {
              "[ how you designed, sequenced and documented the puzzles; what improved over Unpuzzled Business ]",
              "[ result: difficulty curve, playtest or convention feedback ]"),
             ("TUTORIAL", "Tutorial level clip",
-             "[ what new players had to learn, and why text pop-ups wouldn't fit ]",
-             "[ how the levels teach colour-shifting by doing; what changed since Peritoneum ]",
-             "[ playtest sign it worked: e.g. players clearing the opening without help ]"),
+             "The jam version dropped players into the core mechanic with no introduction. Some "
+             "mashed through without noticing they'd changed color, then struggled later. Unlike "
+             "mainstream puzzle mechanics, such as pushing boxes in Sokoban, these rules were new to "
+             "most players.",
+             "The game barely uses text, so the levels show instead of tell. Level 1 is a small maze "
+             "where firewalls are just walls. Level 2 closes that path, so the only way through is a "
+             "tile that changes the player's color. World 1 then hands players color changing as a "
+             "power-up. Each later mechanic opens with a simple practice path, with room to "
+             "experiment.",
+             "Most players got it instantly in level 2. Unprompted, they said things like \"Ohhh, I "
+             "get it now.\"",
+             "A tutorial that shows instead of tells"),
             ("DIEGETIC UI", "In-world UI / HUD screenshot",
              "The jam version already had the console and a clear style, but it was hard to read. "
              "Its only player aid was a fixed mix-formula sheet, and only a few players figured the "
