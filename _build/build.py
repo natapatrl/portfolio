@@ -345,6 +345,15 @@ def pdr(problem, decision, result):
         f'<div class="{c.strip()}"><dt><b>{n}</b>{lbl}</dt><dd>{e(t)}</dd></div>' for n, lbl, t, c in rows) + "</dl>"
 
 
+def cap_title(t):
+    """Tab title in caption case, keeping acronyms such as UI / UX / AI upper-case."""
+    keep = {"UI", "UX", "AI", "HUD", "3D", "2D"}
+    small = {"and", "or", "of", "the", "a", "an", "to", "in", "on", "for", "vs"}
+    words = t.split()
+    return " ".join(w if w in keep else (w.lower() if i and w.lower() in small else w.capitalize())
+                    for i, w in enumerate(words))
+
+
 def design_log(pr):
     """Tabbed DESIGN LOG window: Overview (contributions + highlight menu), one tab per highlight
     (image beside problem / decision / result), Retrospective. Above 900px all panes share one grid
@@ -363,7 +372,7 @@ def design_log(pr):
     tabs = [("OVERVIEW", f'''<div class="dl-overview"><div><h3 class="dl-h">{e(pr['history_title'].upper())}</h3>
       <ul class="plus-list">{contrib}</ul></div>{menu_html}</div>''')]
     for k, (t, img, prob, dec, res, *_teaser) in enumerate(hls):
-        tabs.append((f"{k + 1:02d} {t}", f'<div class="hl-grid">{placeholder(img, f"FIG. {k + 1:02d} / {t.title()}")}'
+        tabs.append((f"{k + 1:02d} {t}", f'<div class="hl-grid">{placeholder(img, f"FIG. {k + 1:02d} / {cap_title(t)}")}'
                      f'<div>{pdr(prob, dec, res)}</div></div>'))
     tabs.append(("RETROSPECTIVE", f'<p class="retro">{e(log.get("retrospective", RETRO_PLACEHOLDER))}</p>'))
     n = len(tabs)
