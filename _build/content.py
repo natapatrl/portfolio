@@ -443,9 +443,17 @@ DESIGN_LOG = {
         # Puzzle design first: at conventions the most common question was "how did you design the puzzles?"
         "highlights": [
             ("PUZZLE DESIGN", "Puzzle flow chart or level sequence",
-             "[ how colour-shift puzzles are built: the rules, and how 12+ levels ramp up without spikes ]",
-             "[ how you designed, sequenced and documented the puzzles; what improved over Unpuzzled Business ]",
-             "[ result: difficulty curve, playtest or convention feedback ]"),
+             "The jam version had 12 levels built on three things: changing color, mixing colors and "
+             "firewalls. Players found the difficulty jumps too steep. The full game needed 120+ "
+             "levels that get harder without just getting longer.",
+             "I made difficulty come from mechanics reacting to each other. Teaching levels focus on "
+             "one idea, while challenge levels and \"final exam\" levels combine everything learned so "
+             "far. Length was never the challenge, so levels that needed filler moves got reworked. "
+             "Splitting one level's two phases, for example, cut its solution in half.",
+             "\"How did you design the puzzles?\" was the question I heard most at conventions. Queues "
+             "got so long that peak hours needed a 15-minute limit, and a few finished the 30+ level "
+             "demo in 40 minutes.",
+             "Harder levels, not longer ones"),
             ("TUTORIAL", "Tutorial level clip",
              "The jam version dropped players into the core mechanic with no introduction. Some "
              "mashed through without noticing they'd changed color, then struggled later. Unlike "
