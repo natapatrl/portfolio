@@ -149,8 +149,8 @@ PROJECTS = [
         "stats": [
             ("Team size", "5 (4 at the jam)"),
             ("Engine", "Unity"),
-            ("Timeframe", "Jan–Nov 2026"),
-            ("Status", "Out now on Steam"),
+            ("Timeframe", "Jan–Oct 2026"),
+            ("Status", "Released Oct 2026, still updated"),
         ],
         "links": [
             ("View on Steam", "https://store.steampowered.com/app/4548240/Anonymized/"),
