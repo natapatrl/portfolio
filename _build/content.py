@@ -177,9 +177,6 @@ PROJECTS = [
             "movement is easy to read",
             "Designed undo, soft and hard reset, and a softlock prompt, none of which the jam "
             "version had",
-            "Made the game playable on keyboard, controller and even a dance pad, so players can run "
-            "the rat's maze with their whole body; main controls stay simple, and color-blind symbols "
-            "cover areas the jam version missed",
             "Built and tested every level in Unity, in rounds: alone against the level's purpose, "
             "then watching teammates play, then outside players",
         ],
