@@ -480,6 +480,10 @@ DESIGN_LOG = {
              "the game.",
              "Turning a hard-to-read console into a live guide"),
         ],
+        "retrospective": "As my first commercial release, Anonymized showed me how wide real players' "
+                         "skill range is. I first designed to show off the mechanics, and only made room "
+                         "for newcomers after playtests. Now I design for the player from the start: "
+                         "challenging for experts, easy to pick up for beginners.",
     },
     "peritoneum": {
         "highlights": [
