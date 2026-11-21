@@ -130,7 +130,7 @@ PROJECTS = [
     {
         "slug": "anonymized",
         "title": "Anonymized",
-        "subtitle": "Entry: Global Game Jam 2026",
+        "subtitle": "Global Game Jam 2026 → Steam release",
         "year": "2026",
         "kind": "Team Project",
         "roles": "Gameplay Designer | Level Designer | UX Designer",
@@ -147,9 +147,9 @@ PROJECTS = [
             "Finalist - Rising Tide 4, Platformer, Puzzles & Arcade (Blue Ocean Games)",
         ],
         "stats": [
-            ("Team size", "4"),
+            ("Team size", "5 (4 at the jam)"),
             ("Engine", "Unity"),
-            ("Timeframe", "72 hours (jam)"),
+            ("Timeframe", "Jan–Nov 2026"),
             ("Status", "Out now on Steam"),
         ],
         "links": [
@@ -167,12 +167,17 @@ PROJECTS = [
         ],
         "history_title": "Work History",
         "history": [
-            "Designed the game's core loop and mechanic interactions",
-            "Worked on over 12 in-game levels",
-            "Oversee the development of the game's UX and UI",
-            "Pushed the implementation of various accessibility features",
-            "Conducted extensive playtests to polish both UX/UI and levels",
-            "Helped with composing various SFX and the BGM",
+            "Designed every mechanic and the core loop, pitching and iterating each with the team "
+            "before it was final",
+            "Designed 120+ levels",
+            "Designed all of the game's UI and feedback, and proposed the walking animation so "
+            "movement is easy to read",
+            "Designed undo, soft and hard reset, and a softlock prompt, none of which the jam "
+            "version had",
+            "Made the game playable on keyboard, controller and dance pad: simple main controls, "
+            "extra controls only as player aids, and color-blind symbols extended to areas the jam "
+            "version missed",
+            "Ran extensive playtests to polish the UI, UX and levels",
         ],
         "sections": [],
         "gallery_ph": ["Level layout / puzzle screenshot", "UI or accessibility options screenshot"],
@@ -446,9 +451,16 @@ DESIGN_LOG = {
              "[ how the levels teach colour-shifting by doing; what changed since Peritoneum ]",
              "[ playtest sign it worked: e.g. players clearing the opening without help ]"),
             ("DIEGETIC UI", "In-world UI / HUD screenshot",
-             "[ what information players needed while playing ]",
-             "[ how it lives in the game world instead of a HUD; what improved over World X Recipe ]",
-             "[ effect on readability or immersion ]"),
+             "The jam version already had the console and a clear style, but it was hard to read. "
+             "Its only player aid was a fixed mix-formula sheet, and only a few players figured the "
+             "game out by watching closely.",
+             "I reworked that same console to react to the player and show more. Holding a button "
+             "projects holograms of where the player will change color and which steps get there. "
+             "The combo display follows the current color, a ring shows mixing, and an invalid move "
+             "shows the color the player would have turned.",
+             "The UI now completes the diegetic tutorial. Playtesters learned the mechanics without "
+             "outside help, could tell what each move would cost, and got less frustrated operating "
+             "the game."),
         ],
     },
     "peritoneum": {

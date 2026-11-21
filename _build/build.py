@@ -142,7 +142,7 @@ def stat(pr, key):
 
 def spec_strip(pr):
     """Year / team / engine as a compact HUD readout instead of a sentence."""
-    team = stat(pr, "Team size")
+    team = stat(pr, "Team size").split(" (")[0]     # compact row: "5", the page shows "5 (4 at the jam)"
     engine = stat(pr, "Engine").replace("Unreal Fortnite (UEFN)", "UEFN")
     cells = [("YEAR", pr["year"]), ("TEAM", team), ("ENGINE", engine)]
     return ('<span class="m-spec">' + "".join(
