@@ -135,8 +135,8 @@ PROJECTS = [
         "kind": "Team Project",
         "roles": "Gameplay Designer | Level Designer | UX Designer",
         "tags": ["Gameplay Design", "Level Design", "UX/UI Design"],
-        "blurb": "Movement-based color-shifting puzzle game; Global Game Jam 2026 submission "
-                 "under the theme 'Mask'.",
+        "blurb": "A grid-based movement puzzle game that grew from an award-winning game jam entry "
+                 "into a full commercial release.",
         "tagline": "Movement-based color-shifting puzzle game.",
         "genre": "Color-shift puzzle",
         # Short HUD badges on the home featured block (kept to a couple of words each).
@@ -167,9 +167,9 @@ PROJECTS = [
         ],
         "history_title": "Work History",
         "history": [
-            "Designed every mechanic and the core loop, pitching and iterating each with the team "
-            "before it was final",
-            "Designed 120+ levels",
+            "As the team's only game designer, designed every mechanic and the core loop, pitching "
+            "and iterating each with the team before it was final",
+            "Designed 120+ levels for the full release",
             "Designed all of the game's UI and feedback, and proposed the walking animation so "
             "movement is easy to read",
             "Designed undo, soft and hard reset, and a softlock prompt, none of which the jam "
@@ -460,7 +460,8 @@ DESIGN_LOG = {
              "shows the color the player would have turned.",
              "The UI now completes the diegetic tutorial. Playtesters learned the mechanics without "
              "outside help, could tell what each move would cost, and got less frustrated operating "
-             "the game."),
+             "the game.",
+             "Turning a hard-to-read console into a live guide"),
         ],
     },
     "peritoneum": {

@@ -353,15 +353,16 @@ def design_log(pr):
     hls = log["highlights"]
     contrib = "".join(f"<li>{e(t)}</li>" for t in pr["history"])
     hls = [tuple(h) for h in hls]
+    teaser = lambda h: h[5] if len(h) > 5 else h[2]      # optional short menu line, else the problem
     menu = "".join(
         f'<button type="button" class="dl-open" data-go="{k + 1}"><span class="dl-thumb">{placeholder(img, decorative=True)}</span>'
         f'<span class="dl-mtext"><span class="dl-mno">{k + 1:02d}</span><span class="dl-mtitle">{e(t)}</span>'
-        f'<span class="dl-mteaser">{e(prob)}</span></span><span class="dl-go" aria-hidden="true">OPEN &rarr;</span></button>'
-        for k, (t, img, prob, _d, _r) in enumerate(hls))
+        f'<span class="dl-mteaser">{e(teaser(h))}</span></span><span class="dl-go" aria-hidden="true">OPEN &rarr;</span></button>'
+        for k, h in enumerate(hls) for t, img in [h[:2]])
     menu_html = f'<div><h3 class="dl-h">HIGHLIGHTS</h3><div class="dl-menu">{menu}</div></div>' if hls else ""
     tabs = [("OVERVIEW", f'''<div class="dl-overview"><div><h3 class="dl-h">{e(pr['history_title'].upper())}</h3>
       <ul class="plus-list">{contrib}</ul></div>{menu_html}</div>''')]
-    for k, (t, img, prob, dec, res) in enumerate(hls):
+    for k, (t, img, prob, dec, res, *_teaser) in enumerate(hls):
         tabs.append((f"{k + 1:02d} {t}", f'<div class="hl-grid">{placeholder(img, f"FIG. {k + 1:02d} / {t.title()}")}'
                      f'<div>{pdr(prob, dec, res)}</div></div>'))
     tabs.append(("RETROSPECTIVE", f'<p class="retro">{e(log.get("retrospective", RETRO_PLACEHOLDER))}</p>'))

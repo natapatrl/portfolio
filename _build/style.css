@@ -523,6 +523,7 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .dl-mno { font: 400 var(--fs-micro) var(--mono); color: var(--dim); }
 .dl-mtitle { font: 500 var(--fs-caps) var(--grot); letter-spacing: .16em; color: var(--head); }
 .dl-mteaser { font: 400 var(--fs-body-s)/1.4 var(--plex); color: var(--muted); display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+@media (max-width: 640px) { .dl-mteaser { -webkit-line-clamp: 2; } }   /* phones: teaser gets two lines */
 .dl-go { font: 400 var(--fs-micro) var(--mono); color: var(--mint); letter-spacing: .08em; }
 .dl-step { display: flex; justify-content: space-between; align-items: center; margin-top: 1.4rem; padding-top: .9rem; border-top: 1px solid var(--line); }
 .dl-step button { background: none; border: 0; cursor: pointer; font: 500 var(--fs-caps-s) var(--grot); letter-spacing: .2em; text-transform: uppercase; color: var(--head); padding: .3rem 0; }
