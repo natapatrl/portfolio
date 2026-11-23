@@ -219,6 +219,19 @@
     });
   });
 
+  // ---------- Step sequences: the numbered step list under a picture picks which step it shows ----------
+  document.querySelectorAll(".hl-steps").forEach(function (list) {
+    var fig = list.closest("figure"), pane = fig.querySelector('.ba-pane[data-pane="' + list.dataset.pane + '"]');
+    var steps = list.querySelectorAll(".hl-step");
+    steps.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var k = btn.dataset.step;
+        steps.forEach(function (x) { x.setAttribute("aria-pressed", x === btn ? "true" : "false"); });
+        pane.querySelectorAll(".hl-stepbox").forEach(function (b) { b.classList.toggle("on", b.dataset.step === k); });
+      });
+    });
+  });
+
   // ---------- Clips in highlight images: play only the one on screen ----------
   // Muted loops. With reduced motion they never start on their own; the viewer gets controls.
   var clips = document.querySelectorAll("video.hl-media");

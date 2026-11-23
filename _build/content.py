@@ -170,7 +170,7 @@ PROJECTS = [
             "This game also has multiple accessibility features such as color-blindness support and "
             "being playable on almost every input device including, DDR pad.",
         ],
-        "history_title": "Work History",
+        "history_title": "My Work",
         "history": [
             "As the team's only game designer, designed every mechanic and the core loop, pitching "
             "and iterating each with the team before it was final",
@@ -211,7 +211,7 @@ PROJECTS = [
             "complete experience of using a firearm. A controllable directional propulsion pack was also "
             "added to give players greater movement feel and control.",
         ],
-        "history_title": "Work History",
+        "history_title": "My Work",
         "history": [
             "Curated 5 progressively challenging levels",
             "Implemented a diegetic tutorial that encourages the player to experiment and test things "
@@ -250,7 +250,7 @@ PROJECTS = [
             "game. The result is a meta-like claw machine experience, made in the given 47 hours for "
             "the jam.",
         ],
-        "history_title": "Work History",
+        "history_title": "My Work",
         "history": [
             "Prototyped the game's various UI on Figma",
             "Managed the development of the game's UX",
@@ -296,7 +296,7 @@ PROJECTS = [
             "players toward points of interest and use scene composition to subtly reveal details about "
             "the game world.",
         ],
-        "history_title": "Work History",
+        "history_title": "My Work",
         "history": [
             "Drafted level blueprint",
             "Blocked out the level",
@@ -343,7 +343,7 @@ PROJECTS = [
             "With the varied workflow of frequent testing and the rapid development of a small-scale "
             "level, I have developed a newfound enjoyment for level design.",
         ],
-        "history_title": "Work History",
+        "history_title": "My Work",
         "history": [
             "Drafted the level blueprint",
             "Rapidly developed level block-outs",
@@ -467,18 +467,21 @@ DESIGN_LOG = {
              ["Most players grasped the core rule on level 2",
               "The tutorial drew far more praise than the jam's"],
              "A tutorial that shows instead of tells",
-             {"switch": ("JAM", "STEP 1", "STEP 2", "STEP 3", "STEP 4"), "open": 1,
+             {"switch": ("JAM", "RELEASE"),
               "media": [("tutorial-jam.webp", "Jam opening level: a corridor with a red firewall before the goal, next to a fixed color formula sheet",
-                         [(73.4, 40, "Every combo and color formula shown from level 1, nothing introduced")]),
-                        ("tutorial-step1.webp", "Release tutorial, step 1: a red firewall sits in the direct path on a small, open board",
-                         [(31.3, 73.1, "The first firewall appears before players can pass one")]),
-                        ("tutorial-step2.webp", "Release tutorial, step 2: the same firewall, now with a red shift tile on the board",
-                         [(57.8, 46.3, "A red shift tile is the only way through")]),
-                        ("tutorial-step3.webp", "Release tutorial, step 3: the red morph tutorial, with red holograms marking each move of the combo",
-                         [(31.3, 45.4, "Players enter the red combo themselves, guided by holograms"),
-                          "Building it themselves makes the combo feel like their own"]),
-                        ("tutorial-step4.webp", "Release tutorial, step 4: the red combo is listed on the console and a red firewall guards the goal",
-                         ["Step 4 matches the difficulty of the jam's first level"])]}),
+                         [(73.4, 40, "Every combo and color formula shown from level 1, nothing introduced"),
+                          "The release tutorial reaches this difficulty at step 4"]),
+                        # RELEASE: a progressive tutorial; the numbered steps under the picture switch it
+                        {"steps": [
+                            ("tutorial-step1.webp", "Release tutorial, step 1: a red firewall sits in the direct path on a small, open board",
+                             "A firewall appears before players can pass one", (31.3, 73.1)),
+                            ("tutorial-step2.webp", "Release tutorial, step 2: the same firewall, now with a red shift tile on the board",
+                             "A red shift tile is the only way through", (57.8, 46.3)),
+                            ("tutorial-step3.webp", "Release tutorial, step 3: the red morph tutorial, with red holograms marking each move of the combo",
+                             "Power-up: players build the red combo themselves, guided by holograms", (31.3, 45.4)),
+                            ("tutorial-step4.webp", "Release tutorial, step 4: an empty board with a red firewall before the goal and the red combo listed on the console",
+                             "An empty board: players now change color with their new combo", (67.5, 43.8)),
+                        ]}]}),
             ("DIEGETIC UI", "Jam console vs release console",
              ["The jam's only player aid was a fixed formula sheet",
               "Invalid moves gave no reason, so the game felt abstract"],

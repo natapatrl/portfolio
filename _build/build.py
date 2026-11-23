@@ -150,6 +150,16 @@ def spec_strip(pr):
         f'<span><b>{e(k)}</b>{e(v)}</span>' for k, v in cells) + "</span>")
 
 
+def cover_thumb(pr, p):
+    """Small cover for project lists and cards: the trailer poster's small copy when the project has one."""
+    tr = pr.get("trailer")
+    if not tr:
+        return placeholder(pr['hero_ph'], None, '16/9', decorative=True)
+    src = tr["poster"].rsplit(".", 1)[0] + "-sm.webp"
+    return (f'<figure class="frame" aria-hidden="true"><div class="ph has-media"><img src="{p}assets/{e(src)}" alt="" '
+            f'width="480" height="270" loading="lazy" decoding="async"></div></figure>')
+
+
 def mission_list(p, projects):
     rows = ""
     for i, pr in projects:
@@ -157,7 +167,7 @@ def mission_list(p, projects):
         rows += f"""
   <a class="mission" href="{p}projects/{pr['slug']}/" data-tags="{e(' '.join(TAG_STYLE[t][0] for t in pr['tags']))}">
     <span class="m-id" aria-hidden="true">{num(i)}</span>
-    <span class="m-thumb">{placeholder(pr['hero_ph'], decorative=True)}</span>
+    <span class="m-thumb">{cover_thumb(pr, p)}</span>
     <span class="m-name"><span class="m-title">{e(title)}<span class="slash" aria-hidden="true">/</span></span><span class="m-genre">{e(pr['genre'])}</span>{tag_chips(pr['tags'])}</span>
     {spec_strip(pr)}
   </a>"""
@@ -171,7 +181,7 @@ def pick_cards(p, slugs):
         i, pr = next((i, pr) for i, pr in enumerate(PROJECTS) if pr["slug"] == slug)
         cards += f"""
   <a class="card" href="{p}projects/{slug}/">
-    {placeholder(pr['hero_ph'], None, '16/9', decorative=True)}
+    {cover_thumb(pr, p)}
     <span class="card-head"><span class="m-title">{e(pr['title'])}<span class="slash" aria-hidden="true">/</span></span><span class="card-id" aria-hidden="true">{num(i)}</span></span>
     <span class="m-genre">{e(pr['genre'])}</span>{tag_chips(pr['tags'])}
   </a>"""
@@ -393,8 +403,18 @@ def hl_figure(label, caption, fig, base=""):
     show = fig.get("open", n - 1)     # pane shown first: the final version, or step 1 of a sequence
     def notes_of(i):
         return media[i][2] if i < len(media) and media[i] and len(media[i]) > 2 else []
+    def steps_of(i):
+        m = media[i] if i < len(media) else None
+        return m["steps"] if isinstance(m, dict) else None
     def pane(idx):
         on = " on" if idx == show else ""
+        st = steps_of(idx)
+        if st:      # a sequence: one picture per step, picked from the numbered step list under it
+            boxes = "".join(
+                f'<div class="hl-box hl-stepbox{" on" if k == 0 else ""}" data-step="{k + 1}">{media_el(base, f, alt)}'
+                + (f'<span class="mk mk-n" data-m="{k + 1}" style="left:{xy[0]}%;top:{xy[1]}%" aria-hidden="true">{k + 1}</span>' if xy else "")
+                + "</div>" for k, (f, alt, _, xy) in enumerate(st))
+            return f'<div class="ph ba-pane has-media{on}" data-pane="{idx}">{boxes}</div>'
         if idx < len(media) and media[idx]:
             k = 0; marks = ""
             for nt in notes_of(idx):
@@ -406,6 +426,15 @@ def hl_figure(label, caption, fig, base=""):
         return (f'<div class="ph ba-pane{on}" data-pane="{idx}" role="img" aria-label="Image coming soon: {e(label)}">'
                 f'<span>[ img: {e(label)} ]</span></div>')
     def notes(idx):
+        on = " on" if idx == show else ""
+        st = steps_of(idx)
+        if st:
+            items = "".join(
+                f'<li class="m" data-m="{k + 1}"><button type="button" class="hl-step" data-step="{k + 1}" '
+                f'aria-pressed="{"true" if k == 0 else "false"}"><span class="sn" aria-hidden="true">{k + 1}</span>'
+                f'<span><span class="sr-only">Step {k + 1}: </span>{tidy(txt)}</span></button></li>'
+                for k, (_, _, txt, _) in enumerate(st))
+            return f'<ol class="hl-notes hl-steps{on}" data-pane="{idx}" aria-label="Steps, each shows its picture">{items}</ol>'
         k = 0; items = ""
         for nt in notes_of(idx):
             if isinstance(nt, (list, tuple)):
@@ -420,7 +449,7 @@ def hl_figure(label, caption, fig, base=""):
     if len(sw) > 1:
         btns = "".join(f'<button type="button" aria-pressed="{"true" if i == show else "false"}" data-show="{i}">{sw_label(t)}</button>'
                        for i, t in enumerate(sw))
-        names = ", ".join(t.lower() for t in sw[:-1]) + " or " + sw[-1].lower()
+        names = (", ".join(t.lower() for t in sw[:-1]) + " or " + sw[-1].lower()) if len(sw) > 2 else f"{sw[0].lower()} or {sw[1].lower()}"
         switch, attr = f'<span class="ba-switch" role="group" aria-label="Show {e(names)}">{btns}</span>', " data-ba"
     else:
         switch, attr = "", ""
@@ -432,7 +461,10 @@ def thumb_src(fig):
     """Small still for the Overview menu: the last pane (the final version)."""
     if not fig.get("media"):
         return None
-    return [m for m in fig["media"] if m][-1][0].rsplit(".", 1)[0] + "-sm.webp"
+    last = [m for m in fig["media"] if m][-1]
+    if isinstance(last, dict):
+        last = last["steps"][-1]
+    return last[0].rsplit(".", 1)[0] + "-sm.webp"
 
 
 def trailer(tr, caption, base):
