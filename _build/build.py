@@ -383,6 +383,24 @@ def media_el(base, file, alt):
     return f'<img class="hl-media" src="{base}{e(file)}" alt="{e(alt)}" width="1200" height="900" loading="lazy" decoding="async">'
 
 
+def note_frames(nt):
+    """A note's frames on the picture: (x, y, text) = one default frame centered at x %, y %;
+    (x, y, w, h, text) = a frame w % by h % of the picture; ([frames], text) = several frames."""
+    if len(nt) == 2 and isinstance(nt[0], list):
+        return nt[0]
+    return [tuple(nt[:-1])]
+
+
+def frame_html(f, m, num=""):
+    """One see-through frame, centered on what it marks; sized to cover it when w / h are given."""
+    if not f:
+        return ""
+    size = f";width:{f[2]}%;height:{f[3]}%" if len(f) == 4 else ""
+    cls = "mk mk-n" if num else "mk"
+    inner = f"<i>{num}</i>" if num else ""
+    return f'<span class="{cls}" data-m="{m}" style="left:{f[0]}%;top:{f[1]}%{size}" aria-hidden="true">{inner}</span>'
+
+
 def sw_label(t):
     """Switch button text. "STEP 3" shows as "3" on phones so a 5-option row stays on one line."""
     w = t.split(" ")
@@ -412,7 +430,7 @@ def hl_figure(label, caption, fig, base=""):
         if st:      # a sequence: one picture per step, picked from the numbered step list under it
             boxes = "".join(
                 f'<div class="hl-box hl-stepbox{" on" if k == 0 else ""}" data-step="{k + 1}">{media_el(base, f, alt)}'
-                + (f'<span class="mk mk-n" data-m="{k + 1}" style="left:{xy[0]}%;top:{xy[1]}%" aria-hidden="true"><i>{k + 1}</i></span>' if xy else "")
+                + "".join(frame_html(f, k + 1, k + 1) for f in (xy if isinstance(xy, list) else [xy] if xy else []))
                 + "</div>" for k, (f, alt, _, xy) in enumerate(st))
             return f'<div class="ph ba-pane has-media{on}" data-pane="{idx}">{boxes}</div>'
         if idx < len(media) and media[idx]:
@@ -420,7 +438,7 @@ def hl_figure(label, caption, fig, base=""):
             for nt in notes_of(idx):
                 if isinstance(nt, (list, tuple)):
                     k += 1
-                    marks += f'<span class="mk" data-m="{k}" style="left:{nt[0]}%;top:{nt[1]}%" aria-hidden="true"></span>'
+                    marks += "".join(frame_html(f, k) for f in note_frames(nt))
             return (f'<div class="ph ba-pane has-media{on}" data-pane="{idx}"><div class="hl-box">'
                     f'{media_el(base, media[idx][0], media[idx][1])}{marks}</div></div>')
         return (f'<div class="ph ba-pane{on}" data-pane="{idx}" role="img" aria-label="Image coming soon: {e(label)}">'
@@ -439,7 +457,7 @@ def hl_figure(label, caption, fig, base=""):
         for nt in notes_of(idx):
             if isinstance(nt, (list, tuple)):
                 k += 1
-                items += f'<li class="m" data-m="{k}">{tidy(nt[2])}</li>'
+                items += f'<li class="m" data-m="{k}">{tidy(nt[-1])}</li>'
             else:
                 items += f"<li>{tidy(nt)}</li>"
         on = " on" if idx == show else ""
