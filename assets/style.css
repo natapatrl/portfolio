@@ -361,6 +361,12 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .list-window .mission:last-child, .list-window .mission.last-shown { border-bottom: 0; }
 .featured-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 2.6rem; align-items: center; }
 .featured-media { display: block; text-decoration: none; }
+/* Whole Latest Project window opens the project: the image link's ::after covers the window
+   (the nearest positioned ancestor); the window's own links sit above it. */
+.featured-media::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.featured .links .link { position: relative; z-index: 2; }
+.featured .window { transition: border-color .15s; }
+.featured .window:hover { border-color: rgba(158, 245, 214, 0.55); }
 .featured-body { padding-top: 0.3rem; }
 .featured-body .doc-head { margin-bottom: 1.1rem; border-bottom-color: var(--line-strong); border-bottom-width: 1px; }
 .featured-body .doc-title { font-size: clamp(1.8rem, 3.6vw, 2.5rem); }
