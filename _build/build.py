@@ -391,7 +391,7 @@ def hl_figure(label, caption, fig, base=""):
             for nt in notes_of(idx):
                 if isinstance(nt, (list, tuple)):
                     k += 1
-                    marks += f'<span class="mk" data-m="{k}" style="left:{nt[0]}%;top:{nt[1]}%" aria-hidden="true">{k}</span>'
+                    marks += f'<span class="mk" data-m="{k}" style="left:{nt[0]}%;top:{nt[1]}%" aria-hidden="true"></span>'
             return (f'<div class="ph ba-pane has-media{on}" data-pane="{idx}"><div class="hl-box">'
                     f'{media_el(base, media[idx][0], media[idx][1])}{marks}</div></div>')
         return (f'<div class="ph ba-pane{on}" data-pane="{idx}" role="img" aria-label="Image coming soon: {e(label)}">'
