@@ -160,6 +160,8 @@ PROJECTS = [
             ("Jam version on itch.io", "https://arkudada.itch.io/anonymized"),
         ],
         "hero_ph": "Anonymized key art or gameplay screenshot",
+        "trailer": {"youtube": "hMYXuowf1Y8", "poster": "img/anonymized/trailer-poster.webp",
+                    "label": "Official trailer"},
         "overview": [
             "Anonymized is a puzzle game following the 2026 Global Game Jam's theme, \"Mask\".",
             "You play as a digital rat, hacking your way into an unknown system in search for the "
@@ -441,7 +443,7 @@ DESIGN_LOG = {
     "anonymized": {
         # Puzzle design first: at conventions the most common question was "how did you design the puzzles?"
         "highlights": [
-            ("PUZZLE DESIGN", "A teaching level vs a mastery level, solution path drawn on both",
+            ("PUZZLE DESIGN", "Teaching levels vs a mastery level",
              ["The jam version had 12 levels on 3 mechanics, with steep difficulty jumps",
               "At 120+ levels, difficulty had to rise without levels just getting longer"],
              ["Difficulty comes from mechanics reacting to each other, not from length",
@@ -450,8 +452,10 @@ DESIGN_LOG = {
              ["The puzzles stood out: \"How did you design them?\" was the question I heard most",
               "At conventions, most players kept solving until their time ran out"],
              "Harder levels, not longer ones",
-             {"switch": ("TEACHING", "MASTERY"), "labels": ("A teaching level: one mechanic, solution path drawn", "A mastery level: several mechanics combined, solution path drawn"),
-              "marks": [(0, 58, 42), (1, 34, 66)]}),
+             {"switch": ("TILES", "COMBOS", "MASTERY"),
+              "media": [("puzzle-tiles.webp", "Teaching level built around shift tiles: a short loop of round tiles in 4 colors"),
+                        ("puzzle-combos.webp", "Teaching level built around combos: 3 firewalls in a row before the goal"),
+                        ("puzzle-mastery.mp4", "A mastery level being solved, using shift tiles, combos and firewalls together")]}),
             ("TUTORIAL", "Jam opening level vs release opening levels",
              ["The jam version dropped players in with no introduction",
               "Unlike pushing boxes in Sokoban, the rules were new to most players"],
@@ -462,8 +466,10 @@ DESIGN_LOG = {
              ["Most players grasped the core rule on level 2",
               "The tutorial drew far more praise than the jam's"],
              "A tutorial that shows instead of tells",
-             {"switch": ("JAM", "RELEASE"), "labels": ("Jam opening level", "Release opening levels"),
-              "marks": [(1, 52, 50)]}),
+             {"switch": ("JAM", "RELEASE"),
+              "media": [("tutorial-jam.webp", "Jam opening level: a corridor with a red firewall before the goal, next to a fixed color formula sheet"),
+                        ("tutorial-release.webp", "Release opening level: a red firewall blocks the goal on a small, open board")],
+              "marks": [(1, 30, 60.2)]}),
             ("DIEGETIC UI", "Jam console vs release console",
              ["The jam's only player aid was a fixed formula sheet",
               "Invalid moves gave no reason, so the game felt abstract"],
@@ -472,8 +478,10 @@ DESIGN_LOG = {
               "Invalid moves show the color the player would have turned"],
              ["Playtesters learned the mechanics without outside help"],
              "Turning a hard-to-read console into a live guide",
-             {"switch": ("JAM", "RELEASE"), "labels": ("Jam console", "Release console"),
-              "marks": [(0, 50, 14), (1, 36, 52), (2, 72, 74)]}),
+             {"switch": ("JAM", "RELEASE"),
+              "media": [("ui-jam.webp", "Jam console: a fixed list of combos and a formula sheet for mixing colors"),
+                        ("ui-release.webp", "Release console showing the colors being mixed, with holograms marking where the player's color would change")],
+              "marks": [(0, 67, 24.5), (1, 45.2, 29.6)]}),
         ],
         "retrospective": "My first commercial release showed me how wide real players' skill range is. I "
                          "now design for the player from the start: challenging for experts, easy to "
