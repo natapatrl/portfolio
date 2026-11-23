@@ -55,7 +55,7 @@ ABOUT = {
             "q": "How did you get into game design?",
             "a": [
                 "Frustration, mostly. At a lot of everyday things, games included.",
-                "One mobile game I used to play changed its UI and font three times in a month. "
+                "One mobile game I used to play changed its UI and font 3 times in a month. "
                 "I had to relearn it every time, and misclicks cost me matches.",
                 "Others reworked characters into something more basic, and the charm was gone.",
                 "That's what made me want to start designing.",
@@ -442,7 +442,7 @@ DESIGN_LOG = {
         # Puzzle design first: at conventions the most common question was "how did you design the puzzles?"
         "highlights": [
             ("PUZZLE DESIGN", "Puzzle flow chart or level sequence",
-             ["The jam version had 12 levels on three mechanics, with steep difficulty jumps",
+             ["The jam version had 12 levels on 3 mechanics, with steep difficulty jumps",
               "At 120+ levels, difficulty had to rise without levels just getting longer"],
              ["Difficulty comes from mechanics reacting to each other, not from length",
               "Teaching levels cover one idea; \"final exam\" levels combine everything learned",
