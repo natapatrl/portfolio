@@ -390,7 +390,7 @@ PROJECTS = [
             "My primary challenge was transforming a vague concept left to the team by a former member "
             "into a cohesive, playable experience.",
         ],
-        "history_title": "Contributions",
+        "history_title": "My Work",
         "history": [
             "Created puzzle flowcharts to streamline development",
             "Designed and implemented core puzzle mechanics",
