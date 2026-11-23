@@ -468,8 +468,10 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 /* Project nav sticks under the top bar while scrolling, so previous / next project are always in
    reach. Once stuck (site.js adds .stuck) it gets the top bar's background across the full width. */
 .proj-nav { position: sticky; top: var(--hh, 92px); z-index: 4; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem 2rem; padding: 0.8rem 0; margin-bottom: 2rem; border-bottom: 1px solid var(--line-strong); }
-.proj-nav.stuck { background: #060b26; box-shadow: 0 0 0 100vmax #060b26; clip-path: inset(0 -100vmax); border-bottom-color: transparent; }
-.proj-nav.stuck::after { content: ""; position: absolute; left: -100vmax; right: -100vmax; bottom: 0; height: 1px; background: var(--line-strong); }
+/* Full-width background and bottom line drawn with box-shadow and border-image outset: both are
+   paint-only, so they never widen the page (a positioned ::after did, making phones zoom out). */
+.proj-nav.stuck { background: #060b26; box-shadow: 0 0 0 100vmax #060b26; clip-path: inset(0 -100vmax);
+  border-image: linear-gradient(var(--line-strong), var(--line-strong)) 0 0 1 0 / 0 0 1px 0 / 0 100vmax; }
 .proj-step { display: flex; align-items: center; flex-wrap: wrap; gap: 0.8rem 1.6rem; }
 .proj-count { font: 400 var(--fs-label) var(--mono); color: var(--muted); }
 .proj-count b { font-weight: 400; color: var(--mint); margin: 0 0.3rem; }

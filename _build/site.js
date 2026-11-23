@@ -177,7 +177,17 @@
         p[j].classList.toggle("on", on);
       });
       t[i].querySelector(".dl-pip").classList.add("seen");
-      if (focus) t[i].focus();
+      if (focus) {
+        t[i].focus({ preventScroll: true });
+        // Prev / Next / OPEN are pressed below the tabs: if the tab row is off screen (phones, long
+        // tabs), bring it back to the top so the new tab starts at its beginning.
+        var r = t[0].parentElement.getBoundingClientRect();
+        var bars = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;   // sticky top bar + project nav
+        if (r.top < bars || r.top > window.innerHeight * 0.5) {
+          var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          t[0].parentElement.scrollIntoView({ block: "start", behavior: still ? "auto" : "smooth" });
+        }
+      }
     }
     t.forEach(function (x, i) {
       x.addEventListener("click", function () { go(i); });
