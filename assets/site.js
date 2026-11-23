@@ -206,6 +206,18 @@
     if (m) { go(+m[1]); log.scrollIntoView({ block: "start" }); }
   });
 
+  // ---------- Project pages: before / after switch on highlight images ----------
+  document.querySelectorAll("[data-ba]").forEach(function (fig) {
+    var btns = fig.querySelectorAll(".ba-switch button"), panes = fig.querySelectorAll(".ba-pane");
+    btns.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var k = btn.dataset.show;
+        btns.forEach(function (x) { x.setAttribute("aria-pressed", x === btn ? "true" : "false"); });
+        panes.forEach(function (p) { p.classList.toggle("on", p.dataset.pane === k); });
+      });
+    });
+  });
+
   // ---------- About page: texting game ----------
   var chat = document.querySelector("[data-chat]");
   var dataEl = document.getElementById("chat-data");

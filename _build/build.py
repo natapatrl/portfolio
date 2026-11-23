@@ -364,17 +364,27 @@ def pdr(problem, decision, result, marked=False):
 
 
 def hl_figure(label, caption, fig):
-    """Highlight image with optional before/after panels and numbered markers.
-    fig = {"panels": ("JAM", "RELEASE"), "marks": [(decision bullet index, x %, y %), ...]}"""
-    panels = fig.get("panels")
-    over = ""
-    if panels:
-        over += ('<span class="ph-panels" aria-hidden="true">'
-                 + "".join(f"<i>{e(p)}</i>" for p in panels) + "</span>")
-    for i, x, y in fig.get("marks", []):
-        over += f'<span class="mk" data-m="{i + 1}" style="left:{x}%;top:{y}%" aria-hidden="true">{i + 1}</span>'
-    return (f'<figure class="frame hl-fig"><div class="ph" style="aspect-ratio:16/9" role="img" '
-            f'aria-label="Image coming soon: {e(label)}"><span>[ img: {e(label)} ]</span>{over}</div>'
+    """Highlight image. Fills the height of its tab, so short tabs don't leave a gap.
+    fig = {"switch": ("JAM", "RELEASE"), "labels": (before label, after label),
+           "marks": [(decision bullet index, x %, y %), ...]}
+    With "switch", one full-size image at a time and a BEFORE/AFTER toggle on it; it opens on
+    the second (after) image, which carries the numbered markers. Without JS only "after" shows."""
+    marks = "".join(f'<span class="mk" data-m="{i + 1}" style="left:{x}%;top:{y}%" aria-hidden="true">{i + 1}</span>'
+                    for i, x, y in fig.get("marks", []))
+    def pane(lbl, extra="", cls="", idx=0):
+        return (f'<div class="ph ba-pane{cls}" data-pane="{idx}" role="img" aria-label="Image coming soon: {e(lbl)}">'
+                f'<span>[ img: {e(lbl)} ]</span>{extra}</div>')
+    sw = fig.get("switch")
+    if sw:
+        before, after = fig.get("labels", (label, label))
+        btns = "".join(f'<button type="button" aria-pressed="{"true" if i else "false"}" data-show="{i}">{e(t)}</button>'
+                       for i, t in enumerate(sw))
+        stage = (f'<div class="ba-switch" role="group" aria-label="Show {e(sw[0].lower())} or {e(sw[1].lower())}">{btns}</div>'
+                 + pane(before, cls=" before", idx=0) + pane(after, marks, " on", 1))
+        attr = " data-ba"
+    else:
+        stage, attr = pane(label, marks, " on"), ""
+    return (f'<figure class="frame hl-fig"{attr}><div class="hl-stage">{stage}</div>'
             f'<figcaption>{e(caption)}</figcaption></figure>')
 
 
