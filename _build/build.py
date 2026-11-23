@@ -3,6 +3,7 @@
 Run from the repo root:  python3 _build/build.py
 Folders starting with "_" are not published by GitHub Pages, so this script stays private to the repo.
 """
+import re
 import json
 import os
 import random
@@ -339,18 +340,24 @@ def build_projects():
          active="PROJECTS")
 
 
-def pdr(problem, decision, result, marked=None):
-    """marked: {decision bullet index: marker number} - those bullets show the number of the
-    matching marker on the image instead of "+", so the text reads as the image's legend."""
-    marked = marked or {}
+def tidy(t):
+    """Escape, then keep a number that ends a phrase on the same line as the word before it
+    ("level 2", "World 1"), so it never starts a line on its own."""
+    return re.sub(r"(\S) (\d+[+%]?)(?=[\s,.;:)]|$)", "\\1&nbsp;\\2", e(t))
+
+
+def pdr(problem, decision, result, marked=False):
+    """marked: True when the image has numbered markers. Then every decision bullet is numbered
+    (1, 2, 3...) instead of "+", and markers on the image reuse those numbers, so the text reads
+    as the image's legend (an image may show only some of the numbers)."""
     rows = [("01", "PROBLEM", problem, ""), ("02", "DECISION", decision, " dec"), ("03", "RESULT", result, "")]
     def body(t, legend=False):   # a string is one paragraph; a list becomes "+" bullets
         if isinstance(t, (list, tuple)):
             items = "".join(
-                f'<li class="m" data-m="{marked[i]}">{e(x)}</li>' if legend and i in marked else f"<li>{e(x)}</li>"
+                f'<li class="m" data-m="{i + 1}">{tidy(x)}</li>' if legend and marked else f"<li>{tidy(x)}</li>"
                 for i, x in enumerate(t))
             return f'<ul class="plus-list pdr-list">{items}</ul>'
-        return e(t)
+        return tidy(t)
     return '<dl class="pdr">' + "".join(
         f'<div class="{c.strip()}"><dt><b>{n}</b>{lbl}</dt><dd>{body(t, c == " dec")}</dd></div>'
         for n, lbl, t, c in rows) + "</dl>"
@@ -364,8 +371,8 @@ def hl_figure(label, caption, fig):
     if panels:
         over += ('<span class="ph-panels" aria-hidden="true">'
                  + "".join(f"<i>{e(p)}</i>" for p in panels) + "</span>")
-    for n, (_i, x, y) in enumerate(fig.get("marks", []), 1):
-        over += f'<span class="mk" data-m="{n}" style="left:{x}%;top:{y}%" aria-hidden="true">{n}</span>'
+    for i, x, y in fig.get("marks", []):
+        over += f'<span class="mk" data-m="{i + 1}" style="left:{x}%;top:{y}%" aria-hidden="true">{i + 1}</span>'
     return (f'<figure class="frame hl-fig"><div class="ph" style="aspect-ratio:16/9" role="img" '
             f'aria-label="Image coming soon: {e(label)}"><span>[ img: {e(label)} ]</span>{over}</div>'
             f'<figcaption>{e(caption)}</figcaption></figure>')
@@ -399,7 +406,7 @@ def design_log(pr):
       <ul class="plus-list">{contrib}</ul></div>{menu_html}</div>''')]
     for k, (t, img, prob, dec, res, *rest) in enumerate(hls):
         fig = rest[1] if len(rest) > 1 else {}
-        marked = {i: n for n, (i, _x, _y) in enumerate(fig.get("marks", []), 1)}
+        marked = bool(fig.get("marks"))
         tabs.append((f"{k + 1:02d} {t}", f'<div class="hl-grid">{hl_figure(img, f"FIG. {k + 1:02d} / {cap_title(t)}", fig)}'
                      f'<div>{pdr(prob, dec, res, marked)}</div></div>'))
     tabs.append(("RETROSPECTIVE", f'<p class="retro">{e(log.get("retrospective", RETRO_PLACEHOLDER))}</p>'))

@@ -491,16 +491,20 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 /* ---------- Project page: DESIGN LOG window ---------- */
 .file-pitch { margin: 0 0 1.3rem; font: 400 var(--fs-body)/1.5 var(--plex); color: var(--head); }
 .dl { margin-top: 0; }
-.pdr { margin: 0; display: grid; gap: 1rem; }
-.pdr dt { font: 500 var(--fs-caps-s) var(--grot); letter-spacing: .22em; color: var(--muted); margin-bottom: .3rem; }
+.pdr { margin: 0; display: grid; gap: 1.35rem; }
+.pdr dt { font: 500 var(--fs-caps-s) var(--grot); letter-spacing: .22em; color: var(--muted); margin-bottom: .55rem; }
 .pdr dt b { font: 400 var(--fs-micro) var(--mono); color: var(--dim); margin-right: .6rem; letter-spacing: .05em; }
 .pdr dd { margin: 0; font: 400 var(--fs-body)/1.55 var(--plex); color: var(--body); }
-.pdr .dec dt { color: var(--mint); } .pdr .dec dd { color: var(--head); }
+.pdr .dec dt { color: var(--mint); }   /* all three sections share one text colour; only the DECISION label is mint */
 .pdr-list { font-size: inherit; color: inherit; }
-.pdr-list li { padding: .12rem 0 .12rem 1.4rem; line-height: 1.5; }
-.pdr-list li::before { top: .1rem; }
+.pdr-list li { padding: .26rem 0 .26rem 1.4rem; line-height: 1.6; }
+/* No lone last word. Bullets are short (1-3 lines): balance evens the lines in every current browser
+   (Chrome's "pretty" skips 2-line blocks). Longer text: pretty where supported, balance elsewhere. */
+.pdr-list li, .plus-list li { text-wrap: balance; }
+.retro, .file-pitch, .file-plays { text-wrap: balance; text-wrap: pretty; }
+.pdr-list li::before { top: .28rem; }
 /* Numbered legend: a decision bullet that matches a marker on the image shows its number */
-.pdr-list li.m::before { content: attr(data-m); top: .28rem; left: 0; width: 1.05rem; height: 1.05rem; display: grid; place-items: center;
+.pdr-list li.m::before { content: attr(data-m); top: .46rem; left: 0; width: 1.05rem; height: 1.05rem; display: grid; place-items: center;
   background: var(--mint); color: var(--deep); font: 600 var(--fs-micro)/1 var(--mono); }
 .pdr-list li.m { padding-left: 1.7rem; }
 /* Markers on the image (positions in % of the image) */
@@ -515,7 +519,7 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .hl-grid:has(li[data-m="2"]:hover) .mk[data-m="2"], .hl-grid:has(.mk[data-m="2"]:hover) li[data-m="2"]::before { background: var(--head); outline: 2px solid var(--mint); outline-offset: 2px; }
 .hl-grid:has(li[data-m="3"]:hover) .mk[data-m="3"], .hl-grid:has(.mk[data-m="3"]:hover) li[data-m="3"]::before { background: var(--head); outline: 2px solid var(--mint); outline-offset: 2px; }
 .hl-grid:has(li[data-m="4"]:hover) .mk[data-m="4"], .hl-grid:has(.mk[data-m="4"]:hover) li[data-m="4"]::before { background: var(--head); outline: 2px solid var(--mint); outline-offset: 2px; }
-.hl-grid { display: grid; grid-template-columns: 1.75fr 1fr; gap: 2rem; align-items: start; }   /* image ~64%: the image is the subject */
+.hl-grid { display: grid; grid-template-columns: 1.75fr 1fr; gap: 2.8rem; align-items: start; }   /* image ~64%: the image is the subject */
 .retro { margin: 0; font: 400 var(--fs-body)/1.55 var(--plex); color: var(--muted); }
 /* D: OS-style tabs under the window bar; all panes share one grid cell so the window never jumps */
 .dl-tabs { display: flex; gap: 2px; padding: .6rem .8rem 0;
