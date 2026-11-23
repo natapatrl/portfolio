@@ -521,7 +521,9 @@ def design_log(pr):
     hls = log["highlights"]
     contrib = "".join(f"<li>{e(t)}</li>" for t in pr["history"])
     hls = [tuple(h) for h in hls]
-    teaser = lambda h: h[5] if len(h) > 5 else h[2]      # optional short menu line, else the problem
+    def teaser(h):      # optional short menu line, else the (first) problem
+        t = h[5] if len(h) > 5 else h[2]
+        return t[0] if isinstance(t, (list, tuple)) else t
     base = f"../../assets/img/{pr['slug']}/"
     def thumb(h, img):
         src = thumb_src(h[6]) if len(h) > 6 else None
@@ -541,10 +543,10 @@ def design_log(pr):
         marked = bool(fig.get("marks"))
         tabs.append((f"{k + 1:02d} {t}", f'<div class="hl-grid">{hl_figure(img, f"FIG. {k + 1:02d} / {cap_title(t)}", fig, base)}'
                      f'<div>{pdr(prob, dec, res, False)}</div></div>'))
-    retro = f'<p class="retro">{e(log.get("retrospective", RETRO_PLACEHOLDER))}</p>'
-    if log.get("retro_fig"):     # beside a picture, the lesson uses the same label + text style as the highlight tabs
-        retro = (f'<dl class="pdr"><div><dt><b>01</b>LESSON</dt>'
-                 f'<dd>{tidy(log.get("retrospective", RETRO_PLACEHOLDER))}</dd></div></dl>')
+    # the lesson always uses the same label + text style as the highlight tabs, with or without a picture
+    retro = (f'<dl class="pdr"><div><dt><b>01</b>LESSON</dt>'
+             f'<dd>{tidy(log.get("retrospective", RETRO_PLACEHOLDER))}</dd></div></dl>')
+    if log.get("retro_fig"):
         retro = (f'<div class="hl-grid">{hl_figure("Retrospective", f"FIG. {len(hls) + 1:02d} / Retrospective", log["retro_fig"], base)}'
                  f'<div>{retro}</div></div>')
     tabs.append(("RETROSPECTIVE", retro))
