@@ -441,7 +441,7 @@ DESIGN_LOG = {
     "anonymized": {
         # Puzzle design first: at conventions the most common question was "how did you design the puzzles?"
         "highlights": [
-            ("PUZZLE DESIGN", "Puzzle flow chart or level sequence",
+            ("PUZZLE DESIGN", "Before / after of a reworked level, solution path drawn on both",
              ["The jam version had 12 levels on 3 mechanics, with steep difficulty jumps",
               "At 120+ levels, difficulty had to rise without levels just getting longer"],
              ["Difficulty comes from mechanics reacting to each other, not from length",
@@ -449,8 +449,9 @@ DESIGN_LOG = {
               "Filler moves were cut: challenging, not tedious"],
              ["The puzzles stood out: \"How did you design them?\" was the question I heard most",
               "At conventions, most players kept solving until their time ran out"],
-             "Harder levels, not longer ones"),
-            ("TUTORIAL", "Tutorial level clip",
+             "Harder levels, not longer ones",
+             {"panels": ("BEFORE", "AFTER"), "marks": [(0, 72, 42), (2, 28, 64)]}),
+            ("TUTORIAL", "Jam opening level vs release opening levels",
              ["The jam version dropped players in with no introduction",
               "Unlike pushing boxes in Sokoban, the rules were new to most players"],
              ["No text: level layouts teach the rules",
@@ -459,15 +460,17 @@ DESIGN_LOG = {
               "Every new mechanic gets a simple practice level; combinations come later"],
              ["Most players grasped the core rule on level 2",
               "The tutorial drew far more praise than the jam's"],
-             "A tutorial that shows instead of tells"),
-            ("DIEGETIC UI", "In-world UI / HUD screenshot",
+             "A tutorial that shows instead of tells",
+             {"panels": ("JAM", "RELEASE"), "marks": [(1, 74, 48)]}),
+            ("DIEGETIC UI", "Jam console vs release console",
              ["The jam's only player aid was a fixed formula sheet",
               "Invalid moves gave no reason, so the game felt abstract"],
              ["Reworked the in-world console to react to the player",
               "Holograms preview where the player's color will change",
               "Invalid moves show the color the player would have turned"],
              ["Playtesters learned the mechanics without outside help"],
-             "Turning a hard-to-read console into a live guide"),
+             "Turning a hard-to-read console into a live guide",
+             {"panels": ("JAM", "RELEASE"), "marks": [(0, 76, 18), (1, 64, 52), (2, 86, 76)]}),
         ],
         "retrospective": "My first commercial release showed me how wide real players' skill range is. I "
                          "now design for the player from the start: challenging for experts, easy to "

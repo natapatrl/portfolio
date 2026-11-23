@@ -499,7 +499,23 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .pdr-list { font-size: inherit; color: inherit; }
 .pdr-list li { padding: .12rem 0 .12rem 1.4rem; line-height: 1.5; }
 .pdr-list li::before { top: .1rem; }
-.hl-grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: 2rem; align-items: start; }
+/* Numbered legend: a decision bullet that matches a marker on the image shows its number */
+.pdr-list li.m::before { content: attr(data-m); top: .28rem; left: 0; width: 1.05rem; height: 1.05rem; display: grid; place-items: center;
+  background: var(--mint); color: var(--deep); font: 600 var(--fs-micro)/1 var(--mono); }
+.pdr-list li.m { padding-left: 1.7rem; }
+/* Markers on the image (positions in % of the image) */
+.hl-fig .ph { overflow: hidden; }
+.mk { position: absolute; transform: translate(-50%, -50%); width: 1.6rem; height: 1.6rem; display: grid; place-items: center;
+  background: var(--mint); color: var(--deep); font: 600 var(--fs-label)/1 var(--mono); box-shadow: 0 0 0 3px rgba(5, 9, 21, .55); }
+/* Before / after panels */
+.ph-panels { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; pointer-events: none; }
+.ph-panels i { font: 500 var(--fs-micro)/1 var(--mono); font-style: normal; letter-spacing: .12em; color: var(--muted); padding: .7rem .8rem; text-align: left; }
+.ph-panels i + i { border-left: 1px dashed var(--line-strong); }
+.hl-grid:has(li[data-m="1"]:hover) .mk[data-m="1"], .hl-grid:has(.mk[data-m="1"]:hover) li[data-m="1"]::before { background: var(--head); outline: 2px solid var(--mint); outline-offset: 2px; }
+.hl-grid:has(li[data-m="2"]:hover) .mk[data-m="2"], .hl-grid:has(.mk[data-m="2"]:hover) li[data-m="2"]::before { background: var(--head); outline: 2px solid var(--mint); outline-offset: 2px; }
+.hl-grid:has(li[data-m="3"]:hover) .mk[data-m="3"], .hl-grid:has(.mk[data-m="3"]:hover) li[data-m="3"]::before { background: var(--head); outline: 2px solid var(--mint); outline-offset: 2px; }
+.hl-grid:has(li[data-m="4"]:hover) .mk[data-m="4"], .hl-grid:has(.mk[data-m="4"]:hover) li[data-m="4"]::before { background: var(--head); outline: 2px solid var(--mint); outline-offset: 2px; }
+.hl-grid { display: grid; grid-template-columns: 1.75fr 1fr; gap: 2rem; align-items: start; }   /* image ~64%: the image is the subject */
 .retro { margin: 0; font: 400 var(--fs-body)/1.55 var(--plex); color: var(--muted); }
 /* D: OS-style tabs under the window bar; all panes share one grid cell so the window never jumps */
 .dl-tabs { display: flex; gap: 2px; padding: .6rem .8rem 0;

@@ -339,14 +339,36 @@ def build_projects():
          active="PROJECTS")
 
 
-def pdr(problem, decision, result):
+def pdr(problem, decision, result, marked=None):
+    """marked: {decision bullet index: marker number} - those bullets show the number of the
+    matching marker on the image instead of "+", so the text reads as the image's legend."""
+    marked = marked or {}
     rows = [("01", "PROBLEM", problem, ""), ("02", "DECISION", decision, " dec"), ("03", "RESULT", result, "")]
-    def body(t):   # a string is one paragraph; a list becomes "+" bullets
+    def body(t, legend=False):   # a string is one paragraph; a list becomes "+" bullets
         if isinstance(t, (list, tuple)):
-            return '<ul class="plus-list pdr-list">' + "".join(f"<li>{e(x)}</li>" for x in t) + "</ul>"
+            items = "".join(
+                f'<li class="m" data-m="{marked[i]}">{e(x)}</li>' if legend and i in marked else f"<li>{e(x)}</li>"
+                for i, x in enumerate(t))
+            return f'<ul class="plus-list pdr-list">{items}</ul>'
         return e(t)
     return '<dl class="pdr">' + "".join(
-        f'<div class="{c.strip()}"><dt><b>{n}</b>{lbl}</dt><dd>{body(t)}</dd></div>' for n, lbl, t, c in rows) + "</dl>"
+        f'<div class="{c.strip()}"><dt><b>{n}</b>{lbl}</dt><dd>{body(t, c == " dec")}</dd></div>'
+        for n, lbl, t, c in rows) + "</dl>"
+
+
+def hl_figure(label, caption, fig):
+    """Highlight image with optional before/after panels and numbered markers.
+    fig = {"panels": ("JAM", "RELEASE"), "marks": [(decision bullet index, x %, y %), ...]}"""
+    panels = fig.get("panels")
+    over = ""
+    if panels:
+        over += ('<span class="ph-panels" aria-hidden="true">'
+                 + "".join(f"<i>{e(p)}</i>" for p in panels) + "</span>")
+    for n, (_i, x, y) in enumerate(fig.get("marks", []), 1):
+        over += f'<span class="mk" data-m="{n}" style="left:{x}%;top:{y}%" aria-hidden="true">{n}</span>'
+    return (f'<figure class="frame hl-fig"><div class="ph" style="aspect-ratio:16/9" role="img" '
+            f'aria-label="Image coming soon: {e(label)}"><span>[ img: {e(label)} ]</span>{over}</div>'
+            f'<figcaption>{e(caption)}</figcaption></figure>')
 
 
 def cap_title(t):
@@ -375,9 +397,11 @@ def design_log(pr):
     menu_html = f'<div><h3 class="dl-h">HIGHLIGHTS</h3><div class="dl-menu">{menu}</div></div>' if hls else ""
     tabs = [("OVERVIEW", f'''<div class="dl-overview"><div><h3 class="dl-h">{e(pr['history_title'].upper())}</h3>
       <ul class="plus-list">{contrib}</ul></div>{menu_html}</div>''')]
-    for k, (t, img, prob, dec, res, *_teaser) in enumerate(hls):
-        tabs.append((f"{k + 1:02d} {t}", f'<div class="hl-grid">{placeholder(img, f"FIG. {k + 1:02d} / {cap_title(t)}")}'
-                     f'<div>{pdr(prob, dec, res)}</div></div>'))
+    for k, (t, img, prob, dec, res, *rest) in enumerate(hls):
+        fig = rest[1] if len(rest) > 1 else {}
+        marked = {i: n for n, (i, _x, _y) in enumerate(fig.get("marks", []), 1)}
+        tabs.append((f"{k + 1:02d} {t}", f'<div class="hl-grid">{hl_figure(img, f"FIG. {k + 1:02d} / {cap_title(t)}", fig)}'
+                     f'<div>{pdr(prob, dec, res, marked)}</div></div>'))
     tabs.append(("RETROSPECTIVE", f'<p class="retro">{e(log.get("retrospective", RETRO_PLACEHOLDER))}</p>'))
     n = len(tabs)
     tl = "".join(
