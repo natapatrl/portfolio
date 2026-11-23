@@ -563,8 +563,7 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
   border-color: var(--mint); }
 .hl-fig:has(.hl-step[aria-pressed="true"]:hover) .hl-stepbox.on .mk { background: var(--head); transform: translate(-50%, -50%) scale(1.2); outline: 2px solid var(--mint); outline-offset: 2px; }
 .hl-grid { display: grid; grid-template-columns: 1.75fr 1fr; gap: 2.8rem; align-items: start; }   /* picture ~64%: the picture is the subject */
-.retro { margin: 0; font: 400 1.3rem/1.55 var(--plex); color: var(--body); }   /* the lesson reads as a pull quote beside its picture */
-@media (max-width: 900px) { .retro { font-size: var(--fs-body); } }
+.retro { margin: 0; font: 400 var(--fs-body)/1.55 var(--plex); color: var(--muted); }
 /* D: OS-style tabs under the window bar; all panes share one grid cell so the window never jumps */
 .dl-tabs { display: flex; gap: 2px; padding: .6rem .8rem 0;
   background: linear-gradient(var(--line-strong), var(--line-strong)) bottom / 100% 1px no-repeat, rgba(158,245,214,.025); }

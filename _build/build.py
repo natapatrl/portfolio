@@ -386,7 +386,7 @@ def media_el(base, file, alt):
 def sw_label(t):
     """Switch button text. "STEP 3" shows as "3" on phones so a 5-option row stays on one line."""
     w = t.split(" ")
-    if len(w) == 2 and w[1].isdigit():
+    if len(w) == 2 and w[0] == "STEP" and w[1].isdigit():
         return f'<span class="sw-w">{e(w[0])} </span>{e(w[1])}'
     return e(t)
 
@@ -524,7 +524,9 @@ def design_log(pr):
         tabs.append((f"{k + 1:02d} {t}", f'<div class="hl-grid">{hl_figure(img, f"FIG. {k + 1:02d} / {cap_title(t)}", fig, base)}'
                      f'<div>{pdr(prob, dec, res, False)}</div></div>'))
     retro = f'<p class="retro">{e(log.get("retrospective", RETRO_PLACEHOLDER))}</p>'
-    if log.get("retro_fig"):
+    if log.get("retro_fig"):     # beside a picture, the lesson uses the same label + text style as the highlight tabs
+        retro = (f'<dl class="pdr"><div><dt><b>01</b>LESSON</dt>'
+                 f'<dd>{tidy(log.get("retrospective", RETRO_PLACEHOLDER))}</dd></div></dl>')
         retro = (f'<div class="hl-grid">{hl_figure("Retrospective", f"FIG. {len(hls) + 1:02d} / Retrospective", log["retro_fig"], base)}'
                  f'<div>{retro}</div></div>')
     tabs.append(("RETROSPECTIVE", retro))
