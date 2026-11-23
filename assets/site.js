@@ -232,6 +232,28 @@
     });
   });
 
+  // ---------- Notes and frames light up together (hover or keyboard focus) ----------
+  document.querySelectorAll(".hl-fig").forEach(function (fig) {
+    function clear() { fig.querySelectorAll(".lit").forEach(function (x) { x.classList.remove("lit"); }); }
+    function light(el) {
+      clear();
+      var m = el.dataset.m;
+      fig.querySelectorAll('.ba-pane.on .mk[data-m="' + m + '"]').forEach(function (k) {
+        var box = k.closest(".hl-stepbox");
+        if (!box || box.classList.contains("on")) k.classList.add("lit");
+      });
+      fig.querySelectorAll('.hl-notes.on li[data-m="' + m + '"]').forEach(function (li) {
+        var step = li.querySelector(".hl-step");
+        if (!step || step.getAttribute("aria-pressed") === "true") li.classList.add("lit");
+      });
+    }
+    fig.addEventListener("mouseover", function (ev) { var el = ev.target.closest(".mk, .hl-notes li.m"); if (el) light(el); else clear(); });
+    fig.addEventListener("mouseleave", clear);
+    fig.addEventListener("focusin", function (ev) { var li = ev.target.closest(".hl-notes li.m"); if (li) light(li); });
+    fig.addEventListener("focusout", clear);
+    fig.addEventListener("click", function (ev) { var li = ev.target.closest(".hl-notes li.m"); if (li) setTimeout(function () { light(li); }, 0); });
+  });
+
   // ---------- Clips in highlight images: play only the one on screen ----------
   // Muted loops. With reduced motion they never start on their own; the viewer gets controls.
   var clips = document.querySelectorAll("video.hl-media");

@@ -492,7 +492,7 @@ DESIGN_LOG = {
              {"switch": ("JAM", "RELEASE"),
               "media": [("ui-jam.webp", "Jam console: a fixed list of combos and a formula sheet for mixing colors",
                          [(59.75, 92.75, 6.9, 12.5, "A state display that shows only the current mix, nothing else"),
-                          ([(19.75, 87.25, 11.5, 18.5), (23.5, 64.5, 8, 31), (34.25, 89.75, 19.5, 7.5)], "Wires connect the d-pad to the combo display and the board")]),
+                          ([(23.75, 62.5, 8.9, 31), (19.9, 87.75, 11.4, 19.5), (34.6, 92.25, 18, 6.5)], "Wires connect the d-pad to the combo display and the board")]),
                         ("ui-release.webp", "Release console showing the colors being mixed, with holograms marking where the player's color would change",
                          [(81, 47.5, 17, 26, "The console's main panel reacts to the player's moves"),
                           (52.25, 36.75, 22.5, 13.5, "Hologram previews along the paths ahead"),

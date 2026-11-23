@@ -528,22 +528,20 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .hl-notes li { position: relative; text-wrap: balance; padding-left: 1.3rem; }
 .hl-notes li.m { padding-left: 1.3rem; cursor: default; }
 .hl-notes li.m::before { content: ""; position: absolute; left: 0; top: .42rem; width: .7rem; height: .7rem; border: 2px solid var(--mint); box-sizing: border-box; transition: background .12s; }   /* same hollow square as its marker */
-/* Hovering a note lights its marker, and the other way round */
-.hl-fig:has(.hl-notes.on li[data-m="1"]:hover) .ba-pane.on .mk[data-m="1"], .hl-fig:has(.hl-notes.on li[data-m="2"]:hover) .ba-pane.on .mk[data-m="2"],
-.hl-fig:has(.hl-notes.on li[data-m="3"]:hover) .ba-pane.on .mk[data-m="3"], .mk:hover {
-  background: rgba(158, 245, 214, .22); border-color: var(--head); transform: translate(-50%, -50%) scale(1.12); }
-.hl-fig:has(.ba-pane.on .mk[data-m="1"]:hover) .hl-notes.on li[data-m="1"], .hl-fig:has(.ba-pane.on .mk[data-m="2"]:hover) .hl-notes.on li[data-m="2"],
-.hl-fig:has(.ba-pane.on .mk[data-m="3"]:hover) .hl-notes.on li[data-m="3"], .hl-notes li.m:hover { color: var(--head); }
-.hl-fig:has(.ba-pane.on .mk[data-m="1"]:hover) .hl-notes.on li[data-m="1"]::before, .hl-fig:has(.ba-pane.on .mk[data-m="2"]:hover) .hl-notes.on li[data-m="2"]::before,
-.hl-fig:has(.ba-pane.on .mk[data-m="3"]:hover) .hl-notes.on li[data-m="3"]::before, .hl-notes li.m:hover::before { background: var(--mint); }
+/* Linked highlight: site.js adds .lit to a note and all its frames while either is hovered or
+   focused, so any number of notes and frames link up (also on the pressed step row) */
+.mk.lit { background: rgba(158, 245, 214, .2); border-color: var(--head); transform: translate(-50%, -50%) scale(1.04); }
+.hl-notes li { transition: transform .12s, color .12s; transform-origin: left center; }
+.hl-notes li.lit { color: var(--head); transform: scale(1.03); }
+.hl-notes li.m.lit::before { background: var(--mint); }
+.hl-notes li.lit .hl-step { color: var(--head); border-color: var(--mint); }
+@media (prefers-reduced-motion: reduce) { .mk.lit { transform: translate(-50%, -50%); } .hl-notes li.lit { transform: none; } }
 /* Pause / play on clips (added by site.js) */
 .clip-btn { position: absolute; right: .55rem; bottom: .55rem; z-index: 2; width: 2rem; height: 2rem; display: grid; place-items: center;
   background: rgba(5, 9, 21, .85); border: 1px solid var(--line-strong); cursor: pointer; }
 .clip-btn svg { width: .8rem; height: .8rem; fill: var(--mint); shape-rendering: crispEdges; }
 .clip-btn:hover { border-color: var(--mint); }
 .clip-btn:focus-visible { outline: 2px solid var(--mint); outline-offset: 2px; }
-/* Keyboard users get the same marker highlight as hover */
-.hl-fig:has(.hl-step[aria-pressed="true"]:focus-visible) .hl-stepbox.on .mk { background: rgba(158, 245, 214, .22); border-color: var(--head); }
 @media (pointer: coarse) { .ba-switch button { min-height: 2.25rem; } }   /* bigger touch targets on phones */
 /* Step sequences: the numbered step list is the control; the picture shows the step pressed */
 .hl-stepbox:not(.on) { display: none; }
@@ -560,9 +558,6 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .hl-step[aria-pressed="true"] { color: var(--head); background: rgba(158, 245, 214, .07); border-color: var(--line-strong); }
 .hl-step[aria-pressed="true"] .sn { background: var(--mint); color: var(--deep); }
 .hl-step:focus-visible { outline: 2px solid var(--mint); outline-offset: 1px; }
-.hl-fig:has(.hl-stepbox.on .mk:hover) .hl-step[aria-pressed="true"], .hl-fig:has(.hl-step[aria-pressed="true"]:hover) .hl-stepbox.on .mk {
-  border-color: var(--mint); }
-.hl-fig:has(.hl-step[aria-pressed="true"]:hover) .hl-stepbox.on .mk { background: rgba(158, 245, 214, .22); border-color: var(--head); transform: translate(-50%, -50%) scale(1.12); }
 .hl-grid { display: grid; grid-template-columns: 1.75fr 1fr; gap: 2.8rem; align-items: start; }   /* picture ~64%: the picture is the subject */
 .retro { margin: 0; font: 400 var(--fs-body)/1.55 var(--plex); color: var(--muted); }
 /* D: OS-style tabs under the window bar; all panes share one grid cell so the window never jumps */
