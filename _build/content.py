@@ -442,46 +442,35 @@ DESIGN_LOG = {
         # Puzzle design first: at conventions the most common question was "how did you design the puzzles?"
         "highlights": [
             ("PUZZLE DESIGN", "Puzzle flow chart or level sequence",
-             ["The jam version had 12 levels on three mechanics: changing color, mixing colors and firewalls",
-              "Players found the difficulty jumps too steep",
-              "Growing to 120+ levels meant difficulty had to rise without levels just getting longer"],
+             ["The jam version had 12 levels on three mechanics, with steep difficulty jumps",
+              "At 120+ levels, difficulty had to rise without levels just getting longer"],
              ["Difficulty comes from mechanics reacting to each other, not from length",
-              "Teaching levels focus on one idea; challenge and \"final exam\" levels combine everything learned",
-              "Challenging shouldn't mean tedious, so levels that needed filler moves were reworked"],
-             ["The puzzles stood out: \"How did you design the puzzles?\" was the question I heard most",
-              "Players stayed engaged: at conventions, most kept solving until their time ran out"],
+              "Teaching levels cover one idea; \"final exam\" levels combine everything learned",
+              "Filler moves were cut: challenging, not tedious"],
+             ["The puzzles stood out: \"How did you design them?\" was the question I heard most",
+              "At conventions, most players kept solving until their time ran out"],
              "Harder levels, not longer ones"),
             ("TUTORIAL", "Tutorial level clip",
-             ["The jam version dropped players into the core mechanic with no introduction",
-              "Some passed the first level by mashing inputs, never learned the rule, and struggled later",
-              "Unlike mainstream puzzle mechanics, such as pushing boxes in Sokoban, the rules were new to "
-              "most players"],
+             ["The jam version dropped players in with no introduction",
+              "Unlike pushing boxes in Sokoban, the rules were new to most players"],
              ["No text: the levels show the rules",
-              "Level 1 is a small maze where firewalls block the way",
-              "Level 2 closes that path, so the only way through is a tile that changes the player's color",
-              "Changing color with your own moves comes later, in World 1, as a power-up",
-              "Every new mechanic opens with a simple practice level, with room to experiment"],
-             ["Most players grasped the core rule on level 2, judging by their reactions",
+              "Level 1: firewalls block the way. Level 2: a color tile is the only way through",
+              "Every new mechanic opens with a practice level"],
+             ["Most players grasped the core rule on level 2",
               "The tutorial drew far more praise than the jam's"],
              "A tutorial that shows instead of tells"),
             ("DIEGETIC UI", "In-world UI / HUD screenshot",
-             ["In the jam version, the only player aid was a fixed mix-formula sheet",
-              "Invalid moves failed without showing why",
-              "The game felt abstract; only a few players figured it out by watching closely"],
-             ["Reworked the in-world console around the play grid to react to the player and show more",
-              "Holding a button previews, as holograms, where the player will change color and the moves "
-              "to get there",
-              "The input display follows the current color and shows when the player is mixing",
-              "An invalid move shows the color the player would have turned, so they see why it failed"],
-             ["The UI now teaches alongside the levels",
-              "Playtesters learned the mechanics without outside help and could tell what each move "
-              "would do"],
+             ["The jam's only player aid was a fixed formula sheet",
+              "Invalid moves gave no reason, so the game felt abstract"],
+             ["Reworked the in-world console to react to the player",
+              "Holograms preview where the player's color will change",
+              "Invalid moves show the color the player would have turned"],
+             ["Playtesters learned the mechanics without outside help"],
              "Turning a hard-to-read console into a live guide"),
         ],
-        "retrospective": "As my first commercial release, Anonymized showed me how wide real players' "
-                         "skill range is. I first designed to show off the mechanics, and only made room "
-                         "for newcomers after playtests. Now I design for the player from the start: "
-                         "challenging for experts, easy to pick up for beginners.",
+        "retrospective": "My first commercial release showed me how wide real players' skill range is. I "
+                         "now design for the player from the start: challenging for experts, easy to "
+                         "pick up for beginners.",
     },
     "peritoneum": {
         "highlights": [
