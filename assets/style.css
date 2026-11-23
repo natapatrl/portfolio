@@ -506,8 +506,8 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 /* Highlight picture: a fixed 16:9 frame in the same place and size on every tab, then a bar
    (switch + caption) and short notes for the pane on show. Markers sit in % of the picture. */
 .hl-fig .ph { overflow: hidden; }
-.mk { position: absolute; transform: translate(-50%, -50%); width: 1rem; height: 1rem; background: var(--mint);
-  box-shadow: 0 0 0 3px rgba(5, 9, 21, .6); transition: transform .12s, background .12s; }   /* unnumbered: hover links it to its note */
+.mk { position: absolute; transform: translate(-50%, -50%); width: 2.1rem; height: 2.1rem; border: 2px solid var(--mint);
+  box-shadow: 0 0 0 2px rgba(5, 9, 21, .55), inset 0 0 0 2px rgba(5, 9, 21, .35); transition: transform .12s, background .12s; }   /* see-through frame around what it marks */
 .hl-stage { position: relative; aspect-ratio: 16 / 9; }
 .hl-stage .ba-pane { position: absolute; inset: 0; height: auto; }
 .hl-stage .ba-pane:not(.on), .hl-notes:not(.on) { display: none; }
@@ -527,15 +527,15 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
   font: 400 var(--fs-body-s)/1.5 var(--plex); color: var(--body); }
 .hl-notes li { position: relative; text-wrap: balance; padding-left: 1.3rem; }
 .hl-notes li.m { padding-left: 1.3rem; cursor: default; }
-.hl-notes li.m::before { content: ""; position: absolute; left: 0; top: .5rem; width: .6rem; height: .6rem; background: var(--mint); transition: background .12s; }   /* same square as its marker */
+.hl-notes li.m::before { content: ""; position: absolute; left: 0; top: .42rem; width: .7rem; height: .7rem; border: 2px solid var(--mint); box-sizing: border-box; transition: background .12s; }   /* same hollow square as its marker */
 /* Hovering a note lights its marker, and the other way round */
 .hl-fig:has(.hl-notes.on li[data-m="1"]:hover) .ba-pane.on .mk[data-m="1"], .hl-fig:has(.hl-notes.on li[data-m="2"]:hover) .ba-pane.on .mk[data-m="2"],
 .hl-fig:has(.hl-notes.on li[data-m="3"]:hover) .ba-pane.on .mk[data-m="3"], .mk:hover {
-  background: var(--head); transform: translate(-50%, -50%) scale(1.35); outline: 2px solid var(--mint); outline-offset: 2px; }
+  background: rgba(158, 245, 214, .22); border-color: var(--head); transform: translate(-50%, -50%) scale(1.12); }
 .hl-fig:has(.ba-pane.on .mk[data-m="1"]:hover) .hl-notes.on li[data-m="1"], .hl-fig:has(.ba-pane.on .mk[data-m="2"]:hover) .hl-notes.on li[data-m="2"],
 .hl-fig:has(.ba-pane.on .mk[data-m="3"]:hover) .hl-notes.on li[data-m="3"], .hl-notes li.m:hover { color: var(--head); }
 .hl-fig:has(.ba-pane.on .mk[data-m="1"]:hover) .hl-notes.on li[data-m="1"]::before, .hl-fig:has(.ba-pane.on .mk[data-m="2"]:hover) .hl-notes.on li[data-m="2"]::before,
-.hl-fig:has(.ba-pane.on .mk[data-m="3"]:hover) .hl-notes.on li[data-m="3"]::before, .hl-notes li.m:hover::before { background: var(--head); }
+.hl-fig:has(.ba-pane.on .mk[data-m="3"]:hover) .hl-notes.on li[data-m="3"]::before, .hl-notes li.m:hover::before { background: var(--mint); }
 /* Pause / play on clips (added by site.js) */
 .clip-btn { position: absolute; right: .55rem; bottom: .55rem; z-index: 2; width: 2rem; height: 2rem; display: grid; place-items: center;
   background: rgba(5, 9, 21, .85); border: 1px solid var(--line-strong); cursor: pointer; }
@@ -543,11 +543,12 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .clip-btn:hover { border-color: var(--mint); }
 .clip-btn:focus-visible { outline: 2px solid var(--mint); outline-offset: 2px; }
 /* Keyboard users get the same marker highlight as hover */
-.hl-fig:has(.hl-step[aria-pressed="true"]:focus-visible) .hl-stepbox.on .mk { background: var(--head); outline: 2px solid var(--mint); outline-offset: 2px; }
+.hl-fig:has(.hl-step[aria-pressed="true"]:focus-visible) .hl-stepbox.on .mk { background: rgba(158, 245, 214, .22); border-color: var(--head); }
 @media (pointer: coarse) { .ba-switch button { min-height: 2.25rem; } }   /* bigger touch targets on phones */
 /* Step sequences: the numbered step list is the control; the picture shows the step pressed */
 .hl-stepbox:not(.on) { display: none; }
-.mk-n { width: 1.45rem; height: 1.45rem; display: grid; place-items: center; color: var(--deep); font: 600 var(--fs-micro)/1 var(--mono); }
+.mk-n i { position: absolute; left: -2px; top: -2px; transform: translate(-100%, 0); min-width: 1.05rem; height: 1.05rem; display: grid; place-items: center;
+  background: var(--mint); color: var(--deep); font: 600 var(--fs-micro)/1 var(--mono); font-style: normal; }   /* step number tab on the frame's corner */
 .hl-steps { gap: .25rem; }
 .hl-steps li, .hl-steps li.m { padding-left: 0; }
 .hl-steps li.m::before { content: none; }
@@ -561,7 +562,7 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .hl-step:focus-visible { outline: 2px solid var(--mint); outline-offset: 1px; }
 .hl-fig:has(.hl-stepbox.on .mk:hover) .hl-step[aria-pressed="true"], .hl-fig:has(.hl-step[aria-pressed="true"]:hover) .hl-stepbox.on .mk {
   border-color: var(--mint); }
-.hl-fig:has(.hl-step[aria-pressed="true"]:hover) .hl-stepbox.on .mk { background: var(--head); transform: translate(-50%, -50%) scale(1.2); outline: 2px solid var(--mint); outline-offset: 2px; }
+.hl-fig:has(.hl-step[aria-pressed="true"]:hover) .hl-stepbox.on .mk { background: rgba(158, 245, 214, .22); border-color: var(--head); transform: translate(-50%, -50%) scale(1.12); }
 .hl-grid { display: grid; grid-template-columns: 1.75fr 1fr; gap: 2.8rem; align-items: start; }   /* picture ~64%: the picture is the subject */
 .retro { margin: 0; font: 400 var(--fs-body)/1.55 var(--plex); color: var(--muted); }
 /* D: OS-style tabs under the window bar; all panes share one grid cell so the window never jumps */

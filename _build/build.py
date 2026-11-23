@@ -412,7 +412,7 @@ def hl_figure(label, caption, fig, base=""):
         if st:      # a sequence: one picture per step, picked from the numbered step list under it
             boxes = "".join(
                 f'<div class="hl-box hl-stepbox{" on" if k == 0 else ""}" data-step="{k + 1}">{media_el(base, f, alt)}'
-                + (f'<span class="mk mk-n" data-m="{k + 1}" style="left:{xy[0]}%;top:{xy[1]}%" aria-hidden="true">{k + 1}</span>' if xy else "")
+                + (f'<span class="mk mk-n" data-m="{k + 1}" style="left:{xy[0]}%;top:{xy[1]}%" aria-hidden="true"><i>{k + 1}</i></span>' if xy else "")
                 + "</div>" for k, (f, alt, _, xy) in enumerate(st))
             return f'<div class="ph ba-pane has-media{on}" data-pane="{idx}">{boxes}</div>'
         if idx < len(media) and media[idx]:
