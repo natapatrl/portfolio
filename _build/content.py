@@ -441,17 +441,17 @@ DESIGN_LOG = {
     "anonymized": {
         # Puzzle design first: at conventions the most common question was "how did you design the puzzles?"
         "highlights": [
-            ("PUZZLE DESIGN", "Before / after of a reworked level, solution path drawn on both",
+            ("PUZZLE DESIGN", "A teaching level vs a mastery level, solution path drawn on both",
              ["The jam version had 12 levels on 3 mechanics, with steep difficulty jumps",
               "At 120+ levels, difficulty had to rise without levels just getting longer"],
              ["Difficulty comes from mechanics reacting to each other, not from length",
-              "Teaching levels cover one idea; \"final exam\" levels combine everything learned",
+              "Teaching levels cover one idea; mastery levels combine everything learned",
               "Filler moves were cut: challenging, not tedious"],
              ["The puzzles stood out: \"How did you design them?\" was the question I heard most",
               "At conventions, most players kept solving until their time ran out"],
              "Harder levels, not longer ones",
-             {"switch": ("BEFORE", "AFTER"), "labels": ("Level before rework, solution path drawn", "Same level after rework, solution path drawn"),
-              "marks": [(0, 58, 42), (2, 34, 66)]}),
+             {"switch": ("TEACHING", "MASTERY"), "labels": ("A teaching level: one mechanic, solution path drawn", "A mastery level: several mechanics combined, solution path drawn"),
+              "marks": [(0, 58, 42), (1, 34, 66)]}),
             ("TUTORIAL", "Jam opening level vs release opening levels",
              ["The jam version dropped players in with no introduction",
               "Unlike pushing boxes in Sokoban, the rules were new to most players"],
