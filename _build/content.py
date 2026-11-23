@@ -453,9 +453,10 @@ DESIGN_LOG = {
             ("TUTORIAL", "Tutorial level clip",
              ["The jam version dropped players in with no introduction",
               "Unlike pushing boxes in Sokoban, the rules were new to most players"],
-             ["No text: the levels show the rules",
-              "Level 1: firewalls block the way. Level 2: a color tile is the only way through",
-              "Every new mechanic opens with a practice level"],
+             ["No text: level layouts teach the rules",
+              "Each obstacle appears before its solution, so players see why they need it "
+              "(e.g. firewalls block the way a level before the color tile appears)",
+              "Every new mechanic gets a simple practice level; combinations come later"],
              ["Most players grasped the core rule on level 2",
               "The tutorial drew far more praise than the jam's"],
              "A tutorial that shows instead of tells"),
