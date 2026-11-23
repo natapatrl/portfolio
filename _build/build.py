@@ -373,6 +373,14 @@ def media_el(base, file, alt):
     return f'<img class="hl-media" src="{base}{e(file)}" alt="{e(alt)}" width="1200" height="900" loading="lazy" decoding="async">'
 
 
+def sw_label(t):
+    """Switch button text. "STEP 3" shows as "3" on phones so a 5-option row stays on one line."""
+    w = t.split(" ")
+    if len(w) == 2 and w[1].isdigit():
+        return f'<span class="sw-w">{e(w[0])} </span>{e(w[1])}'
+    return e(t)
+
+
 def hl_figure(label, caption, fig, base=""):
     """Highlight picture: a fixed 16:9 frame, then a bar with the switch (2-3 options) and the
     caption, then the notes for the pane on show. Same size and place on every tab.
@@ -382,11 +390,12 @@ def hl_figure(label, caption, fig, base=""):
     media = fig.get("media") or []
     sw = fig.get("switch") or ()
     n = max(len(media), len(sw), 1)
+    show = fig.get("open", n - 1)     # pane shown first: the final version, or step 1 of a sequence
     def notes_of(i):
-        return media[i][2] if i < len(media) and len(media[i]) > 2 else []
+        return media[i][2] if i < len(media) and media[i] and len(media[i]) > 2 else []
     def pane(idx):
-        on = " on" if idx == n - 1 else ""
-        if idx < len(media):
+        on = " on" if idx == show else ""
+        if idx < len(media) and media[idx]:
             k = 0; marks = ""
             for nt in notes_of(idx):
                 if isinstance(nt, (list, tuple)):
@@ -404,12 +413,12 @@ def hl_figure(label, caption, fig, base=""):
                 items += f'<li class="m" data-m="{k}">{tidy(nt[2])}</li>'
             else:
                 items += f"<li>{tidy(nt)}</li>"
-        on = " on" if idx == n - 1 else ""
+        on = " on" if idx == show else ""
         return f'<ul class="hl-notes{on}" data-pane="{idx}">{items}</ul>' if items else ""
     panes = "".join(pane(i) for i in range(n))
     note_html = "".join(notes(i) for i in range(n))
     if len(sw) > 1:
-        btns = "".join(f'<button type="button" aria-pressed="{"true" if i == n - 1 else "false"}" data-show="{i}">{e(t)}</button>'
+        btns = "".join(f'<button type="button" aria-pressed="{"true" if i == show else "false"}" data-show="{i}">{sw_label(t)}</button>'
                        for i, t in enumerate(sw))
         names = ", ".join(t.lower() for t in sw[:-1]) + " or " + sw[-1].lower()
         switch, attr = f'<span class="ba-switch" role="group" aria-label="Show {e(names)}">{btns}</span>', " data-ba"
@@ -423,7 +432,7 @@ def thumb_src(fig):
     """Small still for the Overview menu: the last pane (the final version)."""
     if not fig.get("media"):
         return None
-    return fig["media"][-1][0].rsplit(".", 1)[0] + "-sm.webp"
+    return [m for m in fig["media"] if m][-1][0].rsplit(".", 1)[0] + "-sm.webp"
 
 
 def trailer(tr, caption, base):

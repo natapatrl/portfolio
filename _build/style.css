@@ -515,7 +515,8 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .hl-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
 .hl-cap { font: 400 var(--fs-micro) var(--mono); color: var(--dim); margin-left: auto; }
 .ba-switch { display: flex; border: 1px solid var(--line-strong); background: rgba(5, 9, 21, .85); }
-.ba-switch button { font: 500 var(--fs-micro)/1 var(--mono); letter-spacing: .12em; color: var(--muted); background: none; border: 0; padding: .5rem .75rem; cursor: pointer; }
+.ba-switch button { font: 500 var(--fs-micro)/1 var(--mono); letter-spacing: .12em; color: var(--muted); background: none; border: 0; padding: .5rem .75rem; cursor: pointer; white-space: nowrap; }
+@media (max-width: 640px) { .ba-switch button { padding-inline: .9rem; } .sw-w { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } }   /* phones: "STEP 3" reads "3", still "Step 3" to screen readers */
 .ba-switch button + button { border-left: 1px solid var(--line-strong); }
 .ba-switch button[aria-pressed="true"] { background: var(--mint); color: var(--deep); }
 .ba-switch button:hover:not([aria-pressed="true"]) { color: var(--head); }
@@ -524,7 +525,7 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 /* Notes: the legend for the markers (numbered) or a plain line about the picture */
 .hl-notes { list-style: none; margin: .75rem 0 0; padding: 0; display: grid; gap: .3rem;
   font: 400 var(--fs-body-s)/1.5 var(--plex); color: var(--body); }
-.hl-notes li { position: relative; text-wrap: balance; }
+.hl-notes li { position: relative; text-wrap: balance; padding-left: 1.3rem; }
 .hl-notes li.m { padding-left: 1.3rem; cursor: default; }
 .hl-notes li.m::before { content: ""; position: absolute; left: 0; top: .5rem; width: .6rem; height: .6rem; background: var(--mint); transition: background .12s; }   /* same square as its marker */
 /* Hovering a note lights its marker, and the other way round */
