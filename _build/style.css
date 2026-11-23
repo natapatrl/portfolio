@@ -503,32 +503,43 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .pdr-list li, .plus-list li { text-wrap: balance; }
 .retro, .file-pitch, .file-plays { text-wrap: balance; text-wrap: pretty; }
 .pdr-list li::before { top: .28rem; }
-/* Numbered legend: a decision bullet that matches a marker on the image shows its number */
-.pdr-list li.m::before { content: attr(data-m); top: .46rem; left: 0; width: 1.05rem; height: 1.05rem; display: grid; place-items: center;
-  background: var(--mint); color: var(--deep); font: 600 var(--fs-micro)/1 var(--mono); }
-.pdr-list li.m { padding-left: 1.7rem; }
-/* Markers on the image (positions in % of the image) */
+/* Highlight picture: a fixed 16:9 frame in the same place and size on every tab, then a bar
+   (switch + caption) and short notes for the pane on show. Markers sit in % of the picture. */
 .hl-fig .ph { overflow: hidden; }
 .mk { position: absolute; transform: translate(-50%, -50%); width: 1.6rem; height: 1.6rem; display: grid; place-items: center;
-  background: var(--mint); color: var(--deep); font: 600 var(--fs-label)/1 var(--mono); box-shadow: 0 0 0 3px rgba(5, 9, 21, .55); }
-/* Highlight image: fills the tab's height (min 16:9); one pane at a time with a before/after switch */
-.hl-fig { display: flex; flex-direction: column; }
-.hl-stage { position: relative; flex: 1 0 auto; aspect-ratio: 4 / 3; }   /* at least 4:3, grows to the tab's height */
+  background: var(--mint); color: var(--deep); font: 600 var(--fs-label)/1 var(--mono); box-shadow: 0 0 0 3px rgba(5, 9, 21, .55);
+  transition: transform .12s, background .12s; }
+.hl-stage { position: relative; aspect-ratio: 16 / 9; }
 .hl-stage .ba-pane { position: absolute; inset: 0; height: auto; }
-.hl-stage .ba-pane:not(.on) { display: none; }
-.ba-switch { position: absolute; top: .7rem; left: .7rem; z-index: 2; display: flex; border: 1px solid var(--line-strong); background: rgba(5, 9, 21, .85); }
+.hl-stage .ba-pane:not(.on), .hl-notes:not(.on) { display: none; }
+.hl-fig figcaption { margin-top: .6rem; }
+.hl-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.hl-cap { font: 400 var(--fs-micro) var(--mono); color: var(--dim); margin-left: auto; }
+.ba-switch { display: flex; border: 1px solid var(--line-strong); background: rgba(5, 9, 21, .85); }
 .ba-switch button { font: 500 var(--fs-micro)/1 var(--mono); letter-spacing: .12em; color: var(--muted); background: none; border: 0; padding: .5rem .75rem; cursor: pointer; }
 .ba-switch button + button { border-left: 1px solid var(--line-strong); }
 .ba-switch button[aria-pressed="true"] { background: var(--mint); color: var(--deep); }
 .ba-switch button:hover:not([aria-pressed="true"]) { color: var(--head); }
 .ba-switch button:focus-visible { outline: 2px solid var(--mint); outline-offset: -4px; }
 .ba-switch button[aria-pressed="true"]:focus-visible { outline-color: var(--deep); }
-.hl-grid:has(li[data-m="1"]:hover) .mk[data-m="1"], .hl-grid:has(.mk[data-m="1"]:hover) li[data-m="1"]::before { background: var(--head); outline: 2px solid var(--mint); outline-offset: 2px; }
-.hl-grid:has(li[data-m="2"]:hover) .mk[data-m="2"], .hl-grid:has(.mk[data-m="2"]:hover) li[data-m="2"]::before { background: var(--head); outline: 2px solid var(--mint); outline-offset: 2px; }
-.hl-grid:has(li[data-m="3"]:hover) .mk[data-m="3"], .hl-grid:has(.mk[data-m="3"]:hover) li[data-m="3"]::before { background: var(--head); outline: 2px solid var(--mint); outline-offset: 2px; }
-.hl-grid:has(li[data-m="4"]:hover) .mk[data-m="4"], .hl-grid:has(.mk[data-m="4"]:hover) li[data-m="4"]::before { background: var(--head); outline: 2px solid var(--mint); outline-offset: 2px; }
-.hl-grid { display: grid; grid-template-columns: 1.75fr 1fr; gap: 2.8rem; align-items: stretch; }   /* image ~64%: the image is the subject */
-.retro { margin: 0; font: 400 var(--fs-body)/1.55 var(--plex); color: var(--muted); }
+/* Notes: the legend for the markers (numbered) or a plain line about the picture */
+.hl-notes { list-style: none; margin: .75rem 0 0; padding: 0; display: grid; gap: .3rem;
+  font: 400 var(--fs-body-s)/1.5 var(--plex); color: var(--body); }
+.hl-notes li { position: relative; text-wrap: balance; }
+.hl-notes li.m { padding-left: 1.75rem; cursor: default; }
+.hl-notes li.m::before { content: attr(data-m); position: absolute; left: 0; top: .2rem; width: 1.15rem; height: 1.15rem; display: grid; place-items: center;
+  background: var(--mint); color: var(--deep); font: 600 var(--fs-micro)/1 var(--mono); transition: background .12s; }
+/* Hovering a note lights its marker, and the other way round */
+.hl-fig:has(.hl-notes.on li[data-m="1"]:hover) .ba-pane.on .mk[data-m="1"], .hl-fig:has(.hl-notes.on li[data-m="2"]:hover) .ba-pane.on .mk[data-m="2"],
+.hl-fig:has(.hl-notes.on li[data-m="3"]:hover) .ba-pane.on .mk[data-m="3"], .mk:hover {
+  background: var(--head); transform: translate(-50%, -50%) scale(1.18); outline: 2px solid var(--mint); outline-offset: 2px; }
+.hl-fig:has(.ba-pane.on .mk[data-m="1"]:hover) .hl-notes.on li[data-m="1"], .hl-fig:has(.ba-pane.on .mk[data-m="2"]:hover) .hl-notes.on li[data-m="2"],
+.hl-fig:has(.ba-pane.on .mk[data-m="3"]:hover) .hl-notes.on li[data-m="3"], .hl-notes li.m:hover { color: var(--head); }
+.hl-fig:has(.ba-pane.on .mk[data-m="1"]:hover) .hl-notes.on li[data-m="1"]::before, .hl-fig:has(.ba-pane.on .mk[data-m="2"]:hover) .hl-notes.on li[data-m="2"]::before,
+.hl-fig:has(.ba-pane.on .mk[data-m="3"]:hover) .hl-notes.on li[data-m="3"]::before, .hl-notes li.m:hover::before { background: var(--head); }
+.hl-grid { display: grid; grid-template-columns: 1.75fr 1fr; gap: 2.8rem; align-items: start; }   /* picture ~64%: the picture is the subject */
+.retro { margin: 0; font: 400 1.3rem/1.55 var(--plex); color: var(--body); }   /* the lesson reads as a pull quote beside its picture */
+@media (max-width: 900px) { .retro { font-size: var(--fs-body); } }
 /* D: OS-style tabs under the window bar; all panes share one grid cell so the window never jumps */
 .dl-tabs { display: flex; gap: 2px; padding: .6rem .8rem 0;
   background: linear-gradient(var(--line-strong), var(--line-strong)) bottom / 100% 1px no-repeat, rgba(158,245,214,.025); }
@@ -547,16 +558,15 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .dl-pane.on { visibility: visible; }
 .dl-content { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; }
 .dl-content > .dl-overview { align-self: stretch; margin-bottom: auto; }
-.dl-content > .hl-grid { flex: 1; }   /* the highlight (and its image) fills the shared tab height: no empty band in shorter tabs */
 .js .dl-pane.on .dl-content { animation: pane-in .22s ease-out; }
 @keyframes pane-in { from { opacity: 0; transform: translateX(6px); } to { opacity: 1; transform: none; } }
-.dl-overview { display: grid; grid-template-columns: 1fr 1.15fr; gap: 2.4rem; align-items: start; }
+.dl-overview { display: grid; grid-template-columns: 1.75fr 1fr; gap: 2.8rem; align-items: start; }   /* same columns as the highlight tabs: menu in the picture slot */
 .dl-h { margin: 0 0 .8rem; font: 500 var(--fs-caps-s) var(--grot); letter-spacing: .24em; color: var(--mint); }
 .dl-menu { display: grid; gap: .5rem; }
 .dl-menu:has(> :nth-child(4)) { gap: .35rem; }
-.dl-menu:has(> :nth-child(4)) .dl-open { grid-template-columns: 4.6rem 1fr auto; padding: .4rem .7rem .4rem .45rem; }
+.dl-menu:has(> :nth-child(4)) .dl-open { grid-template-columns: 8rem 1fr auto; padding: .4rem .7rem .4rem .45rem; }
 .dl-tabs:has(> :nth-child(6)) .dl-tab { padding-inline: .7rem; letter-spacing: .12em; }
-.dl-open { display: grid; grid-template-columns: 6.5rem 1fr auto; gap: 1rem; align-items: center; text-align: left; cursor: pointer;
+.dl-open { display: grid; grid-template-columns: 13rem 1fr auto; gap: 1rem; align-items: center; text-align: left; cursor: pointer;
   padding: .55rem .8rem .55rem .55rem; background: rgba(255,255,255,.02); border: 1px solid var(--line); color: var(--muted); }
 .dl-open:hover, .dl-open:focus-visible { border-color: var(--mint); background: rgba(158,245,214,.06); }
 .dl-thumb .ph { font-size: 0; padding: 0; } .dl-thumb .ph::before, .dl-thumb .ph::after { width: 8px; height: 8px; }
@@ -579,6 +589,7 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
   .dl-pane.on { display: flex; }
   .hl-grid { grid-template-columns: 1fr; gap: 1.2rem; }
   .dl-overview { grid-template-columns: 1fr; gap: 1.6rem; }
+  .dl-history { order: -1; }   /* phones: what I did first, then the highlight menu */
   .dl-open { grid-template-columns: 4.5rem 1fr; } .dl-go { display: none; }
   .dl-panes { padding: 1.2rem 1.1rem .9rem; }
 }
@@ -755,14 +766,10 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
   .js .chat .bubble:not(.typing) { opacity: 1; transform: none; }
 }
 
-/* Real media inside image frames. Highlight pictures are 4:3 crops around the board and console;
-   the frame keeps its crop marks and the picture sits centered when the tab is taller, so markers
-   (in % of the picture) stay on target. */
+/* Real media inside image frames. Highlight pictures are 16:9 crops zoomed on the board and console. */
 .ph.has-media { padding: 0; display: block; background: rgba(5, 9, 21, .55); }
 .ph.has-media > img { display: block; width: 100%; height: auto; }
-.hl-stage .ba-pane.has-media { display: flex; align-items: center; }
-.hl-stage .ba-pane.has-media:not(.on) { display: none; }
-.hl-box { position: relative; width: 100%; aspect-ratio: 4 / 3; }
+.hl-box { position: relative; width: 100%; height: 100%; }
 .hl-media { display: block; width: 100%; height: 100%; object-fit: contain; }
 .ph.has-media::before, .ph.has-media::after { z-index: 1; pointer-events: none; }
 .dl-thumb img { display: block; width: 100%; height: auto; }

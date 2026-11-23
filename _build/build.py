@@ -373,41 +373,57 @@ def media_el(base, file, alt):
     return f'<img class="hl-media" src="{base}{e(file)}" alt="{e(alt)}" width="1200" height="900" loading="lazy" decoding="async">'
 
 
+def hl_figure(label, caption, fig, base=""):
+    """Highlight picture: a fixed 16:9 frame, then a bar with the switch (2-3 options) and the
+    caption, then the notes for the pane on show. Same size and place on every tab.
+    fig = {"switch": (labels), "media": [(file, alt, notes), ...] one per label}
+    notes: up to 3 per pane; (x %, y %, text) puts a numbered marker on the picture,
+    a plain string is a line without a marker. Opens on the last pane (the final version)."""
+    media = fig.get("media") or []
+    sw = fig.get("switch") or ()
+    n = max(len(media), len(sw), 1)
+    def notes_of(i):
+        return media[i][2] if i < len(media) and len(media[i]) > 2 else []
+    def pane(idx):
+        on = " on" if idx == n - 1 else ""
+        if idx < len(media):
+            k = 0; marks = ""
+            for nt in notes_of(idx):
+                if isinstance(nt, (list, tuple)):
+                    k += 1
+                    marks += f'<span class="mk" data-m="{k}" style="left:{nt[0]}%;top:{nt[1]}%" aria-hidden="true">{k}</span>'
+            return (f'<div class="ph ba-pane has-media{on}" data-pane="{idx}"><div class="hl-box">'
+                    f'{media_el(base, media[idx][0], media[idx][1])}{marks}</div></div>')
+        return (f'<div class="ph ba-pane{on}" data-pane="{idx}" role="img" aria-label="Image coming soon: {e(label)}">'
+                f'<span>[ img: {e(label)} ]</span></div>')
+    def notes(idx):
+        k = 0; items = ""
+        for nt in notes_of(idx):
+            if isinstance(nt, (list, tuple)):
+                k += 1
+                items += f'<li class="m" data-m="{k}">{tidy(nt[2])}</li>'
+            else:
+                items += f"<li>{tidy(nt)}</li>"
+        on = " on" if idx == n - 1 else ""
+        return f'<ul class="hl-notes{on}" data-pane="{idx}">{items}</ul>' if items else ""
+    panes = "".join(pane(i) for i in range(n))
+    note_html = "".join(notes(i) for i in range(n))
+    if len(sw) > 1:
+        btns = "".join(f'<button type="button" aria-pressed="{"true" if i == n - 1 else "false"}" data-show="{i}">{e(t)}</button>'
+                       for i, t in enumerate(sw))
+        names = ", ".join(t.lower() for t in sw[:-1]) + " or " + sw[-1].lower()
+        switch, attr = f'<span class="ba-switch" role="group" aria-label="Show {e(names)}">{btns}</span>', " data-ba"
+    else:
+        switch, attr = "", ""
+    return (f'<figure class="frame hl-fig"{attr}><div class="hl-stage">{panes}</div>'
+            f'<figcaption><span class="hl-bar">{switch}<span class="hl-cap">{e(caption)}</span></span>{note_html}</figcaption></figure>')
+
+
 def thumb_src(fig):
     """Small still for the Overview menu: the last pane (the final version)."""
     if not fig.get("media"):
         return None
     return fig["media"][-1][0].rsplit(".", 1)[0] + "-sm.webp"
-
-
-def hl_figure(label, caption, fig, base=""):
-    """Highlight image. Fills the height of its tab, so short tabs don't leave a gap; the picture
-    keeps 16:9 inside it and the markers sit on the picture.
-    fig = {"switch": (button labels, 2-3), "media": [(file, alt), ...] one per button,
-           "marks": [(decision bullet index, x %, y %), ...]}   markers go on the last pane.
-    It opens on the last pane (the final version). Without JS only that pane shows."""
-    marks = "".join(f'<span class="mk" data-m="{i + 1}" style="left:{x}%;top:{y}%" aria-hidden="true">{i + 1}</span>'
-                    for i, x, y in fig.get("marks", []))
-    media = fig.get("media") or []
-    sw = fig.get("switch") or ()
-    n = max(len(media), len(sw), 1)
-    def pane(idx, extra=""):
-        on = " on" if idx == n - 1 else ""
-        if idx < len(media):
-            body = f'<div class="hl-box">{media_el(base, *media[idx])}{extra}</div>'
-            return f'<div class="ph ba-pane has-media{on}" data-pane="{idx}">{body}</div>'
-        return (f'<div class="ph ba-pane{on}" data-pane="{idx}" role="img" aria-label="Image coming soon: {e(label)}">'
-                f'<span>[ img: {e(label)} ]</span>{extra}</div>')
-    panes = "".join(pane(i, marks if i == n - 1 else "") for i in range(n))
-    if len(sw) > 1:
-        btns = "".join(f'<button type="button" aria-pressed="{"true" if i == n - 1 else "false"}" data-show="{i}">{e(t)}</button>'
-                       for i, t in enumerate(sw))
-        names = ", ".join(t.lower() for t in sw[:-1]) + " or " + sw[-1].lower()
-        stage, attr = f'<div class="ba-switch" role="group" aria-label="Show {e(names)}">{btns}</div>' + panes, " data-ba"
-    else:
-        stage, attr = panes, ""
-    return (f'<figure class="frame hl-fig"{attr}><div class="hl-stage">{stage}</div>'
-            f'<figcaption>{e(caption)}</figcaption></figure>')
 
 
 def trailer(tr, caption, base):
@@ -459,14 +475,18 @@ def design_log(pr):
         f'<span class="dl-mteaser">{e(teaser(h))}</span></span><span class="dl-go" aria-hidden="true">OPEN &rarr;</span></button>'
         for k, h in enumerate(hls) for t, img in [h[:2]])
     menu_html = f'<div><h3 class="dl-h">HIGHLIGHTS</h3><div class="dl-menu">{menu}</div></div>' if hls else ""
-    tabs = [("OVERVIEW", f'''<div class="dl-overview"><div><h3 class="dl-h">{e(pr['history_title'].upper())}</h3>
-      <ul class="plus-list">{contrib}</ul></div>{menu_html}</div>''')]
+    tabs = [("OVERVIEW", f'''<div class="dl-overview">{menu_html}<div class="dl-history"><h3 class="dl-h">{e(pr['history_title'].upper())}</h3>
+      <ul class="plus-list">{contrib}</ul></div></div>''')]
     for k, (t, img, prob, dec, res, *rest) in enumerate(hls):
         fig = rest[1] if len(rest) > 1 else {}
         marked = bool(fig.get("marks"))
         tabs.append((f"{k + 1:02d} {t}", f'<div class="hl-grid">{hl_figure(img, f"FIG. {k + 1:02d} / {cap_title(t)}", fig, base)}'
-                     f'<div>{pdr(prob, dec, res, marked)}</div></div>'))
-    tabs.append(("RETROSPECTIVE", f'<p class="retro">{e(log.get("retrospective", RETRO_PLACEHOLDER))}</p>'))
+                     f'<div>{pdr(prob, dec, res, False)}</div></div>'))
+    retro = f'<p class="retro">{e(log.get("retrospective", RETRO_PLACEHOLDER))}</p>'
+    if log.get("retro_fig"):
+        retro = (f'<div class="hl-grid">{hl_figure("Retrospective", f"FIG. {len(hls) + 1:02d} / Retrospective", log["retro_fig"], base)}'
+                 f'<div>{retro}</div></div>')
+    tabs.append(("RETROSPECTIVE", retro))
     n = len(tabs)
     tl = "".join(
         f'<button type="button" class="dl-tab" role="tab" id="dl-t{i}" aria-controls="dl-p{i}" '

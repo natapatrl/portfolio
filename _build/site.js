@@ -208,12 +208,12 @@
 
   // ---------- Project pages: before / after switch on highlight images ----------
   document.querySelectorAll("[data-ba]").forEach(function (fig) {
-    var btns = fig.querySelectorAll(".ba-switch button"), panes = fig.querySelectorAll(".ba-pane");
+    var btns = fig.querySelectorAll(".ba-switch button");
     btns.forEach(function (btn) {
       btn.addEventListener("click", function () {
         var k = btn.dataset.show;
         btns.forEach(function (x) { x.setAttribute("aria-pressed", x === btn ? "true" : "false"); });
-        panes.forEach(function (p) { p.classList.toggle("on", p.dataset.pane === k); });
+        fig.querySelectorAll("[data-pane]").forEach(function (p) { p.classList.toggle("on", p.dataset.pane === k); });
         syncClips();
       });
     });
