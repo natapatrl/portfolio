@@ -255,7 +255,7 @@ def build_home():
 <section class="wrap featured" id="latest" aria-label="Latest project">
   {window(HOME['latest_title'], f"""
     <div class="featured-grid">
-      <a class="featured-media" href="{p}projects/{f['slug']}/" tabindex="-1" aria-hidden="true">{placeholder(f['hero_ph'], 'FIG. 01 / ' + f['title'])}</a>
+      <a class="featured-media" href="{p}projects/{f['slug']}/" tabindex="-1" aria-hidden="true">{feat_media(f, p)}</a>
       <div class="featured-body">
         {doc_head(None, f['title'], None, tag="h2", cls="featured-head")}
         {badges(f.get('badges', []))}
@@ -363,29 +363,86 @@ def pdr(problem, decision, result, marked=False):
         for n, lbl, t, c in rows) + "</dl>"
 
 
-def hl_figure(label, caption, fig):
-    """Highlight image. Fills the height of its tab, so short tabs don't leave a gap.
-    fig = {"switch": ("JAM", "RELEASE"), "labels": (before label, after label),
-           "marks": [(decision bullet index, x %, y %), ...]}
-    With "switch", one full-size image at a time and a BEFORE/AFTER toggle on it; it opens on
-    the second (after) image, which carries the numbered markers. Without JS only "after" shows."""
-    marks = "".join(f'<span class="mk" data-m="{i + 1}" style="left:{x}%;top:{y}%" aria-hidden="true">{i + 1}</span>'
-                    for i, x, y in fig.get("marks", []))
-    def pane(lbl, extra="", cls="", idx=0):
-        return (f'<div class="ph ba-pane{cls}" data-pane="{idx}" role="img" aria-label="Image coming soon: {e(lbl)}">'
-                f'<span>[ img: {e(lbl)} ]</span>{extra}</div>')
-    sw = fig.get("switch")
-    if sw:
-        before, after = fig.get("labels", (label, label))
-        btns = "".join(f'<button type="button" aria-pressed="{"true" if i else "false"}" data-show="{i}">{e(t)}</button>'
+def media_el(base, file, alt):
+    """One still or clip. Clips are muted loops: site.js plays the one on screen and pauses the
+    rest; with reduced motion they stay paused with controls. The poster is the same name in .webp."""
+    stem = file.rsplit(".", 1)[0]
+    if file.endswith(".mp4"):
+        return (f'<video class="hl-media" src="{base}{e(file)}" poster="{base}{e(stem)}.webp" muted loop playsinline '
+                f'preload="none" aria-label="{e(alt)}"></video>')
+    return f'<img class="hl-media" src="{base}{e(file)}" alt="{e(alt)}" width="1200" height="900" loading="lazy" decoding="async">'
+
+
+def hl_figure(label, caption, fig, base=""):
+    """Highlight picture: a fixed 16:9 frame, then a bar with the switch (2-3 options) and the
+    caption, then the notes for the pane on show. Same size and place on every tab.
+    fig = {"switch": (labels), "media": [(file, alt, notes), ...] one per label}
+    notes: up to 3 per pane; (x %, y %, text) puts a numbered marker on the picture,
+    a plain string is a line without a marker. Opens on the last pane (the final version)."""
+    media = fig.get("media") or []
+    sw = fig.get("switch") or ()
+    n = max(len(media), len(sw), 1)
+    def notes_of(i):
+        return media[i][2] if i < len(media) and len(media[i]) > 2 else []
+    def pane(idx):
+        on = " on" if idx == n - 1 else ""
+        if idx < len(media):
+            k = 0; marks = ""
+            for nt in notes_of(idx):
+                if isinstance(nt, (list, tuple)):
+                    k += 1
+                    marks += f'<span class="mk" data-m="{k}" style="left:{nt[0]}%;top:{nt[1]}%" aria-hidden="true"></span>'
+            return (f'<div class="ph ba-pane has-media{on}" data-pane="{idx}"><div class="hl-box">'
+                    f'{media_el(base, media[idx][0], media[idx][1])}{marks}</div></div>')
+        return (f'<div class="ph ba-pane{on}" data-pane="{idx}" role="img" aria-label="Image coming soon: {e(label)}">'
+                f'<span>[ img: {e(label)} ]</span></div>')
+    def notes(idx):
+        k = 0; items = ""
+        for nt in notes_of(idx):
+            if isinstance(nt, (list, tuple)):
+                k += 1
+                items += f'<li class="m" data-m="{k}">{tidy(nt[2])}</li>'
+            else:
+                items += f"<li>{tidy(nt)}</li>"
+        on = " on" if idx == n - 1 else ""
+        return f'<ul class="hl-notes{on}" data-pane="{idx}">{items}</ul>' if items else ""
+    panes = "".join(pane(i) for i in range(n))
+    note_html = "".join(notes(i) for i in range(n))
+    if len(sw) > 1:
+        btns = "".join(f'<button type="button" aria-pressed="{"true" if i == n - 1 else "false"}" data-show="{i}">{e(t)}</button>'
                        for i, t in enumerate(sw))
-        stage = (f'<div class="ba-switch" role="group" aria-label="Show {e(sw[0].lower())} or {e(sw[1].lower())}">{btns}</div>'
-                 + pane(before, cls=" before", idx=0) + pane(after, marks, " on", 1))
-        attr = " data-ba"
+        names = ", ".join(t.lower() for t in sw[:-1]) + " or " + sw[-1].lower()
+        switch, attr = f'<span class="ba-switch" role="group" aria-label="Show {e(names)}">{btns}</span>', " data-ba"
     else:
-        stage, attr = pane(label, marks, " on"), ""
-    return (f'<figure class="frame hl-fig"{attr}><div class="hl-stage">{stage}</div>'
+        switch, attr = "", ""
+    return (f'<figure class="frame hl-fig"{attr}><div class="hl-stage">{panes}</div>'
+            f'<figcaption><span class="hl-bar">{switch}<span class="hl-cap">{e(caption)}</span></span>{note_html}</figcaption></figure>')
+
+
+def thumb_src(fig):
+    """Small still for the Overview menu: the last pane (the final version)."""
+    if not fig.get("media"):
+        return None
+    return fig["media"][-1][0].rsplit(".", 1)[0] + "-sm.webp"
+
+
+def trailer(tr, caption, base):
+    """Click-to-load YouTube player: a 3 KB poster and play button until pressed, then the real
+    player (privacy-enhanced domain). Without JS it is a plain link to the video."""
+    vid = e(tr["youtube"])
+    return (f'<figure class="frame hero-ph hero-video"><a class="yt" href="https://youtu.be/{vid}" data-yt="{vid}" '
+            f'target="_blank" rel="noopener"><img src="{base}{e(tr["poster"])}" alt="" width="1600" height="900" decoding="async">'
+            f'<span class="yt-play" aria-hidden="true"><svg viewBox="0 0 5 5" shape-rendering="crispEdges"><path d="M1 0h1v1h1v1h1v1H3v1H2v1H1z"/></svg></span>'
+            f'<span class="sr-only">Play the {e(tr["label"].lower())} (YouTube)</span></a>'
             f'<figcaption>{e(caption)}</figcaption></figure>')
+
+
+def feat_media(f, p):
+    """Home page Latest window: the trailer poster when there is one."""
+    if f.get("trailer"):
+        return (f'<figure class="frame"><div class="ph has-media"><img src="{p}assets/{e(f["trailer"]["poster"])}" alt="" '
+                f'width="1600" height="900" decoding="async"></div><figcaption>FIG. 01 / {e(f["title"])}</figcaption></figure>')
+    return placeholder(f['hero_ph'], 'FIG. 01 / ' + f['title'])
 
 
 def cap_title(t):
@@ -406,20 +463,30 @@ def design_log(pr):
     contrib = "".join(f"<li>{e(t)}</li>" for t in pr["history"])
     hls = [tuple(h) for h in hls]
     teaser = lambda h: h[5] if len(h) > 5 else h[2]      # optional short menu line, else the problem
+    base = f"../../assets/img/{pr['slug']}/"
+    def thumb(h, img):
+        src = thumb_src(h[6]) if len(h) > 6 else None
+        if not src:
+            return placeholder(img, decorative=True)
+        return f'<img src="{base}{src}" alt="" width="480" height="270" loading="lazy" decoding="async">'
     menu = "".join(
-        f'<button type="button" class="dl-open" data-go="{k + 1}"><span class="dl-thumb">{placeholder(img, decorative=True)}</span>'
+        f'<button type="button" class="dl-open" data-go="{k + 1}"><span class="dl-thumb">{thumb(h, img)}</span>'
         f'<span class="dl-mtext"><span class="dl-mno">{k + 1:02d}</span><span class="dl-mtitle">{e(t)}</span>'
         f'<span class="dl-mteaser">{e(teaser(h))}</span></span><span class="dl-go" aria-hidden="true">OPEN &rarr;</span></button>'
         for k, h in enumerate(hls) for t, img in [h[:2]])
     menu_html = f'<div><h3 class="dl-h">HIGHLIGHTS</h3><div class="dl-menu">{menu}</div></div>' if hls else ""
-    tabs = [("OVERVIEW", f'''<div class="dl-overview"><div><h3 class="dl-h">{e(pr['history_title'].upper())}</h3>
-      <ul class="plus-list">{contrib}</ul></div>{menu_html}</div>''')]
+    tabs = [("OVERVIEW", f'''<div class="dl-overview">{menu_html}<div class="dl-history"><h3 class="dl-h">{e(pr['history_title'].upper())}</h3>
+      <ul class="plus-list">{contrib}</ul></div></div>''')]
     for k, (t, img, prob, dec, res, *rest) in enumerate(hls):
         fig = rest[1] if len(rest) > 1 else {}
         marked = bool(fig.get("marks"))
-        tabs.append((f"{k + 1:02d} {t}", f'<div class="hl-grid">{hl_figure(img, f"FIG. {k + 1:02d} / {cap_title(t)}", fig)}'
-                     f'<div>{pdr(prob, dec, res, marked)}</div></div>'))
-    tabs.append(("RETROSPECTIVE", f'<p class="retro">{e(log.get("retrospective", RETRO_PLACEHOLDER))}</p>'))
+        tabs.append((f"{k + 1:02d} {t}", f'<div class="hl-grid">{hl_figure(img, f"FIG. {k + 1:02d} / {cap_title(t)}", fig, base)}'
+                     f'<div>{pdr(prob, dec, res, False)}</div></div>'))
+    retro = f'<p class="retro">{e(log.get("retrospective", RETRO_PLACEHOLDER))}</p>'
+    if log.get("retro_fig"):
+        retro = (f'<div class="hl-grid">{hl_figure("Retrospective", f"FIG. {len(hls) + 1:02d} / Retrospective", log["retro_fig"], base)}'
+                 f'<div>{retro}</div></div>')
+    tabs.append(("RETROSPECTIVE", retro))
     n = len(tabs)
     tl = "".join(
         f'<button type="button" class="dl-tab" role="tab" id="dl-t{i}" aria-controls="dl-p{i}" '
@@ -485,7 +552,7 @@ def build_project(i, pr):
   {window("PROJECT FILE", f"""
     <div class="file-grid">
       <div class="file-main">
-        {placeholder(pr['hero_ph'], 'FIG. 00 / ' + pr['title'], '16/9', 'hero-ph')}
+        {trailer(pr['trailer'], 'FIG. 00 / ' + pr['trailer']['label'], p + 'assets/') if pr.get('trailer') else placeholder(pr['hero_ph'], 'FIG. 00 / ' + pr['title'], '16/9', 'hero-ph')}
         <p class="file-pitch">{e(pr['blurb'])}</p>
         {f'<p class="file-plays">{e(pr["plays"])}</p>' if pr.get('plays') else ''}
       </div>

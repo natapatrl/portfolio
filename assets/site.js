@@ -208,13 +208,48 @@
 
   // ---------- Project pages: before / after switch on highlight images ----------
   document.querySelectorAll("[data-ba]").forEach(function (fig) {
-    var btns = fig.querySelectorAll(".ba-switch button"), panes = fig.querySelectorAll(".ba-pane");
+    var btns = fig.querySelectorAll(".ba-switch button");
     btns.forEach(function (btn) {
       btn.addEventListener("click", function () {
         var k = btn.dataset.show;
         btns.forEach(function (x) { x.setAttribute("aria-pressed", x === btn ? "true" : "false"); });
-        panes.forEach(function (p) { p.classList.toggle("on", p.dataset.pane === k); });
+        fig.querySelectorAll("[data-pane]").forEach(function (p) { p.classList.toggle("on", p.dataset.pane === k); });
+        syncClips();
       });
+    });
+  });
+
+  // ---------- Clips in highlight images: play only the one on screen ----------
+  // Muted loops. With reduced motion they never start on their own; the viewer gets controls.
+  var clips = document.querySelectorAll("video.hl-media");
+  var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function shown(v) {
+    var tab = v.closest(".dl-pane"), pane = v.closest(".ba-pane");
+    return (!tab || tab.classList.contains("on")) && (!pane || pane.classList.contains("on"));
+  }
+  function syncClips() {
+    clips.forEach(function (v) {
+      if (still) { v.controls = true; if (!shown(v)) v.pause(); return; }
+      if (shown(v)) { var r = v.play(); if (r && r.catch) r.catch(function () {}); } else v.pause();
+    });
+  }
+  document.querySelectorAll(".dl-tab, .dl-prev, .dl-next, .dl-open").forEach(function (b) {
+    b.addEventListener("click", function () { setTimeout(syncClips, 0); });
+    b.addEventListener("keydown", function () { setTimeout(syncClips, 0); });
+  });
+  syncClips();
+
+  // ---------- Trailer: load the YouTube player only when asked ----------
+  document.querySelectorAll("a.yt[data-yt]").forEach(function (a) {
+    a.addEventListener("click", function (ev) {
+      ev.preventDefault();
+      var f = document.createElement("iframe");
+      f.src = "https://www.youtube-nocookie.com/embed/" + a.dataset.yt + "?autoplay=1&rel=0";
+      f.title = "Official trailer";
+      f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+      f.allowFullscreen = true;
+      a.replaceWith(f);
+      f.focus();
     });
   });
 
