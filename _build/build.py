@@ -472,7 +472,7 @@ def trailer(tr, caption, base):
     player (privacy-enhanced domain). Without JS it is a plain link to the video."""
     vid = e(tr["youtube"])
     return (f'<figure class="frame hero-ph hero-video"><a class="yt" href="https://youtu.be/{vid}" data-yt="{vid}" '
-            f'target="_blank" rel="noopener"><img src="{base}{e(tr["poster"])}" alt="" width="1600" height="900" decoding="async">'
+            f'rel="noopener"><img src="{base}{e(tr["poster"])}" alt="" width="1600" height="900" decoding="async">'
             f'<span class="yt-play" aria-hidden="true"><svg viewBox="0 0 5 5" shape-rendering="crispEdges"><path d="M1 0h1v1h1v1h1v1H3v1H2v1H1z"/></svg></span>'
             f'<span class="sr-only">Play the {e(tr["label"].lower())} (YouTube)</span></a>'
             f'<figcaption>{e(caption)}</figcaption></figure>')

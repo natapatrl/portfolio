@@ -536,6 +536,15 @@ ul.chips { list-style: none; padding: 0; margin-bottom: 0; }
 .hl-fig:has(.ba-pane.on .mk[data-m="3"]:hover) .hl-notes.on li[data-m="3"], .hl-notes li.m:hover { color: var(--head); }
 .hl-fig:has(.ba-pane.on .mk[data-m="1"]:hover) .hl-notes.on li[data-m="1"]::before, .hl-fig:has(.ba-pane.on .mk[data-m="2"]:hover) .hl-notes.on li[data-m="2"]::before,
 .hl-fig:has(.ba-pane.on .mk[data-m="3"]:hover) .hl-notes.on li[data-m="3"]::before, .hl-notes li.m:hover::before { background: var(--head); }
+/* Pause / play on clips (added by site.js) */
+.clip-btn { position: absolute; right: .55rem; bottom: .55rem; z-index: 2; width: 2rem; height: 2rem; display: grid; place-items: center;
+  background: rgba(5, 9, 21, .85); border: 1px solid var(--line-strong); cursor: pointer; }
+.clip-btn svg { width: .8rem; height: .8rem; fill: var(--mint); shape-rendering: crispEdges; }
+.clip-btn:hover { border-color: var(--mint); }
+.clip-btn:focus-visible { outline: 2px solid var(--mint); outline-offset: 2px; }
+/* Keyboard users get the same marker highlight as hover */
+.hl-fig:has(.hl-step[aria-pressed="true"]:focus-visible) .hl-stepbox.on .mk { background: var(--head); outline: 2px solid var(--mint); outline-offset: 2px; }
+@media (pointer: coarse) { .ba-switch button { min-height: 2.25rem; } }   /* bigger touch targets on phones */
 /* Step sequences: the numbered step list is the control; the picture shows the step pressed */
 .hl-stepbox:not(.on) { display: none; }
 .mk-n { width: 1.45rem; height: 1.45rem; display: grid; place-items: center; color: var(--deep); font: 600 var(--fs-micro)/1 var(--mono); }

@@ -243,9 +243,26 @@
   function syncClips() {
     clips.forEach(function (v) {
       if (still) { v.controls = true; if (!shown(v)) v.pause(); return; }
-      if (shown(v)) { var r = v.play(); if (r && r.catch) r.catch(function () {}); } else v.pause();
+      // a clip the viewer paused stays paused (WCAG 2.2.2)
+      if (shown(v) && !v.dataset.held) { var r = v.play(); if (r && r.catch) r.catch(function () {}); } else v.pause();
     });
   }
+  // Pause / play button on every clip (WCAG 2.2.2: moving content longer than 5 s needs a way to stop it)
+  if (!still) clips.forEach(function (v) {
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "clip-btn";
+    function label() {
+      var held = !!v.dataset.held;
+      b.setAttribute("aria-label", held ? "Play clip" : "Pause clip");
+      b.innerHTML = held ? '<svg viewBox="0 0 5 5" aria-hidden="true"><path d="M1 0h1v1h1v1h1v1H3v1H2v1H1z"/></svg>'
+                         : '<svg viewBox="0 0 5 5" aria-hidden="true"><path d="M1 0h1v5H1zM3 0h1v5H3z"/></svg>';
+    }
+    b.addEventListener("click", function () {
+      if (v.dataset.held) delete v.dataset.held; else v.dataset.held = "1";
+      label(); syncClips();
+    });
+    label(); v.parentElement.appendChild(b);
+  });
   document.querySelectorAll(".dl-tab, .dl-prev, .dl-next, .dl-open").forEach(function (b) {
     b.addEventListener("click", function () { setTimeout(syncClips, 0); });
     b.addEventListener("keydown", function () { setTimeout(syncClips, 0); });
